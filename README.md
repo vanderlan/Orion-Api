@@ -43,4 +43,5 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 6.	Advanced Permissions Configuration
 7.	API Test
 8.	API Version control
+9.	In Memory database for Testing
 
