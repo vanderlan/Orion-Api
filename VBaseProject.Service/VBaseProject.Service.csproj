@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VBaseProject.Data\VBaseProject.Data.csproj" />
+    <ProjectReference Include="..\VBaseProject.Entities\VBaseProject.Entities.csproj" />
+    <ProjectReference Include="..\VBaseProject.Extensions\VBaseProject.Extensions.csproj" />
+  </ItemGroup>
+
+</Project>

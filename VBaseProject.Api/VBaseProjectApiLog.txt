@@ -1,0 +1,13 @@
+2019-08-08 21:20:12.5471 Info Message Template Auto Format enabled
+2019-08-08 21:20:12.5737 Info Loading assembly: NLog.Web.AspNetCore
+2019-08-08 21:20:12.7336 Info Adding target FileTarget(Name=allfile)
+2019-08-08 21:20:12.8156 Error Parsing configuration from C:\Users\VanderlanGomes\source\repos\back-end-baseproject\VBaseProject.Api\bin\Debug\netcoreapp2.2\nlog.config failed. Exception: NLog.NLogConfigurationException: Exception when parsing C:\Users\VanderlanGomes\source\repos\back-end-baseproject\VBaseProject.Api\bin\Debug\netcoreapp2.2\nlog.config.  ---> NLog.NLogConfigurationException: Target 'ownFile-web' not found for logging rule: *.
+   at NLog.Config.LoggingConfigurationParser.ParseLoggingRuleTargets(String writeTargets, LoggingRule rule)
+   at NLog.Config.LoggingConfigurationParser.ParseRuleElement(ILoggingConfigurationElement loggerElement)
+   at NLog.Config.LoggingConfigurationParser.ParseRulesElement(ILoggingConfigurationElement rulesElement, IList`1 rulesCollection)
+   at NLog.Config.LoggingConfigurationParser.LoadConfig(ILoggingConfigurationElement nlogConfig, String basePath)
+   at NLog.Config.XmlLoggingConfiguration.ParseNLogElement(ILoggingConfigurationElement nlogElement, String filePath, Boolean autoReloadDefault)
+   at NLog.Config.XmlLoggingConfiguration.Initialize(XmlReader reader, String fileName, Boolean ignoreErrors)
+   --- End of inner exception stack trace ---
+2019-08-08 21:20:12.8156 Warn Failed loading config from C:\Users\VanderlanGomes\source\repos\back-end-baseproject\VBaseProject.Api\bin\Debug\netcoreapp2.2\nlog.config. Invalid XML?
+2019-08-08 21:20:12.8794 Info Found 19 configuration items
