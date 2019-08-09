@@ -1,27 +1,38 @@
 # Introduction 
-VBase Project - An Project Reference for build a Rest API for using C# 
+V Base Project - A project reference for building C# and ASP Net Core REST APIs
 
-# Libraries
+##### Libraries
 
-1.	Entity Framework Core;
-2.  AutoMapper;
-3.  Swagger;
-4.  Fluent Validation;
-5.  Identity Authentication.
+1.	Entity Framework Core
+	1.1	Fluent API;
+	1.2	CreatedAt and UpdatedAt;
+	1.3 Otimized for best performance.
+2.  AutoMapper
+3.  Swagger
+4.  Fluent Validation
+5.  Identity Authentication
+	5.1	JWT Token;
+	5.2 Claims and profiles configuration;
+	5.3	Personalized decorators.
 
-# Configurations and Patterns
+##### Configurations and Patterns
 
-1.  Bussines Exceptions;
-2.  Handler exception;
-3.  Repository Pattern;
-4.  Unit Of Work;
-5.  Base Repository;
-6.  JWT Authentication;
+1.  Business Exceptions
+2.  Exception handler
+3.  Repository Pattern
+4.  Unit Of Work
+5.  Base Repository
+6.  Environments configuration
+7.	CORS Configuration
+8.	All API calls use async
 
-# Todo 
-1.  Advanced NLog;
-2.  Internationalization;
-3.  Pagination;
-4.  Docker;
-5.  Refresh Token;
+##### Todo 
+1.  Advanced NLog
+2.  Internationalization
+3.  Pagination
+4.  Docker
+5.  Refresh Token
+6.	Advanced Permissions Configuration
+7.	API Test
+8.	API Version control
 

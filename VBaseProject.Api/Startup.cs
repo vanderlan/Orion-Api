@@ -155,7 +155,6 @@ namespace VBaseProject
             });
 
             app.UseCors(options => options.WithOrigins("*")
-
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
