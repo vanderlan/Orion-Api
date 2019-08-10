@@ -1,13 +1,6 @@
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using VBaseProject.Api;
-using VBaseProject.Api.AutoMapper.Config;
-using VBaseProject.Api.Handler;
-using VBaseProject.Data.Context;
-using VBaseProject.Data.UnitOfWork;
-using VBaseProject.Service.Implementation;
-using VBaseProject.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -20,6 +13,13 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
 using System.Text;
+using VBaseProject.Api;
+using VBaseProject.Api.AutoMapper.Config;
+using VBaseProject.Api.Handler;
+using VBaseProject.Data.Context;
+using VBaseProject.Data.UnitOfWork;
+using VBaseProject.Service.Implementation;
+using VBaseProject.Service.Interfaces;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject
@@ -70,8 +70,8 @@ namespace VBaseProject
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "My VBaseProject API",
-                    Description = "API do MyInv - Uma plataforma inteligente de acompanhamento do mercado de ações",
+                    Title = "VBaseProject API",
+                    Description = "V Base Project - A project reference for building C# and ASP Net Core REST APIs",
                     TermsOfService = "Private",
                 });
             });

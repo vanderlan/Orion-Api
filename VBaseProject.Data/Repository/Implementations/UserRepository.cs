@@ -1,10 +1,10 @@
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using VBaseProject.Data.Context;
 using VBaseProject.Data.Repository.Generic;
 using VBaseProject.Data.Repository.Interfaces;
 using VBaseProject.Entities.Domain;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace VBaseProject.Data.Repository.Implementations
 {

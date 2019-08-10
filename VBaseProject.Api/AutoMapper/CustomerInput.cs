@@ -2,13 +2,9 @@ namespace VBaseProject.Api.AutoMapper
 {
     public class CustomerInput
     {
-        public string Code { get; set; }
-        public int StockExchangeId { get; set; }
-        public int CompanyId { get; set; }
-        public int SectorId { get; set; }
-        public decimal Price { get; set; }
-        public string Description { get; set; }
-        public int CustomerId { get; set; }
-        public string PublicId { get; internal set; }
+        public string PublicId { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

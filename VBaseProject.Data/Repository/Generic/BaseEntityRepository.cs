@@ -1,11 +1,11 @@
-using VBaseProject.Data.Context;
-using VBaseProject.Entities.Domain;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using VBaseProject.Data.Context;
+using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Data.Repository.Generic
 {

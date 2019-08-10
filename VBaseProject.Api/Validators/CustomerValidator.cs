@@ -1,6 +1,6 @@
 using FluentValidation;
-using VBaseProject.Api.AutoMapper;
 using System;
+using VBaseProject.Api.AutoMapper;
 
 namespace VBaseProject.Api.Validators
 {
@@ -15,17 +15,17 @@ namespace VBaseProject.Api.Validators
                     throw new ArgumentNullException("The Customer can't be found.");
                 });
 
-            RuleFor(c => c.Code)
-                .NotEmpty().WithMessage("Is necessary to inform the Customer Code.")
-                .NotNull().WithMessage("Is necessary to inform the Customer Code.");
+            RuleFor(c => c.Name)
+                .NotEmpty().WithMessage("Is necessary to inform the Customer Name.")
+                .NotNull().WithMessage("Is necessary to inform the Customer Name.");
 
-            RuleFor(c => c.Price)
-                .GreaterThanOrEqualTo(0).WithMessage("Customer Price has to be greater or equal to zero.")
-                .NotNull().WithMessage("Is necessary to inform the Price.");
+            RuleFor(c => c.Address)
+               .NotEmpty().WithMessage("Is necessary to inform the Customer Address.")
+               .NotNull().WithMessage("Is necessary to inform the Customer Address.");
 
-            RuleFor(c => c.StockExchangeId)
-                .NotEmpty().WithMessage("Is necessary to inform the StockExchangeId.")
-                .NotNull().WithMessage("Is necessary to inform the StockExchangeId.");
+            RuleFor(c => c.PhoneNumber)
+                .NotEmpty().WithMessage("Is necessary to inform the Customer Phone Number.")
+                .NotNull().WithMessage("Is necessary to inform the Customer Phone Number.");
         }
     }
 }

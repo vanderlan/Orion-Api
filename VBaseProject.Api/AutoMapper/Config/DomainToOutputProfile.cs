@@ -1,5 +1,6 @@
 using AutoMapper;
 using VBaseProject.Entities.Domain;
+using VBaseProject.Entities.ValueObjects.Pagination;
 
 namespace VBaseProject.Api.AutoMapper.Config
 {
@@ -8,6 +9,7 @@ namespace VBaseProject.Api.AutoMapper.Config
         public DomainToOutputProfile()
         {
             CreateMap<Customer, CustomerOutput>();
+            CreateMap<PagedList<Customer>, PagedList<CustomerOutput>>();
 
             CreateMap<User, UserOutput>()
                 .ForMember(x => x.ProfileDescription, opt => opt.Ignore());

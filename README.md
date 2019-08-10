@@ -5,8 +5,9 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 
 1.	Entity Framework Core
 	1.1	Fluent API;
-	1.2	CreatedAt and UpdatedAt;
-	1.3 Otimized for best performance.
+	1.2	CreatedAt and UpdatedAt by default;
+	1.3 Pagination;
+	1.4 Otimized for best performance.
 2.  AutoMapper
 3.  Swagger
 4.  Fluent Validation
@@ -29,7 +30,6 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 ##### Todo 
 1.  Advanced NLog
 2.  Internationalization
-3.  Pagination
 4.  Docker
 5.  Refresh Token
 6.	Advanced Permissions Configuration

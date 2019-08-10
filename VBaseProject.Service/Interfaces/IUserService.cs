@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Service.Base;
-using System.Threading.Tasks;
 
 namespace VBaseProject.Service.Interfaces
 {

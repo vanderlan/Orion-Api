@@ -1,6 +1,6 @@
+using System.Threading.Tasks;
 using VBaseProject.Data.Repository.Generic;
 using VBaseProject.Entities.Domain;
-using System.Threading.Tasks;
 
 namespace VBaseProject.Data.Repository.Interfaces
 {

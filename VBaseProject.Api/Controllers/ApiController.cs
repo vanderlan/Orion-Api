@@ -1,7 +1,7 @@
 using AutoMapper;
-using VBaseProject.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using VBaseProject.Api.Models;
 
 namespace VBaseProject.Controllers
 {

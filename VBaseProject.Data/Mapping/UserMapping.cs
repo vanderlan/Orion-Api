@@ -1,6 +1,6 @@
-using VBaseProject.Entities.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Data.Mapping
 {

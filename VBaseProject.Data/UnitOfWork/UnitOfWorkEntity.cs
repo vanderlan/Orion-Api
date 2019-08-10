@@ -1,10 +1,10 @@
-using VBaseProject.Data.Context;
-using VBaseProject.Data.Repository.Implementations;
-using VBaseProject.Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
+using VBaseProject.Data.Context;
+using VBaseProject.Data.Repository.Implementations;
+using VBaseProject.Data.Repository.Interfaces;
 
 namespace VBaseProject.Data.UnitOfWork
 {

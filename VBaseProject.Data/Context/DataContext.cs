@@ -1,11 +1,11 @@
-using VBaseProject.Data.Mapping;
-using VBaseProject.Entities.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using VBaseProject.Data.Mapping;
+using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Data.Context
 {
@@ -27,7 +27,7 @@ namespace VBaseProject.Data.Context
 
         private static DbContextOptions GetOptions()
         {
-            var connectionString = "Server=tcp:investdbmyinv.cuevoikrp8by.us-east-1.rds.amazonaws.com,1433;Initial Catalog=MyInv;Persist Security Info=False;User ID=admin;Password=123Ab321;MultipleActiveResultSets=False;TrustServerCertificate=False;Connection Timeout=30;";
+            var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VBaseProject;Integrated Security=True;MultipleActiveResultSets=True;";
 
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }

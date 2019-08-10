@@ -1,32 +1,34 @@
 using AutoMapper;
-using VBaseProject.Api.AutoMapper;
-using VBaseProject.Entities.Domain;
-using VBaseProject.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
+using VBaseProject.Api.AutoMapper;
+using VBaseProject.Entities.Domain;
+using VBaseProject.Entities.Filter;
+using VBaseProject.Entities.ValueObjects.Pagination;
+using VBaseProject.Service.Interfaces;
 
 namespace VBaseProject.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    //[AuthorizeFor(Roles.Admin)]
     public class CustomersController : ApiController
     {
-        private readonly ICustomerService _assetService;
+        private readonly ICustomerService _custumerService;
 
         public CustomersController(ICustomerService assetService, IMapper mapper) : base(mapper)
         {
-            _assetService = assetService;
+            _custumerService = assetService;
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] CustomerFilter filter)
         {
-            var asset = await _assetService.GetAll();
+            var asset = await _custumerService.ListPaginate(filter);
 
-            var assetOutputList = _mapper.Map<IEnumerable<CustomerOutput>>(asset);
+            var assetOutputList = _mapper.Map<PagedList<CustomerOutput>>(asset);
 
             return Ok(assetOutputList);
         }
@@ -35,7 +37,7 @@ namespace VBaseProject.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get(string id)
         {
-            var asset = await _assetService.FindByIdAsync(id);
+            var asset = await _custumerService.FindByIdAsync(id);
             var assetOutput = _mapper.Map<CustomerOutput>(asset);
 
             return Ok(assetOutput);
@@ -48,7 +50,7 @@ namespace VBaseProject.Controllers
         {
             var asset = _mapper.Map<Customer>(assetInput);
 
-            var created = await _assetService.AddAsync(asset);
+            var created = await _custumerService.AddAsync(asset);
 
             return Created("{id}", _mapper.Map<CustomerOutput>(created));
         }
@@ -61,7 +63,7 @@ namespace VBaseProject.Controllers
             assetInput.PublicId = id;
             var asset = _mapper.Map<Customer>(assetInput);
 
-            await _assetService.UpdateAsync(asset);
+            await _custumerService.UpdateAsync(asset);
 
             return Accepted();
         }
@@ -69,7 +71,7 @@ namespace VBaseProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            await _assetService.DeleteAsync(id);
+            await _custumerService.DeleteAsync(id);
 
             return NoContent();
         }

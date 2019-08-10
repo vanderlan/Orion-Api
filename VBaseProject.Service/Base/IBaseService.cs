@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace VBaseProject.Service.Base
@@ -9,7 +8,6 @@ namespace VBaseProject.Service.Base
         Task DeleteAsync(string publicId);
         Task<T> FindByIdAsync(string publicId);
         Task UpdateAsync(T entity);
-        Task<IEnumerable<T>> GetAll();
     }
 }
 

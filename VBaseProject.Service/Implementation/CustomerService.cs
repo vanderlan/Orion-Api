@@ -1,8 +1,9 @@
+using System.Threading.Tasks;
 using VBaseProject.Data.UnitOfWork;
 using VBaseProject.Entities.Domain;
+using VBaseProject.Entities.Filter;
+using VBaseProject.Entities.ValueObjects.Pagination;
 using VBaseProject.Service.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace VBaseProject.Service.Implementation
 {
@@ -34,20 +35,19 @@ namespace VBaseProject.Service.Implementation
             return await unitOfWork.CustomerRepository.FindByIdAsync(id);
         }
 
-        public async Task<IEnumerable<Customer>> GetAll()
+        public async Task<PagedList<Customer>> ListPaginate(CustomerFilter filter)
         {
-            return await unitOfWork.CustomerRepository.GetBy(x => x.CustomerId > 0);
+            return await unitOfWork.CustomerRepository.ListPaginate(filter);
         }
 
         public async Task UpdateAsync(Customer entity)
         {
             var entitySaved = await FindByIdAsync(entity.PublicId);
 
-            entitySaved.Code = entity.Code;
-            entitySaved.Description = entity.Description;
-            entitySaved.StockExchangeId = entity.StockExchangeId;
-            entitySaved.Price = entity.Price;
-            entitySaved.CompanyId = entity.CompanyId;
+            entitySaved.Name = entity.Name;
+            entitySaved.Address = entity.Address;
+            entitySaved.PhoneNumber = entity.PhoneNumber;
+            entitySaved.PublicId = entity.PublicId;
 
             unitOfWork.CustomerRepository.Update(entitySaved);
             await unitOfWork.CommitAsync();

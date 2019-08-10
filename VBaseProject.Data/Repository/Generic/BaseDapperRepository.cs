@@ -1,7 +1,7 @@
 using Dapper;
-using VBaseProject.Data.Exceptions;
 using System;
 using System.Data;
+using VBaseProject.Data.Exceptions;
 
 namespace VBaseProject.Data.Repository.Generic
 {

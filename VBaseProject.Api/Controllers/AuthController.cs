@@ -1,8 +1,4 @@
 using AutoMapper;
-using VBaseProject.Api.AutoMapper;
-using VBaseProject.Api.Models;
-using VBaseProject.Controllers;
-using VBaseProject.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -10,6 +6,10 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using VBaseProject.Api.AutoMapper;
+using VBaseProject.Api.Models;
+using VBaseProject.Controllers;
+using VBaseProject.Service.Interfaces;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject.Api.Controllers
