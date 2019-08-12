@@ -21,6 +21,8 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 
 	5.3	Personalized decorators.
 
+6.	NLog
+
 ##### Configurations and Patterns
 
 1.  Business Exceptions
@@ -32,14 +34,12 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 7.	CORS Configuration
 8.	All API calls use async
 
-
 ##### Todo 
-1.  Advanced NLog
-2.  Internationalization
-4.  Docker
-5.  Refresh Token
-6.	Advanced Permissions Configuration
-7.	API Test
-8.	API Version control
-9.	In Memory database for Testing
+1.  Internationalization
+2.  Docker
+3.  Refresh Token
+4.	Advanced Permissions Configuration
+5.	API Test
+6.	API Version control
+7.	In Memory database for Testing
 

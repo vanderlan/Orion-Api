@@ -18,9 +18,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VBaseProject.Data", "VBaseP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VBaseProject.Service", "VBaseProject.Service\VBaseProject.Service.csproj", "{B7862D34-85F8-4357-96F3-A9E5D71CB04D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - EXTENSIONS", "3 - EXTENSIONS", "{59698913-5D68-41F4-B1C6-134F49DEB449}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - CONFIG", "3 - CONFIG", "{59698913-5D68-41F4-B1C6-134F49DEB449}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VBaseProject.Extensions", "VBaseProject.Extensions\VBaseProject.Extensions.csproj", "{105D1EB4-5091-493E-B75E-2131169CC9AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VBaseProject.Resources", "VBaseProject.Extensions\VBaseProject.Resources.csproj", "{105D1EB4-5091-493E-B75E-2131169CC9AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D8CC498-597C-4415-95BF-48E623039F90}"
 	ProjectSection(SolutionItems) = preProject

@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace VBaseProject.Extensions
+namespace VBaseProject.Resources.Extensions
 {
     public static class DecimalExtensions
     {
@@ -32,15 +32,6 @@ namespace VBaseProject.Extensions
             var result = decimal.Round(secondValue * 100 / value, 2);
 
             return result;
-        }
-        public static decimal PercentDifference(this decimal value, decimal secondValue)
-        {
-            //-10
-            // 50
-
-            var result = decimal.Round(secondValue * 100 / value, 2);
-
-            return result - 100;
         }
     }
 }
