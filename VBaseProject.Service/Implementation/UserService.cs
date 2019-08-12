@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -76,6 +77,30 @@ namespace VBaseProject.Service.Implementation
             }
 
             return stringBuilder.ToString();
+        }
+
+        public async Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken)
+        {
+            var added = await unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+            await unitOfWork.CommitAsync();
+
+            return added;
+        }
+
+        public async Task<User> GetUserByRefreshToken(string refresh)
+        {
+            var refreshToken = await unitOfWork.RefreshTokenRepository.GetBy(x => x.Refreshtoken == refresh);
+
+            if (refreshToken != null && refreshToken.Any())
+            {
+                var user = await unitOfWork.UserRepository.GetBy(x => x.Email == refreshToken.First().Email);
+
+                if (user.Any())
+                {
+                    return user.First();
+                }
+            }
+            return null;
         }
     }
 }

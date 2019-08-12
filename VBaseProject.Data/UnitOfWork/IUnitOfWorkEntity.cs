@@ -8,6 +8,7 @@ namespace VBaseProject.Data.UnitOfWork
     {
         ICustomerRepository CustomerRepository { get; }
         IUserRepository UserRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
         Task CommitAsync();
         void DiscardChanges();
     }

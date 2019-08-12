@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper;
 using VBaseProject.Api.Models;
 using VBaseProject.Controllers;
+using VBaseProject.Entities.Domain;
 using VBaseProject.Service.Interfaces;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
@@ -33,31 +34,65 @@ namespace VBaseProject.Api.Controllers
 
             if (userOutput != null)
             {
-                var claim = new[] {
+                JwtSecurityToken token = CreateToken(userOutput);
+
+                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
+
+                return Ok(
+                  new
+                  {
+                      token = new JwtSecurityTokenHandler().WriteToken(token),
+                      expiration = token.ValidTo,
+                      refreshToken = refreshToken.Refreshtoken
+                  });
+            }
+
+            return Unauthorized();
+        }
+
+        [Route("RefreshToken/{refresh}")]
+        [HttpPost]
+        public async Task<ActionResult> RefreshToken(string refresh)
+        {
+            var userOutput = _mapper.Map<UserOutput>(await _userService.GetUserByRefreshToken(refresh));
+
+            if (userOutput != null)
+            {
+                JwtSecurityToken token = CreateToken(userOutput);
+
+                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
+
+                return Ok(
+                  new
+                  {
+                      token = new JwtSecurityTokenHandler().WriteToken(token),
+                      expiration = token.ValidTo,
+                      refreshToken = refreshToken.Refreshtoken
+                  });
+            }
+
+            return Unauthorized();
+        }
+
+        private static JwtSecurityToken CreateToken(UserOutput userOutput)
+        {
+            var claim = new[] {
                     new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
                     new Claim(JwtRegisteredClaimNames.GivenName, userOutput.FirstName),
                     new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
                     new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
                 };
 
-                var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey));
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey));
 
-                var token = new JwtSecurityToken(
-                  issuer: JWT.Issuer,
-                  audience: JWT.Audience,
-                  expires: DateTime.UtcNow.AddDays(JWT.TokenExpirationDays),
-                  signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
-                  claims: claim
-                );
-
-                return Ok(
-                  new
-                  {
-                      token = new JwtSecurityTokenHandler().WriteToken(token),
-                      expiration = token.ValidTo
-                  });
-            }
-            return Unauthorized();
+            var token = new JwtSecurityToken(
+              issuer: JWT.Issuer,
+              audience: JWT.Audience,
+              expires: DateTime.UtcNow.AddDays(JWT.TokenExpirationDays),
+              signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
+              claims: claim
+            );
+            return token;
         }
     }
 }

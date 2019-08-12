@@ -26,6 +26,9 @@ namespace VBaseProject.Data.UnitOfWork
         private IUserRepository _userRepository;
         public IUserRepository UserRepository => _userRepository ?? (_userRepository = new UserRepository(DbContext));
 
+        private IRefreshTokenRepository _refreshTokenRepository;
+        public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ?? (_refreshTokenRepository = new RefreshTokenRepository(DbContext));
+
         public async Task CommitAsync()
         {
             await DbContext.SaveChangesAsync();
