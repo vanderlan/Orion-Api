@@ -26,5 +26,6 @@ WORKDIR /app
 COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "VBaseProject.Api.dll"]
 
-#docker build -t vbaseproject
-#docker run -d -p 80:5000 vbaseproject
+#docker build -t vbaseproject .
+#docker run -p 8080:5000 vbaseproject
+#PORTS ext:docker
