@@ -1,7 +1,6 @@
-
 FROM mcr.microsoft.com/dotnet/core/aspnet:2.2-nanoserver-1809 AS base
 WORKDIR /VBaseProject.Api
-EXPOSE 80
+EXPOSE 5000
 
 FROM mcr.microsoft.com/dotnet/core/sdk:2.2-nanoserver-1809 AS build
 WORKDIR /app
