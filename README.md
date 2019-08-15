@@ -38,12 +38,11 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 6.  Environments configuration
 7.	CORS Configuration
 8.	All API calls use async
+9.	Docker and Docker-Compose
 
 ##### Todo 
 1.  Internationalization
-2.  Docker
-3.	Advanced Permissions Configuration
-4.	API Test
-5.	API Version control
-6.	In Memory database for Testing
-
+2.	Advanced Permissions Configuration
+3.	API Test
+4.	API Version control
+5.	In Memory database for Testing
