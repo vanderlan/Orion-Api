@@ -14,6 +14,9 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 	1.4 Otimized for best performance.
 
 2.  AutoMapper
+
+	2.1	Unmapped members Configuration
+
 3.  Swagger
 4.  Fluent Validation
 5.  Identity Authentication

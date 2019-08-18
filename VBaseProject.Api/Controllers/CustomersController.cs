@@ -2,7 +2,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
-using VBaseProject.Api.AutoMapper;
+using VBaseProject.Api.AutoMapper.Input;
+using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
@@ -53,11 +54,12 @@ namespace VBaseProject.Controllers
 
             var created = await _custumerService.AddAsync(asset);
 
-            return Created("{id}", _mapper.Map<CustomerOutput>(created));
+            return Created(_mapper.Map<CustomerOutput>(created));
         }
 
         [HttpPut("{id}")]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
         public async Task<IActionResult> Put(string id, [FromBody]  CustomerInput assetInput)
         {
@@ -70,6 +72,8 @@ namespace VBaseProject.Controllers
         }
 
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete(string id)
         {
             await _custumerService.DeleteAsync(id);

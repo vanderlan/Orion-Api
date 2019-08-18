@@ -13,8 +13,7 @@ namespace VBaseProject.Controllers
         public ApiController(IMapper mapper)
         {
             _mapper = mapper;
-
-            //   Mapper.AssertConfigurationIsValid();
+            _mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
 
         private AuthUser GetAuthenticatedUser()
@@ -28,6 +27,11 @@ namespace VBaseProject.Controllers
                 Email = email.Value,
                 FisrtName = givenName.Value,
             };
+        }
+
+        protected CreatedResult Created(object entity)
+        {
+            return base.Created("{id}", entity);
         }
     }
 }

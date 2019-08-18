@@ -54,18 +54,20 @@ namespace VBaseProject.Api.Handler
                 : HttpStatusCode.InternalServerError;
 
             var errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-
             var msg = exception.Message;
-            //var msg = "Ocorreu um erro inesperado. Por favor, contate o suporte para saber mais.";
 
-            if (ex is BusinessException == false && !_env.IsDevelopment())
+            if (ex is BusinessException == false && _env.IsDevelopment())
             {
                 errorResponse = new ExceptionResponse(msg, NotificationType.Error);
             }
-
             if (ex is UnauthorizedUserException)
             {
                 errorResponse = new ExceptionResponse(ex.Message, NotificationType.Error);
+            }
+
+            if (ex is BusinessException businessException)
+            {
+                errorResponse.Title = businessException.Title;
             }
 
             var errrorReturn = JsonConvert.SerializeObject(errorResponse);
@@ -75,14 +77,12 @@ namespace VBaseProject.Api.Handler
             var retorno = JsonConvert.SerializeObject(errorResponse);
 
             context.Response.StatusCode = (int)status;
-            context.Response.ContentType = @"application/json";
+            context.Response.ContentType = "application/json";
             await context.Response.WriteAsync(retorno);
         }
     }
 
-
-
-    // Extension method used to add the middleware to the HTTP request pipeline.
+    // Extension method used to add the middleware to the HTTP request pipeline, on Startup.
     public static class VBaseProjectMiddlewareExtensions
     {
         public static IApplicationBuilder UseVBaseProjectMiddleware(this IApplicationBuilder builder)

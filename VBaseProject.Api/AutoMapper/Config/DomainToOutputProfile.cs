@@ -1,4 +1,5 @@
 using AutoMapper;
+using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.ValueObjects.Pagination;
 

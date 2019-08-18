@@ -5,25 +5,12 @@ namespace VBaseProject.Service.Exceptions
     [Serializable]
     public class NotFoundException : BusinessException
     {
-        public long Id { get; private set; }
+        public string PublicId { get; private set; }
 
-        public NotFoundException()
+        public NotFoundException(string publicId) : base($"Resource Not Found with the identifier {publicId}")
         {
-        }
-
-        public NotFoundException(long id)
-        {
-            Id = id;
-        }
-
-        public NotFoundException(string message, long id) : base(message)
-        {
-            Id = id;
-        }
-
-        public NotFoundException(string message) : base(message)
-        {
-
+            PublicId = publicId;
+            Title = "Not Found";
         }
     }
 }

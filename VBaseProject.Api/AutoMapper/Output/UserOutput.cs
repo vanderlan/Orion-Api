@@ -2,7 +2,7 @@
 using VBaseProject.Entities.Enuns;
 using VBaseProject.Service.Authentication;
 
-namespace VBaseProject.Api.AutoMapper
+namespace VBaseProject.Api.AutoMapper.Output
 {
     public class UserOutput
     {

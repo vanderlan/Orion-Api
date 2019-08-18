@@ -7,18 +7,10 @@ namespace VBaseProject.Service.Exceptions
     {
         public string Email { get; private set; }
 
-        public UnauthorizedUserException()
-        {
-        }
-
-        public UnauthorizedUserException(string email) : base(email)
+        public UnauthorizedUserException(string email) : base($"Unauthorized access to the user {email}")
         {
             Email = email;
-        }
-
-        public UnauthorizedUserException(string message, string email) : base(message)
-        {
-            Email = email;
+            Title = "Unauthorized";
         }
     }
 }

@@ -1,4 +1,5 @@
 using AutoMapper;
+using VBaseProject.Api.AutoMapper.Input;
 using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Api.AutoMapper.Config

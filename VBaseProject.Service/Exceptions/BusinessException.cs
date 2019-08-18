@@ -5,6 +5,7 @@ namespace VBaseProject.Service.Exceptions
     [Serializable]
     public class BusinessException : Exception
     {
+        public string Title { get; set; }
         public BusinessException()
         {
 

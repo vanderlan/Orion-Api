@@ -1,6 +1,6 @@
 using FluentValidation;
 using System;
-using VBaseProject.Api.AutoMapper;
+using VBaseProject.Api.AutoMapper.Input;
 
 namespace VBaseProject.Api.Validators
 {

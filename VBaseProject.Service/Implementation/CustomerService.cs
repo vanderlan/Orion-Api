@@ -3,6 +3,7 @@ using VBaseProject.Data.UnitOfWork;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
+using VBaseProject.Service.Exceptions;
 using VBaseProject.Service.Interfaces;
 
 namespace VBaseProject.Service.Implementation
@@ -26,6 +27,13 @@ namespace VBaseProject.Service.Implementation
 
         public async Task DeleteAsync(string id)
         {
+            var item = await FindByIdAsync(id);
+
+            if (item == null)
+            {
+                throw new NotFoundException(id);
+            }
+
             await unitOfWork.CustomerRepository.DeleteAsync(id);
             await unitOfWork.CommitAsync();
         }

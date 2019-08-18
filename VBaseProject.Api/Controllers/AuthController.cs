@@ -6,7 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using VBaseProject.Api.AutoMapper;
+using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Api.Models;
 using VBaseProject.Controllers;
 using VBaseProject.Entities.Domain;
