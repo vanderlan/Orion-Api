@@ -10,6 +10,6 @@ services:
       # ext : docker-image
     networks:
       - vbaseproject-network
-networks: 
+networks:
     vbaseproject-network:
         driver: nat

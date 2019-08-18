@@ -10,6 +10,7 @@ using VBaseProject.Service.Interfaces;
 
 namespace VBaseProject.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
     //[AuthorizeFor(Roles.Admin)]
