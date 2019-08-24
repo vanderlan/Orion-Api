@@ -20,6 +20,7 @@ namespace VBaseProject.Data.UnitOfWork
         {
             DbContext = new DataContext(GetOptions(connection));
         }
+
         private ICustomerRepository _assetRepository;
         public ICustomerRepository CustomerRepository => _assetRepository ?? (_assetRepository = new CustomerRepository(DbContext));
 
@@ -36,8 +37,7 @@ namespace VBaseProject.Data.UnitOfWork
 
         private static DbContextOptions GetOptions(string connection)
         {
-            // var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=MyInv;Integrated Security=True;MultipleActiveResultSets=True;";
-            //var connectionString = "Server=tcp:myinv-server.database.windows.net,1433;Initial Catalog=MyinvDev;Persist Security Info=False;User ID=myinadmin;Password=123Ab321;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            //var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=MyInv;Integrated Security=True;MultipleActiveResultSets=True;";
 
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
         }

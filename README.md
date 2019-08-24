@@ -41,7 +41,7 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 6.  Environments configuration
 7.	CORS Configuration
 8.	All API calls use async
-9.	Docker and Docker-Compose
+9.	(optional use) Docker and Docker-Compose
 10.	API Version Configuration (by x-api-version header attribute)
 
 
