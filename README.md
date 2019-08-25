@@ -43,10 +43,11 @@ V Base Project - A project reference for building C# and ASP Net Core REST APIs
 8.	All API calls use async
 9.	(optional use) Docker and Docker-Compose
 10.	API Version Configuration (by x-api-version header attribute)
+11. Globalization
 
 
 ##### Todo 
-1.  Internationalization
-2.	Advanced Permissions Configuration
-3.	API Test
-4.	In Memory database for Testing
+1.	Advanced Permissions Configuration
+2.	API Test
+3.	In Memory database for Testing
+4.	Logout

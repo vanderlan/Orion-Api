@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using VBaseProject.Api.Models;
 
-namespace VBaseProject.Controllers
+namespace VBaseProject.Api.Controllers
 {
     [ApiController]
     public abstract class ApiController : ControllerBase

@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -8,7 +9,6 @@ using System.Text;
 using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Api.Models;
-using VBaseProject.Controllers;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Service.Interfaces;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
@@ -27,6 +27,7 @@ namespace VBaseProject.Api.Controllers
         }
 
         [Route("login")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> Login([FromBody] UserLoginModel model)
         {
@@ -51,6 +52,7 @@ namespace VBaseProject.Api.Controllers
         }
 
         [Route("RefreshToken/{refresh}")]
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult> RefreshToken(string refresh)
         {
@@ -88,10 +90,11 @@ namespace VBaseProject.Api.Controllers
             var token = new JwtSecurityToken(
               issuer: JWT.Issuer,
               audience: JWT.Audience,
-              expires: DateTime.UtcNow.AddDays(JWT.TokenExpirationDays),
+              expires: DateTime.Now.AddDays(JWT.TokenExpirationDays),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );
+
             return token;
         }
     }

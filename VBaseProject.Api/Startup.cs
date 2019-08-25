@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using VBaseProject.Api;
 using VBaseProject.Api.AutoMapper.Config;
@@ -29,6 +33,7 @@ namespace VBaseProject
     {
         private readonly ILoggerFactory _loggerFactory;
         private readonly IHostingEnvironment _env;
+        public IConfiguration Configuration { get; set; }
 
         public Startup(
             IConfiguration configuration,
@@ -40,7 +45,6 @@ namespace VBaseProject
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; set; }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -61,9 +65,13 @@ namespace VBaseProject
             .AddFluentValidation(options =>
             {
                 options.RegisterValidatorsFromAssemblyContaining<Startup>();
-            });
+            })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+            .AddDataAnnotationsLocalization();
 
             services.Configure<DatabaseOptions>(Configuration.GetSection("DatabaseOptions"));
+
+            services.AddLocalization(options => options.ResourcesPath = @"Resources");
 
             #region Swagger Config
             services.AddSwaggerGen(c =>
@@ -148,6 +156,7 @@ namespace VBaseProject
         {
             var logger = _loggerFactory.CreateLogger<Startup>();
 
+            //ENVIRONMENT
             if (env.IsDevelopment())
             {
                 logger.LogInformation("Development environment");
@@ -158,12 +167,15 @@ namespace VBaseProject
                 app.UseHsts();
             }
             app.UseVBaseProjectMiddleware();
+
+            //SWAGGER
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
+            //CORS, Origin|Methods|Header|Credentials
             app.UseCors(options => options.WithOrigins("*")
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
@@ -171,16 +183,42 @@ namespace VBaseProject
                 .AllowCredentials());
 
             app.UseAuthentication();
-            app.UseMvc();
+
+            #region  Globalization configuration
+
+            var defaultCultureInfo = new CultureInfo("pt-BR");
+            defaultCultureInfo.NumberFormat.CurrencySymbol = "R$";
+
+            var supportedCultures = new List<CultureInfo>
+            {
+                defaultCultureInfo,
+                new CultureInfo("en-US")
+            };
+
+            var globalizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures,
+            };
+
+            app.UseRequestLocalization(globalizationOptions);
+
+            CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
+
+
+            #endregion
 
             var builder = new ConfigurationBuilder()
-
                .SetBasePath(env.ContentRootPath)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+
+            app.UseMvc();
         }
     }
 }
