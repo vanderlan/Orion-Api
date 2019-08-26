@@ -1,6 +1,5 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Localization;
 using System.Net;
 using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper.Input;
@@ -8,7 +7,6 @@ using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Resources;
 using VBaseProject.Service.Interfaces;
 
 namespace VBaseProject.Api.Controllers
@@ -20,30 +18,16 @@ namespace VBaseProject.Api.Controllers
     public class CustomersController : ApiController
     {
         private readonly ICustomerService _custumerService;
-        private readonly IStringLocalizer<VBaseProjectResources> _stringLocalizer;
 
-        public CustomersController(ICustomerService assetService, IMapper mapper, IStringLocalizer<VBaseProjectResources> stringLocalizer) : base(mapper)
+        public CustomersController(ICustomerService assetService, IMapper mapper) : base(mapper)
         {
-            _stringLocalizer = stringLocalizer;
             _custumerService = assetService;
-        }
-
-        [HttpGet]
-        [Route("Olar")]
-        public IActionResult GetCulture()
-        {
-            var msg = _stringLocalizer["InvalidCustomerName"];
-
-            var eagora = msg.SearchedLocation;
-
-            return Ok(msg);
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromQuery] CustomerFilter filter)
         {
-
             var asset = await _custumerService.ListPaginate(filter);
 
             var assetOutputList = _mapper.Map<PagedList<CustomerOutput>>(asset);

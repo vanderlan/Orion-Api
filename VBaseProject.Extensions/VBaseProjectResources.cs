@@ -2,10 +2,6 @@
 
 namespace VBaseProject.Resources
 {
-    public interface ISharedResource
-    {
-    }
-
     public class VBaseProjectResources : ISharedResource
     {
         private readonly IStringLocalizer _localizer;

@@ -117,7 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidCustomerName" xml:space="preserve">
+  <data name="Customer.InvalidAddress" xml:space="preserve">
+    <value>É necessário informar o endereço</value>
+  </data>
+  <data name="Customer.InvalidName" xml:space="preserve">
     <value>É necessário informar o nome do cliente</value>
+  </data>
+  <data name="Customer.InvalidPhoneNumber" xml:space="preserve">
+    <value>É necessário informar o número do telefone</value>
+  </data>
+  <data name="Customer.NullEntity" xml:space="preserve">
+    <value>O cliente não pode ser encontrado</value>
   </data>
 </root>

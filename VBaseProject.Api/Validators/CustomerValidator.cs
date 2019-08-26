@@ -1,31 +1,34 @@
 using FluentValidation;
+using Microsoft.Extensions.Localization;
 using System;
 using VBaseProject.Api.AutoMapper.Input;
+using VBaseProject.Resources;
 
 namespace VBaseProject.Api.Validators
 {
     public class CustomerValidator : AbstractValidator<CustomerInput>
     {
-        public CustomerValidator()
+        public CustomerValidator(IStringLocalizer<VBaseProjectResources> stringLocalizer)
         {
+
             RuleFor(c => c)
                 .NotNull()
                 .OnAnyFailure(x =>
                 {
-                    throw new ArgumentNullException("The Customer can't be found.");
+                    throw new ArgumentNullException(stringLocalizer["Customer.NullEntity"]);
                 });
 
             RuleFor(c => c.Name)
-                .NotEmpty().WithMessage("Is necessary to inform the Customer Name.")
-                .NotNull().WithMessage("Is necessary to inform the Customer Name.");
+                .NotEmpty().WithMessage(stringLocalizer["Customer.InvalidName"])
+                 .NotNull().WithMessage(stringLocalizer["Customer.InvalidName"]);
 
             RuleFor(c => c.Address)
-               .NotEmpty().WithMessage("Is necessary to inform the Customer Address.")
-               .NotNull().WithMessage("Is necessary to inform the Customer Address.");
+               .NotEmpty().WithMessage(stringLocalizer["Customer.InvalidAddress"])
+                .NotNull().WithMessage(stringLocalizer["Customer.InvalidAddress"]);
 
             RuleFor(c => c.PhoneNumber)
-                .NotEmpty().WithMessage("Is necessary to inform the Customer Phone Number.")
-                .NotNull().WithMessage("Is necessary to inform the Customer Phone Number.");
+                .NotEmpty().WithMessage(stringLocalizer["Customer.InvalidPhoneNumber"])
+                 .NotNull().WithMessage(stringLocalizer["Customer.InvalidPhoneNumber"]);
         }
     }
 }
