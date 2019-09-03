@@ -8,7 +8,7 @@ namespace VBaseProject.Service.Authentication
             public const string Issuer = "http://www.myinvapp.com";
             public const string Audience = "http://www.myinvapp.com";
 
-            public const int TokenExpirationDays = 1;
+            public const int TokenExpirationMinutes = 30;
         }
 
         public static class Roles

@@ -2,19 +2,21 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
+using VBaseProject.Api.Attributes;
 using VBaseProject.Api.AutoMapper.Input;
 using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
 using VBaseProject.Service.Interfaces;
+using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject.Api.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
-    //[AuthorizeFor(Roles.Admin)]
+    [AuthorizeFor(Roles.Admin)]
     public class CustomersController : ApiController
     {
         private readonly ICustomerService _custumerService;

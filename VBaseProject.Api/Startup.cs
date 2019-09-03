@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -127,7 +128,8 @@ namespace VBaseProject
                     ValidateAudience = true,
                     ValidAudience = JWT.Audience,
                     ValidIssuer = JWT.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey)),
+                    ClockSkew = TimeSpan.Zero
                 };
             });
         }
