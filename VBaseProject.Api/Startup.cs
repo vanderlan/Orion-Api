@@ -81,7 +81,7 @@ namespace VBaseProject
                 {
                     Version = "v1",
                     Title = "VBaseProject API",
-                    Description = "V Base Project - A project reference for building C# and ASP Net Core REST APIs",
+                    Description = "VBase Project - API Description Here!",
                     TermsOfService = "Private",
                 });
             });
