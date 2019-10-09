@@ -5,8 +5,8 @@ namespace VBaseProject.Service.Authentication
         public static class JWT
         {
             public const string SymmetricSecurityKey = "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p";
-            public const string Issuer = "http://www.myinvapp.com";
-            public const string Audience = "http://www.myinvapp.com";
+            public const string Issuer = "http://www.myapplication.com";
+            public const string Audience = "http://www.myapplication.com";
 
             public const int TokenExpirationMinutes = 30;
         }

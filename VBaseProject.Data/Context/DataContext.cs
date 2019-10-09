@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -40,7 +39,8 @@ namespace VBaseProject.Data.Context
 
             foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
             {
-                entityType.Relational().TableName = entityType.DisplayName();
+                //entityType.Relational().TableName = entityType.DisplayName();
+                modelBuilder.Entity(entityType.ClrType).ToTable(entityType.ClrType.Name);
             }
         }
 

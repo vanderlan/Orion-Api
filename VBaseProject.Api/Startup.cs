@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
@@ -11,10 +12,10 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -33,12 +34,12 @@ namespace VBaseProject
     public class Startup
     {
         private readonly ILoggerFactory _loggerFactory;
-        private readonly IHostingEnvironment _env;
+        private readonly IWebHostEnvironment _env;
         public IConfiguration Configuration { get; set; }
 
         public Startup(
             IConfiguration configuration,
-            IHostingEnvironment env,
+            IWebHostEnvironment env,
             ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
@@ -54,15 +55,12 @@ namespace VBaseProject
 
             ConfigAuthentication(services);
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddControllers();
 
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ValidateModelStateAttribute));
             })
-            .AddJsonOptions(
-                j => j.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
-             )
             .AddFluentValidation(options =>
             {
                 options.RegisterValidatorsFromAssemblyContaining<Startup>();
@@ -77,12 +75,11 @@ namespace VBaseProject
             #region Swagger Config
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
+                c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
                     Title = "VBaseProject API",
-                    Description = "VBase Project - API Description Here!",
-                    TermsOfService = "Private",
+                    Description = "VBase Project - API Description Here!"
                 });
             });
             #endregion
@@ -149,12 +146,11 @@ namespace VBaseProject
         private static void ConfigureDependencyInjection(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWorkEntity, UnitOfWorkEntity>();
-            services.AddScoped<IUnitOfWorkDapper, UnitOfWorkDapper>();
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IUserService, UserService>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             var logger = _loggerFactory.CreateLogger<Startup>();
 
@@ -181,10 +177,8 @@ namespace VBaseProject
             app.UseCors(options => options.WithOrigins("*")
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowCredentials());
-
-            app.UseAuthentication();
+                .AllowAnyHeader());
+            ;
 
             #region  Globalization configuration
 
@@ -219,8 +213,15 @@ namespace VBaseProject
                .AddEnvironmentVariables();
 
             Configuration = builder.Build();
+            app.UseRouting();
 
-            app.UseMvc();
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapDefaultControllerRoute();
+            });
         }
     }
 }

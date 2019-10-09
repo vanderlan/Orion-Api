@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -15,9 +16,9 @@ namespace VBaseProject.Api.Handler
         private readonly RequestDelegate _next;
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger _logger;
-        private readonly IHostingEnvironment _env;
+        private readonly IHostEnvironment _env;
 
-        public VBaseProjectMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, IHostingEnvironment env)
+        public VBaseProjectMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, IHostEnvironment env)
         {
             _env = env;
             _loggerFactory = loggerFactory;

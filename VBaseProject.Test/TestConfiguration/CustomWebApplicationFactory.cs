@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using VBaseProject.Data.Context;
 
@@ -14,12 +13,10 @@ namespace VBaseProject.Test.TestConfiguration
             {
                 // Create a new service provider.
                 var serviceProvider = new ServiceCollection()
-                    .AddEntityFrameworkInMemoryDatabase()
                     .BuildServiceProvider();
 
                 services.AddDbContext<DataContext>(options =>
                 {
-                    options.UseInMemoryDatabase("InMemoryAppDb");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
 
