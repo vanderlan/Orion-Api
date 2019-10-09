@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\VBaseProject.Data\VBaseProject.Data.csproj" />
     <ProjectReference Include="..\VBaseProject.Entities\VBaseProject.Entities.csproj" />
-    <ProjectReference Include="..\VBaseProject.Extensions\VBaseProject.Resources.csproj" />
+    <ProjectReference Include="..\VBaseProject.Resources\VBaseProject.Resources.csproj" />
   </ItemGroup>
 
 </Project>
