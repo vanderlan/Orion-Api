@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ["VBaseProject.Api/VBaseProject.Api.csproj", "VBaseProject.Api/"]
 COPY ["VBaseProject.Service/VBaseProject.Service.csproj", "VBaseProject.Service/"]
 COPY ["VBaseProject.Entities/VBaseProject.Entities.csproj", "VBaseProject.Entities/"]
-COPY ["VBaseProject.Extensions/VBaseProject.Resources.csproj", "VBaseProject.Extensions/"]
+COPY ["VBaseProject.Resources/VBaseProject.Resources.csproj", "VBaseProject.Extensions/"]
 COPY ["VBaseProject.Data/VBaseProject.Data.csproj", "VBaseProject.Data/"]
 
 RUN dotnet restore "VBaseProject.Api/VBaseProject.Api.csproj"

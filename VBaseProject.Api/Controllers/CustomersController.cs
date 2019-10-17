@@ -39,6 +39,7 @@ namespace VBaseProject.Api.Controllers
 
         [HttpGet("{id}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
             var asset = await _custumerService.FindByIdAsync(id);
