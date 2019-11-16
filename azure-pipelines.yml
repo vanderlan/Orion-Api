@@ -13,10 +13,16 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-
+  
 steps:
+- task: UseDotNet@2
 - task: NuGetToolInstaller@0
 
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '3'
+    includePreviewVersions: true
 - task: NuGetCommand@2
   inputs:
     restoreSolution: '$(solution)'
@@ -28,14 +34,3 @@ steps:
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'Docker'
-    command: 'login'
-
-- task: Docker@2
-  inputs:
-    containerRegistry: 'Docker'
-    repository: 'vbaseprojectapi'
-    command: 'push'
