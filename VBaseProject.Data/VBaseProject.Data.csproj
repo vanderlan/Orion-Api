@@ -5,13 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20190522214932_FixFundamentalistId.cs" />
-    <Compile Remove="Migrations\20190522214932_FixFundamentalistId.Designer.cs" />
-    <Compile Remove="Migrations\20190522215642_CreateFundamentalistTable.cs" />
-    <Compile Remove="Migrations\20190522215642_CreateFundamentalistTable.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

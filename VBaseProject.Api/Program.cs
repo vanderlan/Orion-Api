@@ -40,6 +40,6 @@ namespace VBaseProject
                     logging.ClearProviders();
                     logging.AddConsole();
                 }).UseNLog();
-        
+
     }
 }
