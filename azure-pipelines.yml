@@ -18,10 +18,11 @@ steps:
 - task: UseDotNet@2
 
 - task: UseDotNet@2
+  displayName: 'Install .net core 3.0 (preview)'
   inputs:
-    packageType: 'sdk'
-    version: '3'
-    includePreviewVersions: true
+    packageType: sdk
+    version: '3.0.100-preview6-012264'
+    installationPath: $(Agent.ToolsDirectory)/dotnet
 - task: NuGetToolInstaller@0
 - task: NuGetCommand@2
   inputs:
