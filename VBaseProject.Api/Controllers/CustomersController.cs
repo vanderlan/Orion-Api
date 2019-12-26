@@ -19,18 +19,18 @@ namespace VBaseProject.Api.Controllers
     [AuthorizeFor(Roles.Admin)]
     public class CustomersController : ApiController
     {
-        private readonly ICustomerService _custumerService;
+        private readonly ICustomerService _customerService;
 
         public CustomersController(ICustomerService customerService, IMapper mapper) : base(mapper)
         {
-            _custumerService = customerService;
+            _customerService = customerService;
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromQuery] CustomerFilter filter)
         {
-            var customer = await _custumerService.ListPaginate(filter);
+            var customer = await _customerService.ListPaginate(filter);
 
             var customerOutputList = _mapper.Map<PagedList<CustomerOutput>>(customer);
 
@@ -42,7 +42,7 @@ namespace VBaseProject.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var customer = await _custumerService.FindByIdAsync(id);
+            var customer = await _customerService.FindByIdAsync(id);
             var customerOutput = _mapper.Map<CustomerOutput>(customer);
 
             return Ok(customerOutput);
@@ -55,7 +55,7 @@ namespace VBaseProject.Api.Controllers
         {
             var customer = _mapper.Map<Customer>(customerInput);
 
-            var created = await _custumerService.AddAsync(customer);
+            var created = await _customerService.AddAsync(customer);
 
             return Created(_mapper.Map<CustomerOutput>(created));
         }
@@ -69,7 +69,7 @@ namespace VBaseProject.Api.Controllers
             customerInput.PublicId = id;
             var customer = _mapper.Map<Customer>(customerInput);
 
-            await _custumerService.UpdateAsync(customer);
+            await _customerService.UpdateAsync(customer);
 
             return Accepted();
         }
@@ -79,7 +79,7 @@ namespace VBaseProject.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete(string id)
         {
-            await _custumerService.DeleteAsync(id);
+            await _customerService.DeleteAsync(id);
 
             return NoContent();
         }
