@@ -21,8 +21,8 @@ namespace VBaseProject.Data.UnitOfWork
             DbContext = new DataContext(GetOptions(connection));
         }
 
-        private ICustomerRepository _assetRepository;
-        public ICustomerRepository CustomerRepository => _assetRepository ?? (_assetRepository = new CustomerRepository(DbContext));
+        private ICustomerRepository _customerRepository;
+        public ICustomerRepository CustomerRepository => _customerRepository ?? (_customerRepository = new CustomerRepository(DbContext));
 
         private IUserRepository _userRepository;
         public IUserRepository UserRepository => _userRepository ?? (_userRepository = new UserRepository(DbContext));

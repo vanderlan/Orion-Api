@@ -21,20 +21,20 @@ namespace VBaseProject.Api.Controllers
     {
         private readonly ICustomerService _custumerService;
 
-        public CustomersController(ICustomerService assetService, IMapper mapper) : base(mapper)
+        public CustomersController(ICustomerService customerService, IMapper mapper) : base(mapper)
         {
-            _custumerService = assetService;
+            _custumerService = customerService;
         }
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromQuery] CustomerFilter filter)
         {
-            var asset = await _custumerService.ListPaginate(filter);
+            var customer = await _custumerService.ListPaginate(filter);
 
-            var assetOutputList = _mapper.Map<PagedList<CustomerOutput>>(asset);
+            var customerOutputList = _mapper.Map<PagedList<CustomerOutput>>(customer);
 
-            return Ok(assetOutputList);
+            return Ok(customerOutputList);
         }
 
         [HttpGet("{id}")]
@@ -42,20 +42,20 @@ namespace VBaseProject.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Get(string id)
         {
-            var asset = await _custumerService.FindByIdAsync(id);
-            var assetOutput = _mapper.Map<CustomerOutput>(asset);
+            var customer = await _custumerService.FindByIdAsync(id);
+            var customerOutput = _mapper.Map<CustomerOutput>(customer);
 
-            return Ok(assetOutput);
+            return Ok(customerOutput);
         }
 
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.Created)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> Post([FromBody] CustomerInput assetInput)
+        public async Task<IActionResult> Post([FromBody] CustomerInput customerInput)
         {
-            var asset = _mapper.Map<Customer>(assetInput);
+            var customer = _mapper.Map<Customer>(customerInput);
 
-            var created = await _custumerService.AddAsync(asset);
+            var created = await _custumerService.AddAsync(customer);
 
             return Created(_mapper.Map<CustomerOutput>(created));
         }
@@ -64,12 +64,12 @@ namespace VBaseProject.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        public async Task<IActionResult> Put(string id, [FromBody]  CustomerInput assetInput)
+        public async Task<IActionResult> Put(string id, [FromBody]  CustomerInput customerInput)
         {
-            assetInput.PublicId = id;
-            var asset = _mapper.Map<Customer>(assetInput);
+            customerInput.PublicId = id;
+            var customer = _mapper.Map<Customer>(customerInput);
 
-            await _custumerService.UpdateAsync(asset);
+            await _custumerService.UpdateAsync(customer);
 
             return Accepted();
         }
