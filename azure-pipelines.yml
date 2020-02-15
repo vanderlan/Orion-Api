@@ -1,6 +1,8 @@
 trigger:
-- master
-- tags
+    branches:
+        include:
+        - master
+        - refs/tags/build*
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -37,4 +39,4 @@ steps:
       displayName: "Upload Artifacts"
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'build'
+        artifactName: 'builds'

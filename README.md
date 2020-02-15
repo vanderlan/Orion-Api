@@ -40,14 +40,15 @@ VBase Project - A project reference for building C# and ASP Net Core REST APIs
 5.  Base Repository
 6.  Environments configuration
 7.	CORS Configuration
-8.	All API calls use async
-9.	(optional use) Docker and Docker-Compose
+8.	Async API methods
+9.	Docker and Docker-Compose (optional use)
 10.	API Version Configuration (by x-api-version header attribute)
 11. Globalization
+12.	In Memory database for Testing
+13.	Azure Pipeline Configuration with YAML file
 
 
 ##### Todo 
 1.	Advanced Permissions Configuration
 2.	API Test
-3.	In Memory database for Testing
 4.	Logout
