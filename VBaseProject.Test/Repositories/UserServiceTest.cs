@@ -33,7 +33,7 @@ namespace VBaseProject.Test.Repositories
 
 			var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
 
-			Assert.Equal(userSaved.FirstName, "ffa");
+			Assert.Equal(userFound.FirstName, name);
 		}
     }
 }
