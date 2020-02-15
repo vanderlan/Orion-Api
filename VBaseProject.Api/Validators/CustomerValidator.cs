@@ -10,7 +10,6 @@ namespace VBaseProject.Api.Validators
     {
         public CustomerValidator(IStringLocalizer<VBaseProjectResources> stringLocalizer)
         {
-
             RuleFor(c => c)
                 .NotNull()
                 .OnAnyFailure(x =>

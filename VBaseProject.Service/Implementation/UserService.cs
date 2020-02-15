@@ -1,10 +1,12 @@
+using Microsoft.Extensions.Localization;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using System.Threading.Tasks;
 using VBaseProject.Data.UnitOfWork;
 using VBaseProject.Entities.Domain;
+using VBaseProject.Resources;
+using VBaseProject.Service.Exceptions;
+using VBaseProject.Service.Extensions;
 using VBaseProject.Service.Interfaces;
 
 namespace VBaseProject.Service.Implementation
@@ -12,15 +14,21 @@ namespace VBaseProject.Service.Implementation
     public class UserService : IUserService
     {
         private readonly IUnitOfWorkEntity unitOfWork;
+        private readonly IStringLocalizer<VBaseProjectResources> messages;
 
-        public UserService(IUnitOfWorkEntity unitOfWork)
+        public UserService(IUnitOfWorkEntity unitOfWork, IStringLocalizer<VBaseProjectResources> messages)
         {
             this.unitOfWork = unitOfWork;
+            this.messages = messages;
         }
 
         public async Task<User> AddAsync(User entity)
         {
-            entity.Password = ToSHA512(entity.Password);
+            if (string.IsNullOrEmpty(entity.Password))
+                //TODO: Use messages
+                throw new BusinessException("User.EmptyPassword");
+
+            entity.Password = entity.Password.ToSHA512();
             var added = await unitOfWork.UserRepository.AddAsync(entity);
             await unitOfWork.CommitAsync();
 
@@ -45,7 +53,7 @@ namespace VBaseProject.Service.Implementation
 
         public async Task<User> LoginAsync(string email, string password)
         {
-            return await unitOfWork.UserRepository.LoginAsync(email, ToSHA512(password));
+            return await unitOfWork.UserRepository.LoginAsync(email, password.ToSHA512());
         }
 
         public async Task UpdateAsync(User entity)
@@ -59,25 +67,6 @@ namespace VBaseProject.Service.Implementation
             unitOfWork.UserRepository.Update(entitySaved);
 
             await unitOfWork.CommitAsync();
-        }
-
-        private static string ToSHA512(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-            {
-                return text;
-            }
-
-            var crypt = new SHA512Managed();
-            byte[] crypto = crypt.ComputeHash(Encoding.ASCII.GetBytes(text), 0, Encoding.ASCII.GetByteCount(text));
-            var stringBuilder = new StringBuilder();
-
-            foreach (byte theByte in crypto)
-            {
-                stringBuilder.Append(theByte.ToString("x2"));
-            }
-
-            return stringBuilder.ToString();
         }
 
         public async Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken)

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using VBaseProject.Data.Context;
 
-namespace VBaseProject.Test.Repositories
+namespace VBaseProject.Test.Configuration
 {
     public class TestBootstrapper
     {

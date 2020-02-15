@@ -129,4 +129,7 @@
   <data name="Customer.NullEntity" xml:space="preserve">
     <value>O cliente não pode ser encontrado</value>
   </data>
+  <data name="User.EmptyPassword" xml:space="preserve">
+    <value>A senha do usuário é obrigatória</value>
+  </data>
 </root>

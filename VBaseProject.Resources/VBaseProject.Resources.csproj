@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ApplicationConfig\" />
+    <Compile Remove="ApplicationConfig\**" />
+    <EmbeddedResource Remove="ApplicationConfig\**" />
+    <None Remove="ApplicationConfig\**" />
   </ItemGroup>
 
   <ItemGroup>
