@@ -21,8 +21,8 @@ steps:
       displayName: "Test"
       inputs:
         command: test
-        projects: '**/*tests/*.csproj'
-        arguments: '--configuration $(buildConfiguration)'
+        projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
+        arguments: '--configuration $(BuildConfiguration)'
 
     - task: DotNetCoreCLI@2
       displayName: "Publish"
