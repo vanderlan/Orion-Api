@@ -2,14 +2,14 @@ version: '3'
 
 services:
   api:
-    image: vbaseprojectapi
+    image: backend
     build:
       context: .
     ports:
       - "8000:5000"
       # ext : docker-image
     networks:
-      - vbaseproject-network
+      - backend-network
 networks:
-    vbaseproject-network:
+    backend-network:
         driver: nat
