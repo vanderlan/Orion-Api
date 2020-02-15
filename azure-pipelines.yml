@@ -1,5 +1,6 @@
 trigger:
 - master
+- tags
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -36,4 +37,4 @@ steps:
       displayName: "Upload Artifacts"
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
-        artifactName: 'hanselminutes' 
+        artifactName: '$(Build.SourceBranch)-$(date:yyyyMMdd)'
