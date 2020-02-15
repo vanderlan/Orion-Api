@@ -20,6 +20,7 @@ namespace VBaseProject.Service.Implementation
 
         public async Task<User> AddAsync(User entity)
         {
+            entity.Password = ToSHA512(entity.Password);
             var added = await unitOfWork.UserRepository.AddAsync(entity);
             await unitOfWork.CommitAsync();
 
@@ -60,7 +61,7 @@ namespace VBaseProject.Service.Implementation
             await unitOfWork.CommitAsync();
         }
 
-        public static string ToSHA512(string text)
+        private static string ToSHA512(string text)
         {
             if (string.IsNullOrEmpty(text))
             {

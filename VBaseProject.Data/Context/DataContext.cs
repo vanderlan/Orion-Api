@@ -10,6 +10,8 @@ namespace VBaseProject.Data.Context
 {
     public class DataContext : DbContext
     {
+        public ModelBuilder ModelBuilder { get; private set; }
+
         public DataContext() : base(GetOptions())
         {
 

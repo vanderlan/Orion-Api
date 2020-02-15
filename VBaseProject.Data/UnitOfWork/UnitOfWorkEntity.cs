@@ -21,6 +21,11 @@ namespace VBaseProject.Data.UnitOfWork
             DbContext = new DataContext(GetOptions(connection));
         }
 
+        public UnitOfWorkEntity(DbContextOptions<DataContext> dbContextOptions)
+        {
+            DbContext = new DataContext(dbContextOptions);
+        }
+
         private ICustomerRepository _customerRepository;
         public ICustomerRepository CustomerRepository => _customerRepository ?? (_customerRepository = new CustomerRepository(DbContext));
 
@@ -28,6 +33,7 @@ namespace VBaseProject.Data.UnitOfWork
         public IUserRepository UserRepository => _userRepository ?? (_userRepository = new UserRepository(DbContext));
 
         private IRefreshTokenRepository _refreshTokenRepository;
+
         public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ?? (_refreshTokenRepository = new RefreshTokenRepository(DbContext));
 
         public async Task CommitAsync()

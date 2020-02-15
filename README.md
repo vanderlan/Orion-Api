@@ -19,7 +19,7 @@ VBase Project - A project reference for building C# and ASP Net Core REST APIs
 
 3.  Swagger
 4.  Fluent Validation
-5.  Identity Authentication
+5.  Microsoft Identity Authentication
 
 	5.1	JWT Token;
 
