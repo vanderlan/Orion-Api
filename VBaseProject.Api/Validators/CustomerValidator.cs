@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using System;
 using VBaseProject.Api.AutoMapper.Input;
 using VBaseProject.Resources;
+using static VBaseProject.Resources.Messages.MessagesKeys;
 
 namespace VBaseProject.Api.Validators
 {
@@ -14,20 +15,20 @@ namespace VBaseProject.Api.Validators
                 .NotNull()
                 .OnAnyFailure(x =>
                 {
-                    throw new ArgumentNullException(stringLocalizer["Customer.NullEntity"]);
+                    throw new ArgumentNullException(stringLocalizer[CustomerMessages.NullEntity]);
                 });
 
             RuleFor(c => c.Name)
-                .NotEmpty().WithMessage(stringLocalizer["Customer.InvalidName"])
-                 .NotNull().WithMessage(stringLocalizer["Customer.InvalidName"]);
+                .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidName])
+                 .NotNull().WithMessage(stringLocalizer[CustomerMessages.InvalidName]);
 
             RuleFor(c => c.Address)
-               .NotEmpty().WithMessage(stringLocalizer["Customer.InvalidAddress"])
-                .NotNull().WithMessage(stringLocalizer["Customer.InvalidAddress"]);
+               .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidAddress])
+                .NotNull().WithMessage(stringLocalizer[CustomerMessages.InvalidAddress]);
 
             RuleFor(c => c.PhoneNumber)
-                .NotEmpty().WithMessage(stringLocalizer["Customer.InvalidPhoneNumber"])
-                 .NotNull().WithMessage(stringLocalizer["Customer.InvalidPhoneNumber"]);
+                .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidPhoneNumber])
+                 .NotNull().WithMessage(stringLocalizer[CustomerMessages.InvalidPhoneNumber]);
         }
     }
 }

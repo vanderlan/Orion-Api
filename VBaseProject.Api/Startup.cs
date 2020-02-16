@@ -23,9 +23,7 @@ using VBaseProject.Api;
 using VBaseProject.Api.AutoMapper.Config;
 using VBaseProject.Api.Handler;
 using VBaseProject.Data.Context;
-using VBaseProject.Data.UnitOfWork;
-using VBaseProject.Service.Implementation;
-using VBaseProject.Service.Interfaces;
+using VBaseProject.Service.DependenciesConfig;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject
@@ -68,7 +66,6 @@ namespace VBaseProject
             .AddDataAnnotationsLocalization();
 
             services.Configure<DatabaseOptions>(Configuration.GetSection("DatabaseOptions"));
-
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
 
             #region Swagger Config
@@ -83,7 +80,7 @@ namespace VBaseProject
             });
             #endregion
 
-            //API VERSION CONFIG
+            #region API Version Config
             services.AddApiVersioning(o =>
             {
                 o.ReportApiVersions = true;
@@ -91,8 +88,9 @@ namespace VBaseProject
                 o.DefaultApiVersion = new ApiVersion(1, 0);
                 o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
             });
+            #endregion
 
-            ConfigureDependencyInjection(services);
+            DependenciesInjectionConfiguration.Configure(services);
             services.AddAutoMapper(typeof(Startup));
             ConfigureMapper(services);
         }
@@ -142,13 +140,6 @@ namespace VBaseProject
             services.AddScoped(_ => { return mapper; });
         }
 
-        private static void ConfigureDependencyInjection(IServiceCollection services)
-        {
-            services.AddScoped<IUnitOfWorkEntity, UnitOfWorkEntity>();
-            services.AddScoped<ICustomerService, CustomerService>();
-            services.AddScoped<IUserService, UserService>();
-        }
-
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
             var logger = _loggerFactory.CreateLogger<Startup>();
@@ -179,7 +170,7 @@ namespace VBaseProject
                 .AllowAnyHeader());
             ;
 
-            #region  Globalization configuration
+            #region Globalization configuration
 
             var defaultCultureInfo = new CultureInfo("pt-BR");
             defaultCultureInfo.NumberFormat.CurrencySymbol = "R$";
@@ -201,7 +192,6 @@ namespace VBaseProject
 
             CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
-
 
             #endregion
 

@@ -132,4 +132,10 @@
   <data name="User.EmptyPassword" xml:space="preserve">
     <value>Is necessary to inform the Password</value>
   </data>
+  <data name="User.InvalidCredentials" xml:space="preserve">
+    <value>Invalid Credentials</value>
+  </data>
+  <data name="User.InvalidRefreshToken" xml:space="preserve">
+    <value>Invalid Refresh Token</value>
+  </data>
 </root>

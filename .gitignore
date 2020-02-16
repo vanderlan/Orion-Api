@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /Invest.Api/InvestApiLog.txt
+/VBaseProject.Test/coverage.json

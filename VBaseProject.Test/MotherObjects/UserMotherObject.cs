@@ -7,7 +7,7 @@ namespace VBaseProject.Test.MotherObjects
     {
         public static User ValidAdminUser()
         {
-            return new User 
+            return new User
             {
                 FirstName = "Michael",
                 LastName = "Philips",

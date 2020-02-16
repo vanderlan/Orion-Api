@@ -132,4 +132,10 @@
   <data name="User.EmptyPassword" xml:space="preserve">
     <value>A senha do usuário é obrigatória</value>
   </data>
+  <data name="User.InvalidCredentials" xml:space="preserve">
+    <value>Usuário e senha inválidos</value>
+  </data>
+  <data name="User.InvalidRefreshToken" xml:space="preserve">
+    <value>Token de atualização inválido</value>
+  </data>
 </root>

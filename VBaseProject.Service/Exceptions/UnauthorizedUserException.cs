@@ -5,12 +5,9 @@ namespace VBaseProject.Service.Exceptions
     [Serializable]
     public class UnauthorizedUserException : BusinessException
     {
-        public string Email { get; private set; }
-
-        public UnauthorizedUserException(string email) : base($"Unauthorized access to the user {email}")
+        public UnauthorizedUserException(string msg) : base(msg)
         {
-            Email = email;
-            Title = "Unauthorized";
+
         }
     }
 }
