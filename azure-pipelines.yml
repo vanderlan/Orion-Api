@@ -28,6 +28,12 @@ steps:
         arguments: '--configuration $(BuildConfiguration)'
 
     - task: DotNetCoreCLI@2
+      inputs:
+        command: test
+        projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
+        arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+    - task: DotNetCoreCLI@2
       displayName: "Publish"
       inputs:
         command: 'publish'
