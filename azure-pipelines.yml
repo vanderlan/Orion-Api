@@ -28,8 +28,8 @@ steps:
         arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\'
     - task: reportgenerator@4
       inputs:
-        reports: '$(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml'
-        targetdir: '$(Build.SourcesDirectory)\coveragereport'
+        reports: '$(Build.SourcesDirectory)\TestResults\Coverage\cobertura.xml'
+        targetdir: '$(Build.SourcesDirectory)\TestResults\Coverage\'
     - task: DotNetCoreCLI@2
       displayName: "Publish"
       inputs:
