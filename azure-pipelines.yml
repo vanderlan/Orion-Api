@@ -24,9 +24,9 @@ steps:
       displayName: "Test"
       inputs:
         command: test
-        projects: '/*.Test/*.csproj'
+        projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
         arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[VBaseProject.*]*" /p:Exclude="[*Test]*"'
-
+    
     - task: DotNetCoreCLI@2
       displayName: "Publish"
       inputs:
