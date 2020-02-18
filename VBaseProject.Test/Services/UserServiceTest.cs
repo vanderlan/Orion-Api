@@ -152,7 +152,7 @@ namespace VBaseProject.Test.Services
 			Assert.NotNull(userByRefreshToken);
 
 			Assert.Equal(userByRefreshToken.Email, userAdded.Email);
-			Assert.Equal(userByRefreshToken.Password, userAdded.Password);
+			Assert.Equal(userByRefreshToken.Password, "userAdded.Password");
 			Assert.Equal(userByRefreshToken.LastName, userAdded.LastName);
 			Assert.Equal(userByRefreshToken.FirstName, userAdded.FirstName);
 		}
