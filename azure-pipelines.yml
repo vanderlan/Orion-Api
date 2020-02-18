@@ -27,6 +27,11 @@ steps:
         projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
         arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[VBaseProject.*]*" /p:Exclude="[*Test]*"'
     
+    - task: codecoveragecomparerbt@1
+      inputs:
+        codecoveragetarget: '85'
+        codecoveragemeasurementmethod: 'Lines'
+
     - task: DotNetCoreCLI@2
       displayName: "Publish"
       inputs:
