@@ -17,7 +17,6 @@ namespace VBaseProject
             try
             {
                 CreateWebHostBuilder(args).Build().Run();
-
             }
             catch (Exception ex)
             {

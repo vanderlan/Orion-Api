@@ -9,6 +9,7 @@ using VBaseProject.Service.Extensions;
 using VBaseProject.Service.Interfaces;
 using VBaseProject.Test.Configuration;
 using VBaseProject.Test.MotherObjects;
+using VBaseProject.Test.Services.BaseService;
 using Xunit;
 using static VBaseProject.Resources.Messages.MessagesKeys;
 
@@ -16,13 +17,11 @@ using static VBaseProject.Resources.Messages.MessagesKeys;
 
 namespace VBaseProject.Test.Services
 {
-	public class UserServiceTest : IClassFixture<DependencyInjectionSetupFixture>
+	public class UserServiceTest : BaseServiceTest
 	{
-		private readonly ServiceProvider _serviceProvider;
-
-		public UserServiceTest(DependencyInjectionSetupFixture fixture)
+		public UserServiceTest(DependencyInjectionSetupFixture fixture) : base(fixture)
 		{
-			_serviceProvider = fixture.ServiceProvider;
+
 		}
 
 		#region User CRUD tests
