@@ -261,3 +261,4 @@ __pycache__/
 *.pyc
 /Invest.Api/InvestApiLog.txt
 /VBaseProject.Test/coverage.json
+/.editorconfig

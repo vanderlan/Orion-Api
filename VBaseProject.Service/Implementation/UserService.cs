@@ -78,9 +78,7 @@ namespace VBaseProject.Service.Implementation
         public async Task<User> GetUserByRefreshToken(string refreshToken)
         {
             if (string.IsNullOrEmpty(refreshToken))
-            {
                 throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken]);
-            }
 
             var token = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Refreshtoken.Equals(refreshToken));
 
@@ -90,6 +88,9 @@ namespace VBaseProject.Service.Implementation
 
                 if (user.Any())
                 {
+                    await _unitOfWork.RefreshTokenRepository.DeleteAsync(token.First().PublicId);
+                    await _unitOfWork.CommitAsync();
+
                     return user?.First() ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken]);
                 }
             }

@@ -22,7 +22,6 @@ using System.Text;
 using VBaseProject.Api;
 using VBaseProject.Api.AutoMapper.Config;
 using VBaseProject.Api.Handler;
-using VBaseProject.Data.Context;
 using VBaseProject.Service.DependenciesConfig;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
@@ -65,7 +64,6 @@ namespace VBaseProject
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization();
 
-            services.Configure<DatabaseOptions>(Configuration.GetSection("DatabaseOptions"));
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
 
             #region Swagger Config

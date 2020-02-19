@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,13 +13,9 @@ namespace VBaseProject.Data.UnitOfWork
     {
         private DataContext DbContext { get; }
 
-        public UnitOfWorkEntity(IOptions<DatabaseOptions> databaseOptions)
+        public UnitOfWorkEntity(IConfiguration configuration)
         {
-            DbContext = new DataContext(GetOptions(databaseOptions.Value.ConnectionString));
-        }
-        public UnitOfWorkEntity(string connection)
-        {
-            DbContext = new DataContext(GetOptions(connection));
+            DbContext = new DataContext(GetOptions(configuration.GetSection("DatabaseOptions:ConnectionString").Value));
         }
 
         public UnitOfWorkEntity(DbContextOptions<DataContext> dbContextOptions)
