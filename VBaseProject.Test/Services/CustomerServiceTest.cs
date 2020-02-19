@@ -26,8 +26,8 @@ namespace VBaseProject.Test.Services
 			using var scope = _serviceProvider.CreateScope();
 			var _customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
-			var CustomerSaved = await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
-			var customerFound = await _customerService.FindByIdAsync(CustomerSaved.PublicId);
+			var customerSaved = await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+			var customerFound = await _customerService.FindByIdAsync(customerSaved.PublicId);
 
 			Assert.NotNull(customerFound);
 			Assert.Equal(CustomerMotherObject.ValidCustomer().Name, customerFound.Name);
@@ -118,6 +118,23 @@ namespace VBaseProject.Test.Services
 
 			Assert.True(customerList.Items.Where(x => x.Name.Equals(CustomerMotherObject.ValidCustomer().Name)).Any());
 			Assert.False(customerList.Items.Where(x => x.Name.Equals(CustomerMotherObject.ValidCustomer2().Name)).Any());
+		}
+
+		[Fact]
+		public async Task ListCustomerPaginatedQuantityTest()
+		{
+			const int expectedQuantity = 1;
+
+			using var scope = _serviceProvider.CreateScope();
+			var _customerService = scope.ServiceProvider.GetService<ICustomerService>();
+
+			await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+			await _customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
+
+			var customerList = await _customerService.ListPaginate(new CustomerFilter { Quantity = expectedQuantity});
+
+			Assert.NotNull(customerList);
+			Assert.Equal(expectedQuantity, customerList.Items.Count);
 		}
 	}
 }

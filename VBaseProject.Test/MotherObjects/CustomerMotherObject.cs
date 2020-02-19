@@ -23,15 +23,5 @@ namespace VBaseProject.Test.MotherObjects
                 PhoneNumber = "+3345656678"
             };
         }
-
-        public static Customer InvalidCustomerWihoutName()
-        {
-            return new Customer
-            {
-                Name = null,
-                Address = "Wall Street, 110",
-                PhoneNumber = "+55989898989"
-            };
-        }
     }
 }

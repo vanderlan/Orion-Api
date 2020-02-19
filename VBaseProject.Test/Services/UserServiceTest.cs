@@ -44,7 +44,7 @@ namespace VBaseProject.Test.Services
 		{
 			using var scope = _serviceProvider.CreateScope();
 			var _userService = scope.ServiceProvider.GetService<IUserService>();
-
+			
 			await Assert.ThrowsAsync<BusinessException>(() => _userService.AddAsync(UserMotherObject.InvalidAdminUserWihoutPassword()));
 		}
 
