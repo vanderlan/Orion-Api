@@ -94,7 +94,7 @@ namespace VBaseProject.Test.Services
 
 			var customerSaved = await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerSaved2 = await _customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
-			
+
 			var customerList = await _customerService.ListPaginate(new CustomerFilter { });
 
 			Assert.NotNull(customerList);
@@ -112,7 +112,7 @@ namespace VBaseProject.Test.Services
 			var customerSaved = await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerSaved2 = await _customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
 
-			var customerList = await _customerService.ListPaginate(new CustomerFilter { Query = CustomerMotherObject.ValidCustomer().Name});
+			var customerList = await _customerService.ListPaginate(new CustomerFilter { Query = CustomerMotherObject.ValidCustomer().Name });
 
 			Assert.NotNull(customerList);
 
@@ -131,7 +131,7 @@ namespace VBaseProject.Test.Services
 			await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			await _customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
 
-			var customerList = await _customerService.ListPaginate(new CustomerFilter { Quantity = expectedQuantity});
+			var customerList = await _customerService.ListPaginate(new CustomerFilter { Quantity = expectedQuantity });
 
 			Assert.NotNull(customerList);
 			Assert.Equal(expectedQuantity, customerList.Items.Count);
