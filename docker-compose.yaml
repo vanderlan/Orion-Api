@@ -1,15 +1,17 @@
-version: '3'
+version: '3.4'
 
 services:
   api:
-    image: backend
+    image: backend:tag
     build:
-      context: .
+      context: ./VBaseProject.Api
+      dockerfile: Dockerfile
     ports:
       - "8000:5000"
-      # ext : docker-image
     networks:
       - backend-network
 networks:
     backend-network:
-        driver: nat
+        driver: bridge
+
+#docker rm $(docker ps -a -q)
