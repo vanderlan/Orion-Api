@@ -11,7 +11,7 @@ VBase Project - A project reference for building C# and ASP Net Core REST APIs
 
 	1.3 Pagination;
 
-	1.4 Otimized for best performance.
+	1.4 Optimized for best performance.
 
 2.  AutoMapper
 
@@ -44,7 +44,7 @@ VBase Project - A project reference for building C# and ASP Net Core REST APIs
 9.	Docker and Docker-Compose (optional use)
 10.	API Version Configuration (by x-api-version header attribute)
 11. Globalization
-12.	In Memory database for Testing
+12.	In-Memory database for Testing
 13.	Azure Pipeline Configuration with YAML file
 
 
