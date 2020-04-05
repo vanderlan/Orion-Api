@@ -262,3 +262,4 @@ __pycache__/
 /Invest.Api/InvestApiLog.txt
 /VBaseProject.Test/coverage.json
 /.editorconfig
+/.sonarqube
