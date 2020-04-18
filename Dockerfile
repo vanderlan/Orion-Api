@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-nanoserver-1809 AS base
+FROM microsoft-dotnet-core-aspnet/3.1.3-alpine3.11 AS base
 WORKDIR /VBaseProject.Api
 EXPOSE 5000
 
