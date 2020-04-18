@@ -55,4 +55,11 @@ steps:
         targetFolder: '/home/vanderlan/builds'
         readyTimeout: '20000'
 
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Docker'
+        repository: 'vbaseprojectapi'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+
 
