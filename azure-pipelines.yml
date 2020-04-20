@@ -45,17 +45,14 @@ steps:
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'builds'
- 
-
-    - task: CopyFilesOverSSH@0
-      inputs:
-        sshEndpoint: 'Google Cloud'
-        sourceFolder: '$(Build.ArtifactStagingDirectory)'
-        contents: '**'
-        targetFolder: '/home/vanderlan/builds'
-        readyTimeout: '20000'
 
     - task: Docker@2
+      displayName: 'Login Docker Hub'
+      inputs:
+        containerRegistry: 'Docker Hub'
+        command: 'login'
+    - task: Docker@2
+      displayName: 'Docker Hub Publish'
       inputs:
         containerRegistry: 'Docker Hub'
         repository: 'vbaseprojectapi'
