@@ -13,12 +13,12 @@ variables:
 steps:
 
     - task: UseDotNet@2 
-      displayName: ".NET Core 3.1.x"
+      displayName: 'Configure .NET Core Version'
       inputs:
         version: '3.1.x'
         packageType: sdk
     - script: dotnet build --configuration $(buildConfiguration)
-      displayName: 'dotnet build $(buildConfiguration)'
+      displayName: 'Build'
 
     - task: DotNetCoreCLI@2
       displayName: "Test"
@@ -28,12 +28,13 @@ steps:
         arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[VBaseProject.*]*" /p:Exclude="[*Test]*"'
     
     - task: codecoveragecomparerbt@1
+      displayName: 'Code Coverage'
       inputs:
         codecoveragetarget: '85'
         codecoveragemeasurementmethod: 'Lines'
 
     - task: DotNetCoreCLI@2
-      displayName: "Publish"
+      displayName: 'Publish artifacts'
       inputs:
         command: 'publish'
         publishWebProjects: true
@@ -41,26 +42,24 @@ steps:
         zipAfterPublish: true
 
     - task: PublishBuildArtifacts@1
-      displayName: "Upload Artifacts"
+      displayName: 'Upload Artifacts'
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'builds'
-    - task: Docker@2
-      displayName: Logout Docker Hub
-      inputs:
-        containerRegistry: 'Docker Hub'
-        command: 'logout'
+    
     - task: Docker@2
       displayName: 'Login Docker Hub'
       inputs:
         containerRegistry: 'Docker Hub'
         command: 'login'
+    
     - task: Docker@2
       displayName: 'Docker Hub Publish'
       inputs:
         containerRegistry: 'Docker Hub'
         repository: 'vanderlangs/vbaseprojectapi'
+        tags: |
+            $(Build.BuildId)
+            latest
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
-
-
