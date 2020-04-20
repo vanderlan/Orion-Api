@@ -59,7 +59,7 @@ steps:
       displayName: 'Docker Hub Publish'
       inputs:
         containerRegistry: 'Docker Hub'
-        repository: 'vbaseprojectapi'
+        repository: 'vanderlangs/vbaseprojectapi'
         command: 'buildAndPush'
         Dockerfile: '**/Dockerfile'
 
