@@ -45,7 +45,11 @@ steps:
       inputs:
         pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
         artifactName: 'builds'
-
+    - task: Docker@2
+      displayName: Logout Docker Hub
+      inputs:
+        containerRegistry: 'Docker Hub'
+        command: 'logout'
     - task: Docker@2
       displayName: 'Login Docker Hub'
       inputs:
