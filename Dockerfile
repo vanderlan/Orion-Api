@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine3.11 AS build
+
 EXPOSE 5000
 
 WORKDIR /app
@@ -6,17 +7,8 @@ WORKDIR /app
 COPY . .
 
 RUN dotnet restore "VBaseProject.Api/VBaseProject.Api.csproj"
+RUN dotnet publish  "VBaseProject.Api/VBaseProject.Api.csproj" -c Release -o /out
 
-WORKDIR /app/VBaseProject.Api
+WORKDIR /out
 
-RUN dotnet build "VBaseProject.Api.csproj" -c Release -o /app
-RUN dotnet publish "VBaseProject.Api.csproj" -c Release -o /app
-
-WORKDIR /app
-
-RUN dotnet --version
 ENTRYPOINT ["dotnet", "VBaseProject.Api.dll"]
-
-#docker build -t backend .
-#docker run -p 8080:5000 backend
-#PORTS ext:docker
