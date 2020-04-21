@@ -36,20 +36,26 @@ VBase Project - A project reference for building C# and ASP Net Core REST APIs
 1.  Business Exceptions
 2.  Exception handler
 3.  Repository Pattern
-4.  Unit Of Work
-5.  Base Repository
-6.  Environments configuration
-7.	CORS Configuration
-8.	Async API methods
-9.	Docker and Docker-Compose (optional use)
-10.	API Version Configuration (by x-api-version header attribute)
-11. Globalization
-12.	In-Memory database for Testing
-13.	Azure Pipeline Configuration with YAML file
+4.	Mother Objects
+5.  Unit Of Work
+6.  Base Repository
+7.  Environments configuration
+8.	CORS Configuration
+9.	Async API methods
+10.	Docker and Docker-Compose
+11.	API Version Configuration (by x-api-version header attribute)
+12. Globalization
+13.	In-Memory database for Testing
+14.	Azure Pipelines
+	
+	14.1 Automated tests;
+	
+	14.2 Continuous Integration;
 
+	14.3 Continuous Delivery.
+
+15. DockerHub Integration
 
 ##### Todo 
 1.	Advanced Permissions Configuration
 2.	API Test
-4.	Logout
-5.  Add Mother Objects
