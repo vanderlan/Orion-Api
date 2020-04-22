@@ -90,7 +90,7 @@ namespace VBaseProject.Api.Controllers
             var token = new JwtSecurityToken(
               issuer: JWT.Issuer,
               audience: JWT.Audience,
-              expires: DateTime.UtcNow.AddMinutes(JWT.TokenExpirationMinutes),
+              expires: DateTime.UtcNow.AddDays(JWT.TokenExpirationDays),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );
