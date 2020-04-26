@@ -20,13 +20,12 @@ steps:
     - script: dotnet build --configuration $(buildConfiguration)
       displayName: 'Build'
 
-      ######## TESTS
-   # - task: DotNetCoreCLI@2
-    #  displayName: "Test"
-     # inputs:
-      #  command: test
-       # projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
-        #arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[VBaseProject.*]*" /p:Exclude="[*Test]*"'
+    - task: DotNetCoreCLI@2
+      displayName: "Test"
+      inputs:
+        command: test
+        projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
+        arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[VBaseProject.*]*" /p:Exclude="[*Test]*"'
     
     - task: codecoveragecomparerbt@1
       displayName: 'Code Coverage'
@@ -34,36 +33,6 @@ steps:
         codecoveragetarget: '85'
         codecoveragemeasurementmethod: 'Lines'
 
-    - task: DotNetCoreCLI@2
-      displayName: "dotnet global test tool install"
-      inputs:
-        command: 'custom'
-        custom: 'tool'
-        arguments: 'install --global dotnet-reportgenerator-globaltool'
-
-    - script: dotnet test VBaseProject.Test/VBaseProject.Test.csproj --logger "trx;LogFileName=testresults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/
-      displayName: 'dotnet test'
-    
-    - script: ls
-
-    - script: reportgenerator "-reports:$(Build.SourcesDirectory)/TestResults/Coverage/**/*.xml" "-targetDir:$(Build.SourcesDirectory)/TestResults/Coverage/Reports" -tag:$(Build.BuildNumber) -reportTypes:htmlInline
-      workingDirectory: $(Build.SourcesDirectory)/VBaseProject.Test
-      displayName: 'dotnet reportgenerator'
-    
-    - task: PublishTestResults@2
-      inputs:
-        testRunner: VSTest
-        testResultsFiles: '**/*.trx'
-        failTaskOnFailedTests: true
-
-   #   - task: PublishCodeCoverageResults@1
-    #    inputs:
-     #     codeCoverageTool: 'cobertura'
-      #    summaryFileLocation: $(Build.SourcesDirectory)/TestResults/Coverage/**/coverage.cobertura.xml
-       #   reportDirectory: $(Build.SourcesDirectory)/TestResults/Coverage/Reports
-        #  failIfCoverageEmpty: false 
-      
-      #############
     - task: DotNetCoreCLI@2
       displayName: 'Publish artifacts'
       inputs:
