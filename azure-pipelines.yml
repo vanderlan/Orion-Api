@@ -35,23 +35,24 @@ steps:
         codecoveragemeasurementmethod: 'Lines'
 
     - task: DotNetCoreCLI@2
-        displayName: "dotnet global test tool install"
-        inputs:
-          command: 'custom'
-          custom: 'tool'
-          arguments: 'install --global dotnet-reportgenerator-globaltool'
+      displayName: "dotnet global test tool install"
+      inputs:
+        command: 'custom'
+        custom: 'tool'
+        arguments: 'install --global dotnet-reportgenerator-globaltool'
 
     - script: dotnet test VBaseProject.Test/VBaseProject.Test.csproj --logger "trx;LogFileName=testresults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/
-        displayName: 'dotnet test'
+      displayName: 'dotnet test'
 
     - script: reportgenerator "-reports:$(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml" "-targetDir:$(Build.SourcesDirectory)/TestResults/Coverage/Reports" -tag:$(Build.BuildNumber) -reportTypes:htmlInline
-        workingDirectory: $(Build.SourcesDirectory)/WebApp.Web.Tests
-        displayName: 'dotnet reportgenerator'
+      workingDirectory: $(Build.SourcesDirectory)/WebApp.Web.Tests
+      displayName: 'dotnet reportgenerator'
+    
     - task: PublishTestResults@2
-        inputs:
-          testRunner: VSTest
-          testResultsFiles: '**/*.trx'
-          failTaskOnFailedTests: true
+      inputs:
+        testRunner: VSTest
+        testResultsFiles: '**/*.trx'
+        failTaskOnFailedTests: true
 
    #   - task: PublishCodeCoverageResults@1
     #    inputs:
