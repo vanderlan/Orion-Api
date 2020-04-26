@@ -45,7 +45,7 @@ steps:
       displayName: 'dotnet test'
 
     - script: reportgenerator "-reports:$(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml" "-targetDir:$(Build.SourcesDirectory)/TestResults/Coverage/Reports" -tag:$(Build.BuildNumber) -reportTypes:htmlInline
-      workingDirectory: $(Build.SourcesDirectory)/WebApp.Web.Tests
+      workingDirectory: $(Build.SourcesDirectory)/VBaseProject.Test
       displayName: 'dotnet reportgenerator'
     
     - task: PublishTestResults@2
