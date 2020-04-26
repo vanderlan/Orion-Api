@@ -43,8 +43,10 @@ steps:
 
     - script: dotnet test VBaseProject.Test/VBaseProject.Test.csproj --logger "trx;LogFileName=testresults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/
       displayName: 'dotnet test'
+    
+    - script: ls
 
-    - script: reportgenerator "-reports:$(Build.SourcesDirectory)/TestResults/Coverage/**/coverage.cobertura.xml" "-targetDir:$(Build.SourcesDirectory)/TestResults/Coverage/Reports" -tag:$(Build.BuildNumber) -reportTypes:htmlInline
+    - script: reportgenerator "-reports:$(Build.SourcesDirectory)/TestResults/Coverage/**/*.xml" "-targetDir:$(Build.SourcesDirectory)/TestResults/Coverage/Reports" -tag:$(Build.BuildNumber) -reportTypes:htmlInline
       workingDirectory: $(Build.SourcesDirectory)/VBaseProject.Test
       displayName: 'dotnet reportgenerator'
     
