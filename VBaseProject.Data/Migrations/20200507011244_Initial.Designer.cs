@@ -10,14 +10,14 @@ using VBaseProject.Data.Context;
 namespace VBaseProject.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191116165607_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200507011244_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.0.0")
+                .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -64,27 +64,33 @@ namespace VBaseProject.Data.Migrations
 
             modelBuilder.Entity("VBaseProject.Entities.Domain.RefreshToken", b =>
                 {
-                    b.Property<int>("RefreshTokenId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Refreshtoken")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(200)")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("PublicId")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
 
-                    b.Property<string>("Refreshtoken")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("RefreshTokenId")
+                        .HasColumnType("int");
 
-                    b.HasKey("RefreshTokenId");
+                    b.HasKey("Refreshtoken");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("RefreshToken");
                 });

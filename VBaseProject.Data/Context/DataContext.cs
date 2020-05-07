@@ -32,13 +32,14 @@ namespace VBaseProject.Data.Context
             var prodConn = "Server=tcp:vbaseproject-api.ddns.net,1433;Initial Catalog=vbaseprojectapi;Persist Security Info=False;User ID=sa;Password=123Ab321;MultipleActiveResultSets=False;Connection Timeout=30;";
             var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VBaseProject;Integrated Security=True;MultipleActiveResultSets=True;";
 
-            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), prodConn).Options;
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new CustomerMapping());
             modelBuilder.ApplyConfiguration(new UserMapping());
+            modelBuilder.ApplyConfiguration(new RefreshTokenMapping());
 
             foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
             {

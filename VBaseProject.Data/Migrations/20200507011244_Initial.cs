@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace VBaseProject.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,17 +29,16 @@ namespace VBaseProject.Data.Migrations
                 name: "RefreshToken",
                 columns: table => new
                 {
-                    RefreshTokenId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    PublicId = table.Column<string>(nullable: true),
+                    Refreshtoken = table.Column<string>(maxLength: 50, nullable: false),
+                    PublicId = table.Column<string>(maxLength: 50, nullable: false),
                     LastUpdated = table.Column<DateTime>(nullable: false),
                     CreatedAt = table.Column<DateTime>(nullable: false),
-                    Refreshtoken = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true)
+                    RefreshTokenId = table.Column<int>(nullable: false),
+                    Email = table.Column<string>(maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshToken", x => x.RefreshTokenId);
+                    table.PrimaryKey("PK_RefreshToken", x => x.Refreshtoken);
                 });
 
             migrationBuilder.CreateTable(
@@ -66,6 +65,12 @@ namespace VBaseProject.Data.Migrations
                 name: "IX_Customer_Name",
                 table: "Customer",
                 column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_Email",
+                table: "RefreshToken",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
