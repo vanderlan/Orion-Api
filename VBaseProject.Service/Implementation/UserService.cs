@@ -51,7 +51,7 @@ namespace VBaseProject.Service.Implementation
         {
             var user = await _unitOfWork.UserRepository.LoginAsync(email, password.ToSHA512());
 
-            return user ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidCredentials]);
+            return user ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidCredentials], _resourceMessages[AutheticationMessages.AuthenticationError]);
         }
 
         public async Task UpdateAsync(User entity)
@@ -79,7 +79,7 @@ namespace VBaseProject.Service.Implementation
         {
             if (string.IsNullOrEmpty(refreshToken))
             {
-                throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken]);
+                throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken], _resourceMessages[AutheticationMessages.AuthenticationError]);
             }
 
             var token = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Refreshtoken.Equals(refreshToken));
@@ -93,11 +93,11 @@ namespace VBaseProject.Service.Implementation
                     await _unitOfWork.RefreshTokenRepository.DeleteAsync(token.First().PublicId);
                     await _unitOfWork.CommitAsync();
 
-                    return user?.First() ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken]);
+                    return user?.First() ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken], _resourceMessages[AutheticationMessages.AuthenticationError]);
                 }
             }
 
-            throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken]);
+            throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken], _resourceMessages[AutheticationMessages.AuthenticationError]);
         }
     }
 }

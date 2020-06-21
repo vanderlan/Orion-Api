@@ -210,7 +210,7 @@ namespace VBaseProject
             var supportedCultures = new List<CultureInfo>
             {
                 defaultCultureInfo,
-                new CultureInfo("en-US")
+                new CultureInfo("pt-BR")
             };
 
             var globalizationOptions = new RequestLocalizationOptions

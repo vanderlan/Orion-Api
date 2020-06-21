@@ -12,6 +12,11 @@
             public const string InvalidRefreshToken = "User.InvalidRefreshToken";
         }
 
+        public class AutheticationMessages
+        {
+            public const string AuthenticationError = "Authentication.Error";
+        }
+
         public class CustomerMessages
         {
             public const string NullEntity = "Customer.NullEntity";
