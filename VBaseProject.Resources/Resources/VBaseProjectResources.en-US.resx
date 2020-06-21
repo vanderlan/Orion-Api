@@ -132,6 +132,12 @@
   <data name="Customer.NullEntity" xml:space="preserve">
     <value>The Customer can't be found</value>
   </data>
+  <data name="ExceptionTitle.ValidationError" xml:space="preserve">
+    <value>Validation Error</value>
+  </data>
+  <data name="User.EmailExists" xml:space="preserve">
+    <value>There is already a user with this email</value>
+  </data>
   <data name="User.EmptyPassword" xml:space="preserve">
     <value>Is necessary to inform the Password</value>
   </data>

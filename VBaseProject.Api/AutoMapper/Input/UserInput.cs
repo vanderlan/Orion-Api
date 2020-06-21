@@ -1,16 +1,14 @@
-
 using VBaseProject.Entities.Enuns;
-using VBaseProject.Service.Authentication;
 
-namespace VBaseProject.Api.AutoMapper.Output
+namespace VBaseProject.Api.AutoMapper.Input
 {
-    public class UserOutput
+    public class UserInput
     {
         public string PublicId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
+        public string Password { get; set; }
         public UserProfile Profile { get; set; }
-        public string ProfileDescription => Profile == UserProfile.Admin ? AuthenticationConfiguration.Roles.Admin : AuthenticationConfiguration.Roles.Customer;
     }
 }

@@ -15,6 +15,10 @@ namespace VBaseProject.Service.Exceptions
         {
 
         }
+        public BusinessException(string message, string title) : base(message)
+        {
+            Title = title;
+        }
 
         public BusinessException(string message, Exception innerException) : base(message, innerException)
         {

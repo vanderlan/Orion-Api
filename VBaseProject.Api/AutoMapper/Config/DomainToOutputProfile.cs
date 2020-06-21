@@ -11,6 +11,7 @@ namespace VBaseProject.Api.AutoMapper.Config
         {
             CreateMap<Customer, CustomerOutput>();
             CreateMap<PagedList<Customer>, PagedList<CustomerOutput>>();
+            CreateMap<PagedList<User>, PagedList<UserOutput>>();
 
             CreateMap<User, UserOutput>()
                 .ForMember(x => x.ProfileDescription, opt => opt.Ignore());

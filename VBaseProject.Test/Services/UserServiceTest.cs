@@ -37,6 +37,8 @@ namespace VBaseProject.Test.Services
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
             Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
 
         [Fact]
@@ -91,6 +93,8 @@ namespace VBaseProject.Test.Services
             Assert.Equal(userFound.Password, userEdited.Password);
             Assert.Equal(userFound.LastName, userEdited.LastName);
             Assert.Equal(userFound.FirstName, userEdited.FirstName);
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
 
         #endregion
@@ -115,6 +119,8 @@ namespace VBaseProject.Test.Services
             Assert.Equal(userLoged.Password, userAdded.Password);
             Assert.Equal(userLoged.LastName, userAdded.LastName);
             Assert.Equal(userLoged.FirstName, userAdded.FirstName);
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
 
         [Fact]
@@ -129,6 +135,8 @@ namespace VBaseProject.Test.Services
             Assert.NotNull(userFound);
 
             await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.LoginAsync(userFound.Email, "wrong pass"));
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
 
         [Fact]
@@ -154,6 +162,8 @@ namespace VBaseProject.Test.Services
             Assert.Equal(userByRefreshToken.Password, userAdded.Password);
             Assert.Equal(userByRefreshToken.LastName, userAdded.LastName);
             Assert.Equal(userByRefreshToken.FirstName, userAdded.FirstName);
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
 
         [Fact]
@@ -175,6 +185,8 @@ namespace VBaseProject.Test.Services
             var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.GetUserByRefreshToken(null));
 
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
 
         [Fact]

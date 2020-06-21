@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Data.UnitOfWork;
 using VBaseProject.Entities.Domain;
+using VBaseProject.Entities.Filter;
+using VBaseProject.Entities.ValueObjects.Pagination;
 using VBaseProject.Resources;
 using VBaseProject.Service.Exceptions;
 using VBaseProject.Service.Extensions;
@@ -14,26 +16,37 @@ namespace VBaseProject.Service.Implementation
     public class UserService : IUserService
     {
         private readonly IUnitOfWorkEntity _unitOfWork;
-        private readonly IStringLocalizer<VBaseProjectResources> _resourceMessages;
+        private readonly IStringLocalizer<VBaseProjectResources> _messages;
 
         public UserService(IUnitOfWorkEntity unitOfWork, IStringLocalizer<VBaseProjectResources> resourceMessages)
         {
             _unitOfWork = unitOfWork;
-            _resourceMessages = resourceMessages;
+            _messages = resourceMessages;
         }
 
-        public async Task<User> AddAsync(User entity)
+        public async Task<User> AddAsync(User user)
         {
-            if (string.IsNullOrEmpty(entity.Password))
-            {
-                throw new BusinessException(_resourceMessages[UserMessages.EmptyPasword]);
-            }
+            if (string.IsNullOrEmpty(user.Password))
+                throw new BusinessException(_messages[UserMessages.EmptyPasword]);
 
-            entity.Password = entity.Password.ToSHA512();
-            var added = await _unitOfWork.UserRepository.AddAsync(entity);
+            await ValidateUser(user);
+
+            user.Password = user.Password.ToSHA512();
+            var added = await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.CommitAsync();
 
             return added;
+        }
+
+        private async Task ValidateUser(User user)
+        {
+            var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
+
+            if (userFound != null)
+            {
+                if (userFound.PublicId != user.PublicId)
+                    throw new ConflictException(_messages[UserMessages.EmailExists], _messages[ExceptionsTitles.ValidationError]);
+            }
         }
 
         public async Task DeleteAsync(string id)
@@ -51,16 +64,18 @@ namespace VBaseProject.Service.Implementation
         {
             var user = await _unitOfWork.UserRepository.LoginAsync(email, password.ToSHA512());
 
-            return user ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidCredentials], _resourceMessages[AutheticationMessages.AuthenticationError]);
+            return user ?? throw new UnauthorizedUserException(_messages[UserMessages.InvalidCredentials], _messages[ExceptionsTitles.AuthenticationError]);
         }
 
-        public async Task UpdateAsync(User entity)
+        public async Task UpdateAsync(User user)
         {
-            var entitySaved = await FindByIdAsync(entity.PublicId);
+            var entitySaved = await FindByIdAsync(user.PublicId);
 
-            entitySaved.Email = entity.FirstName;
-            entitySaved.LastName = entity.LastName;
-            entitySaved.FirstName = entity.FirstName;
+            await ValidateUser(user);
+
+            entitySaved.Email = user.Email;
+            entitySaved.LastName = user.LastName;
+            entitySaved.FirstName = user.FirstName;
 
             _unitOfWork.UserRepository.Update(entitySaved);
 
@@ -79,7 +94,10 @@ namespace VBaseProject.Service.Implementation
         {
             if (string.IsNullOrEmpty(refreshToken))
             {
-                throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken], _resourceMessages[AutheticationMessages.AuthenticationError]);
+                throw new UnauthorizedUserException(
+                    _messages[UserMessages.InvalidRefreshToken], 
+                    _messages[ExceptionsTitles.AuthenticationError]
+                );
             }
 
             var token = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Refreshtoken.Equals(refreshToken));
@@ -93,11 +111,16 @@ namespace VBaseProject.Service.Implementation
                     await _unitOfWork.RefreshTokenRepository.DeleteAsync(token.First().PublicId);
                     await _unitOfWork.CommitAsync();
 
-                    return user?.First() ?? throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken], _resourceMessages[AutheticationMessages.AuthenticationError]);
+                    return user?.First() ?? throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
                 }
             }
 
-            throw new UnauthorizedUserException(_resourceMessages[UserMessages.InvalidRefreshToken], _resourceMessages[AutheticationMessages.AuthenticationError]);
+            throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
+        }
+
+        public async Task<PagedList<User>> ListPaginate(UserFilter filter)
+        {
+            return await  _unitOfWork.UserRepository.ListPaginate(filter);
         }
     }
 }

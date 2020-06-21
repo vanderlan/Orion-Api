@@ -10,7 +10,7 @@ namespace VBaseProject.Service.Exceptions
 
         }
 
-        public ConflictException(string message) : base(message)
+        public ConflictException(string message, string title) : base(message, title)
         {
 
         }

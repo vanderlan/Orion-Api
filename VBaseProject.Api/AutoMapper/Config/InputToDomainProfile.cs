@@ -12,6 +12,11 @@ namespace VBaseProject.Api.AutoMapper.Config
                 .ForMember(x => x.CustomerId, opt => opt.Ignore())
                 .ForMember(x => x.LastUpdated, opt => opt.Ignore())
                 .ForMember(x => x.CreatedAt, opt => opt.Ignore());
+
+            CreateMap<UserInput, User>()
+              .ForMember(x => x.UserId, opt => opt.Ignore())
+              .ForMember(x => x.LastUpdated, opt => opt.Ignore())
+              .ForMember(x => x.CreatedAt, opt => opt.Ignore());
         }
     }
 }
