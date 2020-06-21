@@ -208,6 +208,8 @@ namespace VBaseProject.Test.Services
             var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.GetUserByRefreshToken("wrong refresh token"));
 
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
+
+            await _userService.DeleteAsync(userFound.PublicId);
         }
         #endregion
     }
