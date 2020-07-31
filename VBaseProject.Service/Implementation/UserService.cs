@@ -84,6 +84,11 @@ namespace VBaseProject.Service.Implementation
 
         public async Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken)
         {
+            var existentRt = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Email == refreshToken.Email);
+
+            if (existentRt.Any())
+                return existentRt.First();
+
             var added = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
             await _unitOfWork.CommitAsync();
 
