@@ -152,9 +152,9 @@ namespace VBaseProject.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            await _userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            var refreshTokenAdded = await _userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var userByRefreshToken = await _userService.GetUserByRefreshToken(refreshToken);
+            var userByRefreshToken = await _userService.GetUserByRefreshToken(refreshTokenAdded.Refreshtoken);
 
             Assert.NotNull(userByRefreshToken);
 
