@@ -65,6 +65,7 @@ namespace VBaseProject
             .AddDataAnnotationsLocalization();
 
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
+            services.AddHealthChecks();
 
             #region Swagger Config
 
@@ -221,6 +222,8 @@ namespace VBaseProject
             };
 
             app.UseRequestLocalization(globalizationOptions);
+            
+            app.UseHealthChecks("/health");
 
             CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
