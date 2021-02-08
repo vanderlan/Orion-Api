@@ -1,3 +1,5 @@
+![.NET](https://github.com/vanderlan/BaseProject/workflows/.NET/badge.svg)
+
 # Introduction 
 
 VBase Project - A project reference for building C# and ASP Net Core REST APIs
