@@ -47,7 +47,7 @@ namespace VBaseProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            ValidatorOptions.CascadeMode = CascadeMode.StopOnFirstFailure;
+            ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 
             ConfigAuthentication(services);
 
