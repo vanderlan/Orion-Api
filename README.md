@@ -1,4 +1,5 @@
 ![.NET](https://github.com/vanderlan/BaseProject/workflows/.NET/badge.svg)
+[![Coverage Status](https://coveralls.io/repos/github/vanderlan/BaseProject/badge.svg?branch=master)](https://coveralls.io/github/vanderlan/BaseProject?branch=master)
 
 # Introduction 
 
