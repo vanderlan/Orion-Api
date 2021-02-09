@@ -3,6 +3,7 @@ using Microsoft.Extensions.Localization;
 using System;
 using System.Threading.Tasks;
 using VBaseProject.Entities.Domain;
+using VBaseProject.Entities.Filter;
 using VBaseProject.Resources;
 using VBaseProject.Service.Exceptions;
 using VBaseProject.Service.Extensions;
@@ -12,8 +13,6 @@ using VBaseProject.Test.MotherObjects;
 using VBaseProject.Test.Services.BaseService;
 using Xunit;
 using static VBaseProject.Resources.Messages.MessagesKeys;
-
-//coverlet .\bin\Debug\netcoreapp3.1\VBaseProject.Api.dll --target "dotnet" --targetargs "test --no-build"
 
 namespace VBaseProject.Test.Services
 {
@@ -37,6 +36,41 @@ namespace VBaseProject.Test.Services
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
             Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+
+            await _userService.DeleteAsync(userFound.PublicId);
+        }
+
+        [Fact]
+        public async Task AddDuplicatedUserTest()
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var _userService = scope.ServiceProvider.GetService<IUserService>();
+
+            var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
+
+            Assert.NotNull(userFound);
+            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
+            Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+
+            await Assert.ThrowsAsync<ConflictException>(() => _userService.AddAsync(UserMotherObject.ValidAdminUser()));
+
+            await _userService.DeleteAsync(userFound.PublicId);
+        }
+        [Fact]
+        public async Task ListUserPaginatedTest()
+        {
+            var userCount = 1;
+
+            using var scope = _serviceProvider.CreateScope();
+            var _userService = scope.ServiceProvider.GetService<IUserService>();
+
+            var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
+
+            var userPaginated = await _userService.ListPaginate(new UserFilter());
+
+            Assert.Equal(userCount, userPaginated.Count);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }

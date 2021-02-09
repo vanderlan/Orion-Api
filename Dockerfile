@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-alpine3.11 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
 
 EXPOSE 5000
 

@@ -9,8 +9,6 @@ using VBaseProject.Test.MotherObjects;
 using VBaseProject.Test.Services.BaseService;
 using Xunit;
 
-//coverlet .\bin\Debug\netcoreapp3.1\VBaseProject.Api.dll --target "dotnet" --targetargs "test --no-build"
-
 namespace VBaseProject.Test.Services
 {
     public class CustomerServiceTest : BaseServiceTest
