@@ -1,65 +1,57 @@
-![.NET](https://github.com/vanderlan/BaseProject/workflows/.NET/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/github/vanderlan/BaseProject/badge.svg?branch=master)](https://coveralls.io/github/vanderlan/BaseProject?branch=master)
+# **VBase Project**
 
-# Introduction 
+![.NET](https://github.com/vanderlan/BaseProject/workflows/.NET/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/BaseProject/badge.svg?branch=master)](https://coveralls.io/github/vanderlan/BaseProject?branch=master)
 
-VBase Project - A project reference for building C# and ASP Net Core REST APIs
+**About this Project**
 
-##### Libraries
+A project reference for creating REST C # and ASP Net Core APIs.
+The main objective of starting projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
 
-1.	Entity Framework Core;
+**Libraries**
 
-	1.1	Fluent API;
++ Entity Framework Core;
+	+ Fluent API;
+	+ CreatedAt and UpdatedAt by default;
+	+ Pagination;
+	+ Optimized for best performance.
 
-	1.2	CreatedAt and UpdatedAt by default;
++ AutoMapper
+	+ Unmapped members Configuration
+	+ Swagger
+	+ Fluent Validation
 
-	1.3 Pagination;
++ Microsoft Identity Authentication
+	+ JWT Token;
+	+ Claims and profiles configuration;
+	+ Personalized decorators;
+	+ Refresh Token.
 
-	1.4 Optimized for best performance.
++ NLog
 
-2.  AutoMapper
+**+ Configurations and Patterns**
 
-	2.1	Unmapped members Configuration
+	Business Exceptions
+	Exception handler
+	Repository Pattern
+	Mother Objects
+	Unit Of Work
+	Base Repository
+	Environments configuration
+	CORS Configuration
+	Async API methods
+	Docker and Docker-Compose
+	API Version Configuration (by x-api-version header attribute)
+	Globalization
+	In-Memory database for Testing
 
-3.  Swagger
-4.  Fluent Validation
-5.  Microsoft Identity Authentication
+**CI & CD**
 
-	5.1	JWT Token;
+	Automated tests;
+	Continuous Integration;
+	Continuous Delivery.
+	DockerHub Integration
 
-	5.2 Claims and profiles configuration;
+**Todo**
 
-	5.3	Personalized decorators;
-
-	5.4	Refresh Token.
-
-6.	NLog
-
-##### Configurations and Patterns
-
-1.  Business Exceptions
-2.  Exception handler
-3.  Repository Pattern
-4.	Mother Objects
-5.  Unit Of Work
-6.  Base Repository
-7.  Environments configuration
-8.	CORS Configuration
-9.	Async API methods
-10.	Docker and Docker-Compose
-11.	API Version Configuration (by x-api-version header attribute)
-12. Globalization
-13.	In-Memory database for Testing
-14.	Azure Pipelines
-	
-	14.1 Automated tests;
-	
-	14.2 Continuous Integration;
-
-	14.3 Continuous Delivery.
-
-15. DockerHub Integration
-
-##### Todo 
-1.	Advanced Permissions Configuration
-2.	API Test
+	Advanced Permissions Configuration
+	API Test
