@@ -30,28 +30,28 @@ The main objective of starting projects with a clean and simple architecture, wi
 
 **Configurations and Patterns**
 
-	Business Exceptions
-	Exception handler
-	Repository Pattern
-	Mother Objects
-	Unit Of Work
-	Base Repository
-	Environments configuration
-	CORS Configuration
-	Async API methods
-	Docker and Docker-Compose
-	API Version Configuration (by x-api-version header attribute)
-	Globalization
-	In-Memory database for Testing
+	1. Business Exceptions;
+	2. Exception handler;
+	3. Repository Pattern;
+	4. Mother Objects;
+	5. Unit Of Work;
+	6. Base Repository;
+	7. Environments configuration;
+	8. CORS Configuration;
+	9. Async API methods;
+	10. Docker and Docker-Compose;
+	11. API Version Configuration (by x-api-version header attribute);
+	12. Globalization;
+	13. In-Memory database for Testing.
 
 **CI & CD**
 
-	Automated tests;
-	Continuous Integration;
-	Continuous Delivery.
-	DockerHub Integration
+	1. Automated tests;
+	2. Continuous Integration;
+	3. Continuous Delivery;
+	4. DockerHub Integration.
 
 **Todo**
 
-	Advanced Permissions Configuration
-	API Test
+	1. Advanced Permissions Configuration;
+	2. API Test.
