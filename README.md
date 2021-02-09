@@ -28,7 +28,7 @@ The main objective of starting projects with a clean and simple architecture, wi
 
 + NLog
 
-**+ Configurations and Patterns**
+**Configurations and Patterns**
 
 	Business Exceptions
 	Exception handler
