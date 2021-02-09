@@ -13,7 +13,7 @@ using Xunit;
 
 namespace VBaseProject.Test.Services
 {
-	public class CustomerServiceTest : BaseServiceTest
+    public class CustomerServiceTest : BaseServiceTest
 	{
 		public CustomerServiceTest(DependencyInjectionSetupFixture fixture) : base(fixture)
 		{

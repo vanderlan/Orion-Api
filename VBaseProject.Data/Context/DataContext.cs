@@ -29,7 +29,6 @@ namespace VBaseProject.Data.Context
 
         private static DbContextOptions GetOptions()
         {
-            var prodConn = "Server=tcp:vbaseproject-api.ddns.net,1433;Initial Catalog=vbaseprojectapi;Persist Security Info=False;User ID=sa;Password=123Ab321;MultipleActiveResultSets=False;Connection Timeout=30;";
             var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VBaseProject;Integrated Security=True;MultipleActiveResultSets=True;";
 
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
@@ -43,7 +42,6 @@ namespace VBaseProject.Data.Context
 
             foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
             {
-                //entityType.Relational().TableName = entityType.DisplayName();
                 modelBuilder.Entity(entityType.ClrType).ToTable(entityType.ClrType.Name);
             }
         }
