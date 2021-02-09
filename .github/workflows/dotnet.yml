@@ -24,6 +24,7 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Code Coverage
       run: |
+        dotnet add package coverlet.msbuild
         cd ./VBaseProject.Test/
         dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
     - name: Publish coverage report to coveralls.io
