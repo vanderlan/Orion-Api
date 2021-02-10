@@ -34,6 +34,7 @@ jobs:
         path-to-lcov: ./VBaseProject.Test/TestResults/coverage.info   
     
   push_to_registry:
+    needs: [build]
     name: Docker Hub
     runs-on: ubuntu-latest
     steps:
