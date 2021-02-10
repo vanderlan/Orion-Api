@@ -1,6 +1,6 @@
 # **VBase Project**
 
-![.NET](https://github.com/vanderlan/BaseProject/workflows/.NET/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/BaseProject/badge.svg?branch=master)](https://coveralls.io/github/vanderlan/BaseProject?branch=master)
+![.NET](https://github.com/vanderlan/VBaseProject-NetCoreAPI/workflows/.NET/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/VBaseProject-NetCoreAPI/badge.svg?branch=master)](https://coveralls.io/github/vanderlan/VBaseProject-NetCoreAPI?branch=master)
 
 **About this Project**
 

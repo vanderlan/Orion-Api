@@ -49,11 +49,6 @@ namespace VBaseProject.Data.Repository.Generic
             return await DataContext.Set<T>().Where(predicate).ToListAsync();
         }
 
-        public async Task<IEnumerable<T>> GetAll()
-        {
-            return await DataContext.Set<T>().ToListAsync();
-        }
-
         public void Update(T entity)
         {
             DataContext.Entry(entity).State = EntityState.Modified;

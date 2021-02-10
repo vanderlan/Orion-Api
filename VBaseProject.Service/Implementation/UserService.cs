@@ -125,7 +125,7 @@ namespace VBaseProject.Service.Implementation
 
         public async Task<PagedList<User>> ListPaginate(UserFilter filter)
         {
-            return await  _unitOfWork.UserRepository.ListPaginate(filter);
+            return await _unitOfWork.UserRepository.ListPaginate(filter);
         }
     }
 }

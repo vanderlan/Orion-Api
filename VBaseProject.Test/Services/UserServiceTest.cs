@@ -68,7 +68,7 @@ namespace VBaseProject.Test.Services
             var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
 
-            var userPaginated = await _userService.ListPaginate(new UserFilter());
+            var userPaginated = await _userService.ListPaginate(new UserFilter { Query = UserMotherObject.ValidAdminUser().FirstName});
 
             Assert.Equal(userCount, userPaginated.Count);
 

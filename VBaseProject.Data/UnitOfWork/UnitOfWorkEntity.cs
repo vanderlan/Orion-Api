@@ -39,8 +39,6 @@ namespace VBaseProject.Data.UnitOfWork
 
         private static DbContextOptions GetOptions(string connection)
         {
-            //var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=MyInv;Integrated Security=True;MultipleActiveResultSets=True;";
-
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
         }
 

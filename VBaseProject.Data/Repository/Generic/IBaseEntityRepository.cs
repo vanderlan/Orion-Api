@@ -11,7 +11,6 @@ namespace VBaseProject.Data.Repository.Generic
         Task AddRange(IEnumerable<T> listEntity);
         Task DeleteAsync(string publicId);
         Task<IEnumerable<T>> GetBy(Expression<Func<T, bool>> predicate);
-        Task<IEnumerable<T>> GetAll();
         Task<T> FindByIdAsync(string publicId);
         void Update(T entity);
     }
