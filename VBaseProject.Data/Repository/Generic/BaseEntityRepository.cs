@@ -25,11 +25,6 @@ namespace VBaseProject.Data.Repository.Generic
             return added.Entity;
         }
 
-        public async Task AddRange(IEnumerable<T> listEntity)
-        {
-            await DataContext.Set<T>().AddRangeAsync(listEntity);
-        }
-
         public async Task DeleteAsync(string publicId)
         {
             var existing = await FindByIdAsync(publicId);

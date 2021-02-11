@@ -21,7 +21,7 @@ using System.Globalization;
 using System.Text;
 using VBaseProject.Api;
 using VBaseProject.Api.AutoMapper.Config;
-using VBaseProject.Api.Handler;
+using VBaseProject.Api.Middleware;
 using VBaseProject.Service.DependenciesConfig;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 

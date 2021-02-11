@@ -9,7 +9,7 @@ using System.Net;
 using System.Threading.Tasks;
 using VBaseProject.Service.Exceptions;
 
-namespace VBaseProject.Api.Handler
+namespace VBaseProject.Api.Middleware
 {
     public class VBaseProjectMiddleware
     {

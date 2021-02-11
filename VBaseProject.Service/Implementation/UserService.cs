@@ -127,5 +127,5 @@ namespace VBaseProject.Service.Implementation
         {
             return await _unitOfWork.UserRepository.ListPaginate(filter);
         }
-    }
+   }
 }

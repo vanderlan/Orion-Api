@@ -7,6 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:5000"
+    container_name: vbaseproject-api
     networks:
       - backend-network
 networks:

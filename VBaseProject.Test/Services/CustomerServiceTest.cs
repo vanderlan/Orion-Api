@@ -127,7 +127,6 @@ namespace VBaseProject.Test.Services
 			var _customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
 			await _customerService.AddAsync(CustomerMotherObject.ValidCustomer());
-			await _customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
 
 			var customerList = await _customerService.ListPaginate(new CustomerFilter { Quantity = expectedQuantity });
 

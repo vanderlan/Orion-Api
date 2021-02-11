@@ -10,17 +10,17 @@ namespace VBaseProject.Service.Implementation
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IUnitOfWorkEntity unitOfWork;
+        private readonly IUnitOfWorkEntity _unitOfWork;
 
         public CustomerService(IUnitOfWorkEntity unitOfWork)
         {
-            this.unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Customer> AddAsync(Customer entity)
         {
-            var added = await unitOfWork.CustomerRepository.AddAsync(entity);
-            await unitOfWork.CommitAsync();
+            var added = await _unitOfWork.CustomerRepository.AddAsync(entity);
+            await _unitOfWork.CommitAsync();
 
             return added;
         }
@@ -34,18 +34,18 @@ namespace VBaseProject.Service.Implementation
                 throw new NotFoundException(id);
             }
 
-            await unitOfWork.CustomerRepository.DeleteAsync(id);
-            await unitOfWork.CommitAsync();
+            await _unitOfWork.CustomerRepository.DeleteAsync(id);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<Customer> FindByIdAsync(string id)
         {
-            return await unitOfWork.CustomerRepository.FindByIdAsync(id);
+            return await _unitOfWork.CustomerRepository.FindByIdAsync(id);
         }
 
         public async Task<PagedList<Customer>> ListPaginate(CustomerFilter filter)
         {
-            return await unitOfWork.CustomerRepository.ListPaginate(filter);
+            return await _unitOfWork.CustomerRepository.ListPaginate(filter);
         }
 
         public async Task UpdateAsync(Customer entity)
@@ -57,8 +57,8 @@ namespace VBaseProject.Service.Implementation
             entitySaved.PhoneNumber = entity.PhoneNumber;
             entitySaved.PublicId = entity.PublicId;
 
-            unitOfWork.CustomerRepository.Update(entitySaved);
-            await unitOfWork.CommitAsync();
+            _unitOfWork.CustomerRepository.Update(entitySaved);
+            await _unitOfWork.CommitAsync();
         }
     }
 }
