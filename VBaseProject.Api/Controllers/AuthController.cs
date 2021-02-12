@@ -33,22 +33,7 @@ namespace VBaseProject.Api.Controllers
         {
             var userOutput = _mapper.Map<UserOutput>(await _userService.LoginAsync(model.Email, model.Password));
 
-            if (userOutput != null)
-            {
-                JwtSecurityToken token = CreateToken(userOutput);
-
-                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
-
-                return Ok(
-                  new
-                  {
-                      token = new JwtSecurityTokenHandler().WriteToken(token),
-                      expiration = token.ValidTo,
-                      refreshToken = refreshToken.Refreshtoken
-                  });
-            }
-
-            return Unauthorized();
+            return await AuthorizeUser(userOutput);
         }
 
         [Route("RefreshToken/{refresh}")]
@@ -58,9 +43,14 @@ namespace VBaseProject.Api.Controllers
         {
             var userOutput = _mapper.Map<UserOutput>(await _userService.GetUserByRefreshToken(refresh));
 
+            return await AuthorizeUser(userOutput);
+        }
+
+        private async Task<ActionResult> AuthorizeUser(UserOutput userOutput)
+        {
             if (userOutput != null)
             {
-                JwtSecurityToken token = CreateToken(userOutput);
+                var token = CreateToken(userOutput);
 
                 var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
 
