@@ -71,15 +71,20 @@ namespace VBaseProject.Api.Middleware
                 errorResponse.Title = businessException.Title;
             }
 
+            await ProccessResponse(context, status, errorResponse);
+        }
+
+        private async Task ProccessResponse(HttpContext context, HttpStatusCode status, ExceptionResponse errorResponse)
+        {
             var errrorReturn = JsonConvert.SerializeObject(errorResponse);
 
             _logger.LogError(errrorReturn);
 
-            var retorno = JsonConvert.SerializeObject(errorResponse);
+            var responseReturn = JsonConvert.SerializeObject(errorResponse);
 
             context.Response.StatusCode = (int)status;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(retorno);
+            await context.Response.WriteAsync(responseReturn);
         }
     }
 
