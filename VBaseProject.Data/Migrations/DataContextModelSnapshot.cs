@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using VBaseProject.Data.Context;
 
 namespace VBaseProject.Data.Migrations
 {
+    [ExcludeFromCodeCoverage]
     [DbContext(typeof(DataContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
