@@ -29,7 +29,7 @@ namespace VBaseProject.Api.Controllers
         [Route("login")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> Login([FromBody] UserLoginModel model)
+        public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
             var userOutput = _mapper.Map<UserOutput>(await _userService.LoginAsync(model.Email, model.Password));
 
@@ -39,14 +39,14 @@ namespace VBaseProject.Api.Controllers
         [Route("RefreshToken/{refresh}")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<ActionResult> RefreshToken(string refresh)
+        public async Task<IActionResult> RefreshToken(string refresh)
         {
             var userOutput = _mapper.Map<UserOutput>(await _userService.GetUserByRefreshToken(refresh));
 
             return await AuthorizeUser(userOutput);
         }
 
-        private async Task<ActionResult> AuthorizeUser(UserOutput userOutput)
+        private async Task<IActionResult> AuthorizeUser(UserOutput userOutput)
         {
             if (userOutput != null)
             {

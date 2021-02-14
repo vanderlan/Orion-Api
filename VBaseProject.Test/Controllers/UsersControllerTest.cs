@@ -100,7 +100,7 @@ namespace VBaseProject.Test.Controllers
             var userListPaginated = new PagedList<User>(userList, 4);
 
             userServiceMock.Setup(x => x.FindByIdAsync(UserMotherObject.ValidAdminUser().PublicId)).ReturnsAsync(UserMotherObject.ValidAdminUser());
-            userServiceMock.Setup(x => x.AddAsync(UserMotherObject.ValidAdminUser())).ReturnsAsync(UserMotherObject.ValidAdminUser());
+            userServiceMock.Setup(x => x.AddAsync(It.IsAny<User>())).ReturnsAsync(UserMotherObject.ValidAdminUser());
             userServiceMock.Setup(x => x.UpdateAsync(It.IsAny<User>())).Verifiable();
             userServiceMock.Setup(x => x.DeleteAsync(UserMotherObject.ValidAdminUser().PublicId)).Verifiable();
             userServiceMock.Setup(x => x.ListPaginate(It.IsAny<UserFilter>())).

@@ -1,4 +1,5 @@
-﻿using VBaseProject.Entities.Domain;
+﻿using VBaseProject.Api.AutoMapper.Input;
+using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Test.MotherObjects
 {
@@ -23,5 +24,16 @@ namespace VBaseProject.Test.MotherObjects
                 PhoneNumber = "+3345656678"
             };
         }
+
+        public static CustomerInput ValidCustomerInput()
+        {
+            return new CustomerInput
+            {
+                Name = "Michael",
+                Address = "Wall Street, 110",
+                PhoneNumber = "+55989898989"
+            };
+        }
+
     }
 }
