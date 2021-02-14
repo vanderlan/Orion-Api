@@ -1,4 +1,5 @@
-﻿using System;
+﻿using VBaseProject.Api.AutoMapper.Input;
+using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Enuns;
 
@@ -15,7 +16,30 @@ namespace VBaseProject.Test.MotherObjects
                 Email = "michaelfilips@gmail.com",
                 Password = "123",
                 Profile = UserProfile.Admin,
-                PublicId = Guid.NewGuid().ToString()
+                PublicId = "aeb2d208-d3c6-4304-8d85-30a899f0043a"
+            };
+        }
+
+        public static UserInput ValidAdminUserInput()
+        {
+            return new UserInput
+            {
+                FirstName = "Michael",
+                LastName = "Philips",
+                Email = "michaelfilips@gmail.com",
+                Password = "123",
+                Profile = UserProfile.Admin
+            };
+        }
+
+        public static UserOutput ValidAdminUserOutput()
+        {
+            return new UserOutput
+            {
+                FirstName = "Michael",
+                LastName = "Philips",
+                Email = "michaelfilips@gmail.com",
+                Profile = UserProfile.Admin
             };
         }
 
