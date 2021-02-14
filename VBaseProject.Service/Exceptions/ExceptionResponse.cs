@@ -12,6 +12,7 @@ namespace VBaseProject.Service.Exceptions
         public string Title { get; set; }
         public string NotificationType { get; set; }
     }
+
     public enum NotificationType
     {
         Info = 1,
