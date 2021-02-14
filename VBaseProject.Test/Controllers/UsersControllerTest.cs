@@ -16,7 +16,7 @@ namespace VBaseProject.Test.Controllers
 {
     public class UsersControllerTestTest : BaseControllerTest
     {
-        private UsersController usersController;
+        private UsersController _usersController;
 
         public UsersControllerTestTest()
         {
@@ -26,7 +26,7 @@ namespace VBaseProject.Test.Controllers
         [Fact]
         public async Task GetUserValidTest()
         {
-            var result = await usersController.Get(UserMotherObject.ValidAdminUser().PublicId);
+            var result = await _usersController.Get(UserMotherObject.ValidAdminUser().PublicId);
 
             var contentResult = (OkObjectResult) result;
             var user = (UserOutput) contentResult.Value;
@@ -42,7 +42,7 @@ namespace VBaseProject.Test.Controllers
         [Fact]
         public async Task CreateUserValidTest()
         {
-            var result = await usersController.Post(UserMotherObject.ValidAdminUserInput());
+            var result = await _usersController.Post(UserMotherObject.ValidAdminUserInput());
 
             var contentResult = (CreatedResult) result;
 
@@ -54,7 +54,7 @@ namespace VBaseProject.Test.Controllers
         [Fact]
         public async Task EditUserValidTest()
         {
-            var result = await usersController.Put(UserMotherObject.ValidAdminUser().PublicId, UserMotherObject.ValidAdminUserInput());
+            var result = await _usersController.Put(UserMotherObject.ValidAdminUser().PublicId, UserMotherObject.ValidAdminUserInput());
 
             var contentResult = (AcceptedResult) result;
 
@@ -65,7 +65,7 @@ namespace VBaseProject.Test.Controllers
         [Fact]
         public async Task DeleteUserValidTest()
         {
-            var result = await usersController.Delete(UserMotherObject.ValidAdminUser().PublicId);
+            var result = await _usersController.Delete(UserMotherObject.ValidAdminUser().PublicId);
 
             var contentResult = (NoContentResult)result;
 
@@ -76,7 +76,7 @@ namespace VBaseProject.Test.Controllers
         [Fact]
         public async Task ListUsersTest()
         {
-            var result = await usersController.Get(new UserFilter());
+            var result = await _usersController.Get(new UserFilter());
 
             var contentResult = (OkObjectResult) result;
             var userPagedList = (PagedList<UserOutput>) contentResult.Value;
@@ -106,7 +106,7 @@ namespace VBaseProject.Test.Controllers
             userServiceMock.Setup(x => x.ListPaginate(It.IsAny<UserFilter>())).
                 ReturnsAsync(userListPaginated);
 
-            usersController = new UsersController(userServiceMock.Object, _mapper);
+            _usersController = new UsersController(userServiceMock.Object, _mapper);
         }
     }
 }
