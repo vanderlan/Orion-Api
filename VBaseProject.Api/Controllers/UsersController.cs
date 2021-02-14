@@ -64,7 +64,7 @@ namespace VBaseProject.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
         [ProducesResponseType((int)HttpStatusCode.Accepted)]
-        public async Task<IActionResult> Put(string id, [FromBody]  UserInput userInput)
+        public async Task<IActionResult> Put(string id, [FromBody] UserInput userInput)
         {
             userInput.PublicId = id;
             var user = _mapper.Map<User>(userInput);
