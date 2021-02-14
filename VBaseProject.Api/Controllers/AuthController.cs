@@ -55,11 +55,11 @@ namespace VBaseProject.Api.Controllers
                 var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
 
                 return Ok(
-                  new
+                  new UserApiToken
                   {
-                      token = new JwtSecurityTokenHandler().WriteToken(token),
-                      expiration = token.ValidTo,
-                      refreshToken = refreshToken.Refreshtoken
+                      Token = new JwtSecurityTokenHandler().WriteToken(token),
+                      Expiration = token.ValidTo,
+                      RefreshToken = refreshToken.Refreshtoken
                   });
             }
 

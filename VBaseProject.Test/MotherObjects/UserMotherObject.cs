@@ -1,4 +1,5 @@
-﻿using VBaseProject.Entities.Domain;
+﻿using System;
+using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Enuns;
 
 namespace VBaseProject.Test.MotherObjects
@@ -13,7 +14,8 @@ namespace VBaseProject.Test.MotherObjects
                 LastName = "Philips",
                 Email = "michaelfilips@gmail.com",
                 Password = "123",
-                Profile = UserProfile.Admin
+                Profile = UserProfile.Admin,
+                PublicId = Guid.NewGuid().ToString()
             };
         }
 
