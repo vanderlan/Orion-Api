@@ -29,14 +29,14 @@ namespace VBaseProject.Test.Controllers
             var result = await _customersController.Get(CustomerMotherObject.ValidCustomer().PublicId);
 
             var contentResult = (OkObjectResult) result;
-            var user = (CustomerOutput) contentResult.Value;
+            var customer = (CustomerOutput) contentResult.Value;
 
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
             Assert.IsType<CustomerOutput>(contentResult.Value);
-            Assert.Equal(CustomerMotherObject.ValidCustomer().Name, user.Name);
-            Assert.Equal(CustomerMotherObject.ValidCustomer().Address, user.Address);
+            Assert.Equal(CustomerMotherObject.ValidCustomer().Name, customer.Name);
+            Assert.Equal(CustomerMotherObject.ValidCustomer().Address, customer.Address);
         }
 
         [Fact]
@@ -82,17 +82,17 @@ namespace VBaseProject.Test.Controllers
             var result = await _customersController.Get(new CustomerFilter());
 
             var contentResult = (OkObjectResult)result;
-            var userPagedList = (PagedList<CustomerOutput>)contentResult.Value;
+            var customersPagedList = (PagedList<CustomerOutput>)contentResult.Value;
 
-            Assert.Equal(4, userPagedList.Count);
+            Assert.Equal(4, customersPagedList.Count);
             Assert.Equal(200, contentResult.StatusCode);
         }
 
 
         private void SetupServiceMock()
         {
-            var userServiceMock = new Mock<ICustomerService>();
-            var userList = new List<Customer>
+            var customerServiceMock = new Mock<ICustomerService>();
+            var customerList = new List<Customer>
             {
                 CustomerMotherObject.ValidCustomer(),
                 CustomerMotherObject.ValidCustomer(),
@@ -100,16 +100,16 @@ namespace VBaseProject.Test.Controllers
                 CustomerMotherObject.ValidCustomer()
             };
 
-            var customerListPaginated = new PagedList<Customer>(userList, 4);
+            var customerListPaginated = new PagedList<Customer>(customerList, 4);
 
-            userServiceMock.Setup(x => x.FindByIdAsync(CustomerMotherObject.ValidCustomer().PublicId)).ReturnsAsync(CustomerMotherObject.ValidCustomer());
-            userServiceMock.Setup(x => x.AddAsync(It.IsAny<Customer>())).ReturnsAsync(CustomerMotherObject.ValidCustomer());
-            userServiceMock.Setup(x => x.UpdateAsync(It.IsAny<Customer>())).Verifiable();
-            userServiceMock.Setup(x => x.DeleteAsync(CustomerMotherObject.ValidCustomer().PublicId)).Verifiable();
-            userServiceMock.Setup(x => x.ListPaginate(It.IsAny<CustomerFilter>())).
+            customerServiceMock.Setup(x => x.FindByIdAsync(CustomerMotherObject.ValidCustomer().PublicId)).ReturnsAsync(CustomerMotherObject.ValidCustomer());
+            customerServiceMock.Setup(x => x.AddAsync(It.IsAny<Customer>())).ReturnsAsync(CustomerMotherObject.ValidCustomer());
+            customerServiceMock.Setup(x => x.UpdateAsync(It.IsAny<Customer>())).Verifiable();
+            customerServiceMock.Setup(x => x.DeleteAsync(CustomerMotherObject.ValidCustomer().PublicId)).Verifiable();
+            customerServiceMock.Setup(x => x.ListPaginate(It.IsAny<CustomerFilter>())).
                 ReturnsAsync(customerListPaginated);
 
-            _customersController = new CustomersController(userServiceMock.Object, _mapper);
+            _customersController = new CustomersController(customerServiceMock.Object, _mapper);
         }
     }
 }
