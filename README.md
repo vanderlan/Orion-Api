@@ -18,9 +18,8 @@ The main objective of starting projects with a clean and simple architecture, wi
 
 + AutoMapper
 	+ Unmapped members Configuration
-	+ Swagger
-	+ Fluent Validation
-
++ Swagger
++ Fluent Validation
 + Microsoft Identity Authentication
 	+ JWT Token;
 	+ Claims and profiles configuration;
