@@ -223,7 +223,7 @@ namespace VBaseProject
 
             app.UseRequestLocalization(globalizationOptions);
             
-            app.UseHealthChecks("/health");
+            app.UseHealthChecks("/health-check");
 
             CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
