@@ -6,10 +6,6 @@ namespace VBaseProject.Service.Exceptions
     public class BusinessException : Exception
     {
         public string Title { get; set; }
-        public BusinessException()
-        {
-
-        }
 
         public BusinessException(string message) : base(message)
         {
@@ -18,11 +14,6 @@ namespace VBaseProject.Service.Exceptions
         public BusinessException(string message, string title) : base(message)
         {
             Title = title;
-        }
-
-        public BusinessException(string message, Exception innerException) : base(message, innerException)
-        {
-
         }
     }
 }

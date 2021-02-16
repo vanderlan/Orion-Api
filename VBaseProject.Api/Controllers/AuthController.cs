@@ -26,7 +26,7 @@ namespace VBaseProject.Api.Controllers
             _userService = userService;
         }
 
-        [Route("login")]
+        [Route("Login")]
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
