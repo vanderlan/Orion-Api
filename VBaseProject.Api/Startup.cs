@@ -201,8 +201,7 @@ namespace VBaseProject
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
                 .AllowAnyHeader());
-            ;
-
+            
             #region Globalization configuration
 
             var defaultCultureInfo = new CultureInfo("pt-BR");

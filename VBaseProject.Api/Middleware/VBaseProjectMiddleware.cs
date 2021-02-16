@@ -50,7 +50,6 @@ namespace VBaseProject.Api.Middleware
             var status = exception is NotFoundException ? HttpStatusCode.NotFound :
                 exception is ConflictException ? HttpStatusCode.Conflict :
                 exception is UnauthorizedUserException ? HttpStatusCode.Unauthorized :
-                exception is DatabaseException ? HttpStatusCode.BadRequest :
                 exception is BusinessException ? HttpStatusCode.BadRequest
                 : HttpStatusCode.InternalServerError;
 
