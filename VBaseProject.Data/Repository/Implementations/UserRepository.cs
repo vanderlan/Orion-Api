@@ -33,6 +33,10 @@ namespace VBaseProject.Data.Repository.Implementations
             {
                 listQuerable = listQuerable.Where(x => x.FirstName.Contains(filter.Query) || x.LastName.Contains(filter.Query));
             }
+            if (!string.IsNullOrWhiteSpace(filter?.Entity?.FirstName))
+            {
+                listQuerable = listQuerable.Where(x => x.FirstName.Contains(filter.Entity.FirstName));
+            }
 
             var customerList = await listQuerable.OrderBy(x => x.FirstName).Skip(pagination).Take(filter.Quantity).ToListAsync();
 

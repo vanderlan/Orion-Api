@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
@@ -32,10 +33,11 @@ namespace VBaseProject.Test.Services
 
             var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
-
+            
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
             Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+            Assert.True(userFound.UserId > 0);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
@@ -58,7 +60,7 @@ namespace VBaseProject.Test.Services
             await _userService.DeleteAsync(userFound.PublicId);
         }
         [Fact]
-        public async Task ListUserPaginatedTest()
+        public async Task ListUserPaginatedFilterTest()
         {
             var userCount = 1;
 
@@ -68,9 +70,17 @@ namespace VBaseProject.Test.Services
             var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
 
-            var userPaginated = await _userService.ListPaginate(new UserFilter { Query = UserMotherObject.ValidAdminUser().FirstName});
+            var userPaginated = await _userService.ListPaginate(
+                new UserFilter {
+                    Query = UserMotherObject.ValidAdminUser().FirstName,
+                    Entity = new User 
+                    { 
+                        FirstName = UserMotherObject.ValidAdminUser().FirstName 
+                    } 
+                });
 
             Assert.Equal(userCount, userPaginated.Count);
+            Assert.Contains(userPaginated.Items, x => x.FirstName == UserMotherObject.ValidAdminUser().FirstName);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }

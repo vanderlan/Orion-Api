@@ -30,8 +30,8 @@ namespace VBaseProject.Test.Services
 			Assert.NotNull(customerFound);
 			Assert.Equal(CustomerMotherObject.ValidCustomer().Name, customerFound.Name);
 			Assert.Equal(customerFound.PhoneNumber, CustomerMotherObject.ValidCustomer().PhoneNumber);
+			Assert.True(customerFound.CustomerId > 0);
 		}
-
 
 		[Fact]
 		public async Task RemoveCustomerTest()
