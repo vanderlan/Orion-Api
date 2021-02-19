@@ -10,14 +10,14 @@ The main objective of starting projects with a clean and simple architecture, wi
 
 **Libraries**
 
-+ Entity Framework Core;
++ Entity Framework Core
 	+ Fluent API;
 	+ CreatedAt and UpdatedAt by default;
 	+ Pagination;
 	+ Optimized for best performance.
 
 + AutoMapper
-	+ Unmapped members Configuration
+	+ Unmapped members Configuration.
 + Swagger
 + Fluent Validation
 + Microsoft Identity Authentication
@@ -53,5 +53,4 @@ The main objective of starting projects with a clean and simple architecture, wi
 
 **Todo**
 
-	1. Advanced Permissions Configuration;
-	2. API Test.
+	1. API Test.

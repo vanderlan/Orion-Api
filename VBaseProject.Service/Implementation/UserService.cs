@@ -26,12 +26,10 @@ namespace VBaseProject.Service.Implementation
 
         public async Task<User> AddAsync(User user)
         {
-            if (string.IsNullOrEmpty(user.Password))
-                throw new BusinessException(_messages[UserMessages.EmptyPasword]);
-
             await ValidateUser(user);
 
             user.Password = user.Password.ToSHA512();
+
             var added = await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.CommitAsync();
 
@@ -40,6 +38,9 @@ namespace VBaseProject.Service.Implementation
 
         private async Task ValidateUser(User user)
         {
+            if (string.IsNullOrEmpty(user.Password))
+                throw new BusinessException(_messages[UserMessages.EmptyPasword]);
+
             var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
 
             if (userFound != null)

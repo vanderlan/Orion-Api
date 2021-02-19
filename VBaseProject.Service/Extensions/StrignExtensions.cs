@@ -1,3 +1,4 @@
+using System;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -8,11 +9,6 @@ namespace VBaseProject.Service.Extensions
         #region SHA512
         public static string ToSHA512(this string text)
         {
-            if (string.IsNullOrEmpty(text))
-            {
-                return text;
-            }
-
             var crypt = new SHA512Managed();
             byte[] crypto = crypt.ComputeHash(Encoding.ASCII.GetBytes(text), 0, Encoding.ASCII.GetByteCount(text));
             var stringBuilder = new StringBuilder();

@@ -32,10 +32,11 @@ namespace VBaseProject.Test.Services
 
             var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
-
+            
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
             Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+            Assert.True(userFound.UserId > 0);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
@@ -58,7 +59,7 @@ namespace VBaseProject.Test.Services
             await _userService.DeleteAsync(userFound.PublicId);
         }
         [Fact]
-        public async Task ListUserPaginatedTest()
+        public async Task ListUserPaginatedFilterTest()
         {
             var userCount = 1;
 
@@ -68,9 +69,17 @@ namespace VBaseProject.Test.Services
             var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
 
-            var userPaginated = await _userService.ListPaginate(new UserFilter { Query = UserMotherObject.ValidAdminUser().FirstName});
+            var userPaginated = await _userService.ListPaginate(
+                new UserFilter {
+                    Query = UserMotherObject.ValidAdminUser().FirstName,
+                    Entity = new User 
+                    { 
+                        FirstName = UserMotherObject.ValidAdminUser().FirstName 
+                    } 
+                });
 
             Assert.Equal(userCount, userPaginated.Count);
+            Assert.Contains(userPaginated.Items, x => x.FirstName == UserMotherObject.ValidAdminUser().FirstName);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
@@ -245,6 +254,16 @@ namespace VBaseProject.Test.Services
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
+
+        [Fact]
+        public void CryptoSHA512Test()
+        {
+            var stringValidTest = "userPawssTest1234A%@&!";
+            var expectedResult = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
+
+            Assert.Equal(expectedResult, stringValidTest.ToSHA512());
+        }
+
         #endregion
     }
 }
