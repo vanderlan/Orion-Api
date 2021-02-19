@@ -33,23 +33,19 @@ namespace VBaseProject
         private readonly IWebHostEnvironment _env;
         public IConfiguration Configuration { get; set; }
 
-        public Startup(
-            IConfiguration configuration,
-            IWebHostEnvironment env,
-            ILoggerFactory loggerFactory)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
             _loggerFactory = loggerFactory;
             _env = env;
             Configuration = configuration;
         }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
             ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 
-            ConfigAuthentication(services);
+            ConfigureAuthentication(services);
 
             services.AddControllers();
 
@@ -67,8 +63,27 @@ namespace VBaseProject
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
             services.AddHealthChecks();
 
-            #region Swagger Config
+            ConfigureSwagger(services);
+            ConfigureApiVersioning(services);
 
+            DependenciesInjectionConfiguration.Configure(services);
+            services.AddAutoMapper(typeof(Startup));
+            ConfigureMapper(services);
+        }
+
+        private static void ConfigureApiVersioning(IServiceCollection services)
+        {
+            services.AddApiVersioning(o =>
+            {
+                o.ReportApiVersions = true;
+                o.AssumeDefaultVersionWhenUnspecified = true;
+                o.DefaultApiVersion = new ApiVersion(1, 0);
+                o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+            });
+        }
+
+        private static void ConfigureSwagger(IServiceCollection services)
+        {
             //To Disable Swagger in production environment
             //if (!_env.IsProduction())
 
@@ -77,7 +92,7 @@ namespace VBaseProject
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
-                    Title = "VBaseProject API",
+                    Title = "VBase Project API",
                     Description = "VBase Project - API Description Here!"
                 });
 
@@ -93,14 +108,14 @@ namespace VBaseProject
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                    {
+                {
                     {
                         new OpenApiSecurityScheme
                         {
-                        Reference = new OpenApiReference
+                            Reference = new OpenApiReference
                             {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
                             },
                             Scheme = "oauth2",
                             Name = "Bearer",
@@ -110,25 +125,9 @@ namespace VBaseProject
                     }
                 });
             });
-
-            #endregion
-
-            #region API Version Config
-            services.AddApiVersioning(o =>
-            {
-                o.ReportApiVersions = true;
-                o.AssumeDefaultVersionWhenUnspecified = true;
-                o.DefaultApiVersion = new ApiVersion(1, 0);
-                o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-            });
-            #endregion
-
-            DependenciesInjectionConfiguration.Configure(services);
-            services.AddAutoMapper(typeof(Startup));
-            ConfigureMapper(services);
         }
 
-        private static void ConfigAuthentication(IServiceCollection services)
+        private static void ConfigureAuthentication(IServiceCollection services)
         {
             services.AddIdentity<IdentityUser, IdentityRole>(
                             option =>
@@ -201,33 +200,10 @@ namespace VBaseProject
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
                 .AllowAnyHeader());
-            
-            #region Globalization configuration
 
-            var defaultCultureInfo = new CultureInfo("pt-BR");
-            defaultCultureInfo.NumberFormat.CurrencySymbol = "R$";
+            ConfigureGlobalization(app);
 
-            var supportedCultures = new List<CultureInfo>
-            {
-                defaultCultureInfo,
-                new CultureInfo("pt-BR")
-            };
-
-            var globalizationOptions = new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("en-US"),
-                SupportedCultures = supportedCultures,
-                SupportedUICultures = supportedCultures,
-            };
-
-            app.UseRequestLocalization(globalizationOptions);
-            
             app.UseHealthChecks("/health-check");
-
-            CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
-            CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
-
-            #endregion
 
             var builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
@@ -245,6 +221,30 @@ namespace VBaseProject
             {
                 endpoints.MapDefaultControllerRoute();
             });
+        }
+
+        private static void ConfigureGlobalization(IApplicationBuilder app)
+        {
+            var defaultCultureInfo = new CultureInfo("pt-BR");
+            defaultCultureInfo.NumberFormat.CurrencySymbol = "R$";
+
+            var supportedCultures = new List<CultureInfo>
+            {
+                defaultCultureInfo,
+                new CultureInfo("en-US")
+            };
+
+            var globalizationOptions = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures,
+            };
+
+            app.UseRequestLocalization(globalizationOptions);
+
+            CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
         }
     }
 }

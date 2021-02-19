@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
@@ -255,6 +254,16 @@ namespace VBaseProject.Test.Services
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
+
+        [Fact]
+        public void CryptoSHA512Test()
+        {
+            var stringValidTest = "userPawssTest1234A%@&!";
+            var expectedResult = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
+
+            Assert.Equal(expectedResult, stringValidTest.ToSHA512());
+        }
+
         #endregion
     }
 }
