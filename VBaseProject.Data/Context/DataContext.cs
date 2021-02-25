@@ -29,7 +29,7 @@ namespace VBaseProject.Data.Context
 
         private static DbContextOptions GetOptions()
         {
-            var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VBaseProject;Integrated Security=True;MultipleActiveResultSets=True;";
+            var connectionString = "Server=tcp:191.240.163.171,1433;Initial Catalog=VBaseProject;Persist Security Info=False;User ID=sa;Password=123456Ab;MultipleActiveResultSets=False;Connection Timeout=30;";
 
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }

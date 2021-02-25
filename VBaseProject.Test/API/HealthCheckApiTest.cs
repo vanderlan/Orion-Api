@@ -18,6 +18,5 @@ namespace VBaseProject.Test.API
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal(successMessageService, content);
         }
-
     }
 }
