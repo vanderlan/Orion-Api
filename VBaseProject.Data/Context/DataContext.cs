@@ -12,7 +12,7 @@ namespace VBaseProject.Data.Context
     {
         public ModelBuilder ModelBuilder { get; private set; }
 
-        public DataContext() : base(GetOptions())
+        public DataContext() : base(GetDefaultOptions())
         {
 
         }
@@ -27,7 +27,7 @@ namespace VBaseProject.Data.Context
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         #endregion
 
-        private static DbContextOptions GetOptions()
+        private static DbContextOptions GetDefaultOptions()
         {
             var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VBaseProject;Integrated Security=True;MultipleActiveResultSets=True;";
 

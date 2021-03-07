@@ -17,20 +17,22 @@
       },
       "applicationUrl": "http://127.0.0.1:5000"
     },
+    "Test": {
+      "commandName": "Project",
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Test"
+      },
+      "applicationUrl": "http://127.0.0.1:5000"
+    },
     "Production": {
       "commandName": "Project",
+      "launchBrowser": true,
       "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
-      "applicationUrl": "http://127.0.0.1:5000"
-    },
-    "QA": {
-      "commandName": "Project",
-      "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "QA"
-      },
+      "sqlDebugging": false,
       "applicationUrl": "http://127.0.0.1:5000"
     },
     "Docker": {
