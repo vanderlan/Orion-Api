@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Data.Context;
@@ -8,7 +9,7 @@ using VBaseProject.Data.Repository.Interfaces;
 
 namespace VBaseProject.Data.UnitOfWork
 {
-    public class UnitOfWorkEntity : IUnitOfWorkEntity
+    public class UnitOfWorkEntity : IUnitOfWorkEntity, IDisposable
     {
         private DataContext DbContext { get; }
 
@@ -23,14 +24,14 @@ namespace VBaseProject.Data.UnitOfWork
         }
 
         private ICustomerRepository _customerRepository;
-        public ICustomerRepository CustomerRepository => _customerRepository ?? (_customerRepository = new CustomerRepository(DbContext));
+        public ICustomerRepository CustomerRepository => _customerRepository ??= new CustomerRepository(DbContext);
 
         private IUserRepository _userRepository;
-        public IUserRepository UserRepository => _userRepository ?? (_userRepository = new UserRepository(DbContext));
+        public IUserRepository UserRepository => _userRepository ??= new UserRepository(DbContext);
 
         private IRefreshTokenRepository _refreshTokenRepository;
 
-        public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ?? (_refreshTokenRepository = new RefreshTokenRepository(DbContext));
+        public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new RefreshTokenRepository(DbContext);
 
         public async Task CommitAsync()
         {

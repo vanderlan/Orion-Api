@@ -12,7 +12,7 @@ namespace VBaseProject.Data.Context
     {
         public ModelBuilder ModelBuilder { get; private set; }
 
-        public DataContext() : base(GetOptions())
+        public DataContext() : base(GetDefaultOptions())
         {
 
         }
@@ -27,9 +27,9 @@ namespace VBaseProject.Data.Context
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         #endregion
 
-        private static DbContextOptions GetOptions()
+        private static DbContextOptions GetDefaultOptions()
         {
-            var connectionString = "Server=tcp:191.240.163.171,1433;Initial Catalog=VBaseProject;Persist Security Info=False;User ID=sa;Password=123456Ab;MultipleActiveResultSets=False;Connection Timeout=30;";
+            var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=VBaseProject;Integrated Security=True;MultipleActiveResultSets=True;";
 
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }
