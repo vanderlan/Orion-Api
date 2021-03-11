@@ -35,7 +35,7 @@ namespace VBaseProject.Test.Services
             
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
-            Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+            Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
             Assert.True(userFound.UserId > 0);
 
             await _userService.DeleteAsync(userFound.PublicId);
@@ -52,7 +52,7 @@ namespace VBaseProject.Test.Services
 
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
-            Assert.Equal(userFound.FirstName, UserMotherObject.ValidAdminUser().FirstName);
+            Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
 
             await Assert.ThrowsAsync<ConflictException>(() => _userService.AddAsync(UserMotherObject.ValidAdminUser()));
 
@@ -71,15 +71,15 @@ namespace VBaseProject.Test.Services
 
             var userPaginated = await _userService.ListPaginate(
                 new UserFilter {
-                    Query = UserMotherObject.ValidAdminUser().FirstName,
+                    Query = UserMotherObject.ValidAdminUser().Name,
                     Entity = new User 
                     { 
-                        FirstName = UserMotherObject.ValidAdminUser().FirstName 
+                        Name = UserMotherObject.ValidAdminUser().Name 
                     } 
                 });
 
             Assert.Equal(userCount, userPaginated.Count);
-            Assert.Contains(userPaginated.Items, x => x.FirstName == UserMotherObject.ValidAdminUser().FirstName);
+            Assert.Contains(userPaginated.Items, x => x.Name == UserMotherObject.ValidAdminUser().Name);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
@@ -122,8 +122,7 @@ namespace VBaseProject.Test.Services
 
             Assert.NotNull(userFound);
 
-            userFound.FirstName = "Jane";
-            userFound.LastName = "White";
+            userFound.Name = "Jane";
             userFound.Email = "newemail@gmail.com";
             userFound.Password = "123";
 
@@ -134,8 +133,7 @@ namespace VBaseProject.Test.Services
 
             Assert.Equal(userFound.Email, userEdited.Email);
             Assert.Equal(userFound.Password, userEdited.Password);
-            Assert.Equal(userFound.LastName, userEdited.LastName);
-            Assert.Equal(userFound.FirstName, userEdited.FirstName);
+            Assert.Equal(userFound.Name, userEdited.Name);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
@@ -160,8 +158,7 @@ namespace VBaseProject.Test.Services
 
             Assert.Equal(userLoged.Email, userAdded.Email);
             Assert.Equal(userLoged.Password, userAdded.Password);
-            Assert.Equal(userLoged.LastName, userAdded.LastName);
-            Assert.Equal(userLoged.FirstName, userAdded.FirstName);
+            Assert.Equal(userLoged.Name, userAdded.Name);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }
@@ -203,8 +200,7 @@ namespace VBaseProject.Test.Services
 
             Assert.Equal(userByRefreshToken.Email, userAdded.Email);
             Assert.Equal(userByRefreshToken.Password, userAdded.Password);
-            Assert.Equal(userByRefreshToken.LastName, userAdded.LastName);
-            Assert.Equal(userByRefreshToken.FirstName, userAdded.FirstName);
+            Assert.Equal(userByRefreshToken.Name, userAdded.Name);
 
             await _userService.DeleteAsync(userFound.PublicId);
         }

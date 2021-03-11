@@ -36,7 +36,6 @@ namespace VBaseProject.Test.Controllers
 
             Assert.IsType<CustomerOutput>(contentResult.Value);
             Assert.Equal(CustomerMotherObject.ValidCustomer().Name, customer.Name);
-            Assert.Equal(CustomerMotherObject.ValidCustomer().Address, customer.Address);
         }
 
         [Fact]
@@ -51,7 +50,6 @@ namespace VBaseProject.Test.Controllers
             Assert.Equal(201, contentResult.StatusCode);
             Assert.NotNull(contentResult.Value);
             Assert.Equal(CustomerMotherObject.ValidCustomerInput().Name, contentResultObject.Name);
-            Assert.Equal(CustomerMotherObject.ValidCustomerInput().Address, contentResultObject.Address);
         }
 
         [Fact]

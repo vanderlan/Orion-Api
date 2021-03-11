@@ -36,7 +36,7 @@ namespace VBaseProject.Test.Controllers
 
             Assert.IsType<UserOutput>(contentResult.Value);
             Assert.Equal(UserMotherObject.ValidAdminUser().Email, user.Email);
-            Assert.Equal(UserMotherObject.ValidAdminUser().FirstName, user.FirstName);
+            Assert.Equal(UserMotherObject.ValidAdminUser().Name, user.Name);
         }
 
         [Fact]
