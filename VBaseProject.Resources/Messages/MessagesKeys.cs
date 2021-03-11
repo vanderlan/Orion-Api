@@ -22,8 +22,6 @@
         public class CustomerMessages
         {
             public const string NullEntity = "Customer.NullEntity";
-            public const string InvalidAddress = "Customer.InvalidAddress";
-            public const string InvalidPhoneNumber = "Customer.InvalidPhoneNumber";
             public const string InvalidName = "Customer.InvalidName";
         }
     }

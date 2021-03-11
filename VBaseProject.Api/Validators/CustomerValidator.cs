@@ -21,14 +21,6 @@ namespace VBaseProject.Api.Validators
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidName])
                  .NotNull().WithMessage(stringLocalizer[CustomerMessages.InvalidName]);
-
-            RuleFor(c => c.Address)
-               .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidAddress])
-                .NotNull().WithMessage(stringLocalizer[CustomerMessages.InvalidAddress]);
-
-            RuleFor(c => c.PhoneNumber)
-                .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidPhoneNumber])
-                 .NotNull().WithMessage(stringLocalizer[CustomerMessages.InvalidPhoneNumber]);
         }
     }
 }

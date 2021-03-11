@@ -11,8 +11,7 @@ namespace VBaseProject.Test.MotherObjects
         {
             return new User
             {
-                FirstName = "Michael",
-                LastName = "Philips",
+                Name = "Michael Philips",
                 Email = "michaelfilips@gmail.com",
                 Password = "123",
                 Profile = UserProfile.Admin,
@@ -24,8 +23,7 @@ namespace VBaseProject.Test.MotherObjects
         {
             return new UserInput
             {
-                FirstName = "Michael",
-                LastName = "Philips",
+                Name = "Michael Philips",
                 Email = "michaelfilips@gmail.com",
                 Password = "123",
                 Profile = UserProfile.Admin
@@ -36,8 +34,7 @@ namespace VBaseProject.Test.MotherObjects
         {
             return new UserOutput
             {
-                FirstName = "Michael",
-                LastName = "Philips",
+                Name = "Michael Philips",
                 Email = "michaelfilips@gmail.com",
                 Profile = UserProfile.Admin
             };
@@ -47,8 +44,7 @@ namespace VBaseProject.Test.MotherObjects
         {
             return new User
             {
-                FirstName = "Michael",
-                LastName = "Philips",
+                Name = "Michael Philips",
                 Email = "michaelfilips@gmail.com",
                 Password = null,
                 Profile = UserProfile.Admin

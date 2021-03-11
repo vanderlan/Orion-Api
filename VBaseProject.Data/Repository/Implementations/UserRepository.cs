@@ -31,14 +31,14 @@ namespace VBaseProject.Data.Repository.Implementations
 
             if (!string.IsNullOrWhiteSpace(filter.Query))
             {
-                listQuerable = listQuerable.Where(x => x.FirstName.Contains(filter.Query) || x.LastName.Contains(filter.Query));
+                listQuerable = listQuerable.Where(x => x.Name.Contains(filter.Query));
             }
-            if (!string.IsNullOrWhiteSpace(filter?.Entity?.FirstName))
+            if (!string.IsNullOrWhiteSpace(filter?.Entity?.Name))
             {
-                listQuerable = listQuerable.Where(x => x.FirstName.Contains(filter.Entity.FirstName));
+                listQuerable = listQuerable.Where(x => x.Name.Contains(filter.Entity.Name));
             }
 
-            var customerList = await listQuerable.OrderBy(x => x.FirstName).Skip(pagination).Take(filter.Quantity).ToListAsync();
+            var customerList = await listQuerable.OrderBy(x => x.Name).Skip(pagination).Take(filter.Quantity).ToListAsync();
 
             return new PagedList<User>(customerList, listQuerable.Count());
         }

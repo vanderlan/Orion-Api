@@ -9,9 +9,7 @@ namespace VBaseProject.Test.MotherObjects
         {
             return new Customer
             {
-                Name = "Michael",
-                Address = "Wall Street, 110",
-                PhoneNumber = "+55989898989"
+                Name = "Lionel Messi",
             };
         }
 
@@ -20,8 +18,6 @@ namespace VBaseProject.Test.MotherObjects
             return new Customer
             {
                 Name = "Tony Stark",
-                Address = "Orchard Road, Singapura",
-                PhoneNumber = "+3345656678"
             };
         }
 
@@ -29,11 +25,8 @@ namespace VBaseProject.Test.MotherObjects
         {
             return new CustomerInput
             {
-                Name = "Michael",
-                Address = "Wall Street, 110",
-                PhoneNumber = "+55989898989"
+                Name = "Lionel Messi",
             };
         }
-
     }
 }

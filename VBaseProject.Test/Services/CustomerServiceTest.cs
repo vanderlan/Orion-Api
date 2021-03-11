@@ -29,7 +29,6 @@ namespace VBaseProject.Test.Services
 
 			Assert.NotNull(customerFound);
 			Assert.Equal(CustomerMotherObject.ValidCustomer().Name, customerFound.Name);
-			Assert.Equal(customerFound.PhoneNumber, CustomerMotherObject.ValidCustomer().PhoneNumber);
 			Assert.True(customerFound.CustomerId > 0);
 		}
 
@@ -71,8 +70,6 @@ namespace VBaseProject.Test.Services
 			Assert.NotNull(customerFound);
 
 			customerFound.Name = "Jane";
-			customerFound.PhoneNumber = "789879879797";
-			customerFound.Address = "Wall Street";
 
 			await _customerService.UpdateAsync(customerFound);
 			await _customerService.FindByIdAsync(customerSaved.PublicId);
@@ -80,8 +77,6 @@ namespace VBaseProject.Test.Services
 			var customerEdited = await _customerService.FindByIdAsync(customerSaved.PublicId);
 
 			Assert.Equal(customerFound.Name, customerEdited.Name);
-			Assert.Equal(customerFound.PhoneNumber, customerEdited.PhoneNumber);
-			Assert.Equal(customerFound.Address, customerEdited.Address);
 		}
 
 		[Fact]

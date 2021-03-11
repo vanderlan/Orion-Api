@@ -53,8 +53,6 @@ namespace VBaseProject.Service.Implementation
             var entitySaved = await FindByIdAsync(entity.PublicId);
 
             entitySaved.Name = entity.Name;
-            entitySaved.Address = entity.Address;
-            entitySaved.PhoneNumber = entity.PhoneNumber;
             entitySaved.PublicId = entity.PublicId;
 
             _unitOfWork.CustomerRepository.Update(entitySaved);

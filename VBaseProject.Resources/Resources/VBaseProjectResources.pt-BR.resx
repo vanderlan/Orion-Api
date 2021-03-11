@@ -120,14 +120,8 @@
   <data name="Authentication.Error" xml:space="preserve">
     <value>Erro de Autenticação</value>
   </data>
-  <data name="Customer.InvalidAddress" xml:space="preserve">
-    <value>É necessário informar o endereço</value>
-  </data>
   <data name="Customer.InvalidName" xml:space="preserve">
     <value>É necessário informar o nome do cliente</value>
-  </data>
-  <data name="Customer.InvalidPhoneNumber" xml:space="preserve">
-    <value>É necessário informar o número do telefone</value>
   </data>
   <data name="Customer.NullEntity" xml:space="preserve">
     <value>O cliente não pode ser encontrado</value>

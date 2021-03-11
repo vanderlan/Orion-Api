@@ -75,8 +75,7 @@ namespace VBaseProject.Service.Implementation
             await ValidateUser(user);
 
             entitySaved.Email = user.Email;
-            entitySaved.LastName = user.LastName;
-            entitySaved.FirstName = user.FirstName;
+            entitySaved.Name = user.Name;
 
             _unitOfWork.UserRepository.Update(entitySaved);
 

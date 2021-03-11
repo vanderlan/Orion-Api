@@ -10,8 +10,6 @@ namespace VBaseProject.Data.Mapping
         {
             builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
             builder.Property(x => x.PublicId).HasMaxLength(50).IsRequired();
-            builder.Property(x => x.Address).HasMaxLength(200).IsRequired();
-            builder.Property(x => x.PhoneNumber).HasMaxLength(20).IsRequired();
             builder.HasIndex(x => x.Name).IsUnique();
         }
     }

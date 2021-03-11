@@ -70,7 +70,7 @@ namespace VBaseProject.Api.Controllers
         {
             var claim = new[] {
                     new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
-                    new Claim(JwtRegisteredClaimNames.GivenName, userOutput.FirstName),
+                    new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
                     new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
                     new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
                 };
