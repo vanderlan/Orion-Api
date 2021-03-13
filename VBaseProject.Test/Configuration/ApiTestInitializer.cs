@@ -37,7 +37,7 @@ namespace VBaseProject.Test.Configuration
 
             var content = result.Content.ReadAsStringAsync().Result;
 
-            var tokenResult = JsonConvert.DeserializeObject<UserApiToken>(content);
+            var tokenResult = JsonConvert.DeserializeObject<UserApiTokenModel>(content);
 
             AuthToken = tokenResult.Token;
         }

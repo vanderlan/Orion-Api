@@ -9,19 +9,19 @@ namespace VBaseProject.Api.Controllers
     public abstract class ApiController : ControllerBase
     {
         protected readonly IMapper _mapper;
-        protected AuthUser AuthUser => GetAuthenticatedUser();
+        protected AuthUserModel AuthUser => GetAuthenticatedUser();
         public ApiController(IMapper mapper)
         {
             _mapper = mapper;
             _mapper.ConfigurationProvider.AssertConfigurationIsValid();
         }
 
-        private AuthUser GetAuthenticatedUser()
+        private AuthUserModel GetAuthenticatedUser()
         {
             var email = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Email);
             var givenName = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.GivenName);
 
-            return new AuthUser
+            return new AuthUserModel
             {
                 PublicId = User.Identity.Name,
                 Email = email.Value,

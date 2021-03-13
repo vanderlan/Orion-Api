@@ -33,12 +33,12 @@ namespace VBaseProject.Test.Controllers
             );
 
             var contentResult = (OkObjectResult) result;
-            var userApiToken = (UserApiToken) contentResult.Value;
+            var userApiToken = (UserApiTokenModel) contentResult.Value;
 
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
-            Assert.IsType<UserApiToken>(contentResult.Value);
+            Assert.IsType<UserApiTokenModel>(contentResult.Value);
             Assert.NotNull(userApiToken.Token);
             Assert.True(userApiToken.Expiration > DateTime.Now);
         }
@@ -64,16 +64,16 @@ namespace VBaseProject.Test.Controllers
         public async Task RefreshTokenValidTest()
         {
             var result = await authController.RefreshToken(
-                RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken
+                RefreshTokenMotherObject.ValidRefreshTokenModel()
             );
 
             var contentResult = (OkObjectResult)result;
-            var userApiToken = (UserApiToken)contentResult.Value;
+            var userApiToken = (UserApiTokenModel)contentResult.Value;
 
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
-            Assert.IsType<UserApiToken>(contentResult.Value);
+            Assert.IsType<UserApiTokenModel>(contentResult.Value);
             Assert.NotNull(userApiToken.Token);
             Assert.True(userApiToken.Expiration > DateTime.Now);
         }
@@ -81,7 +81,7 @@ namespace VBaseProject.Test.Controllers
         public async Task RefreshTokenInValidTest()
         {
             var result = await authController.RefreshToken(
-                "invalid-token"
+                new RefreshTokenModel { RefreshToken = null}
             );
 
             var contentResult = (UnauthorizedResult)result;

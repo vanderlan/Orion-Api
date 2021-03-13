@@ -1,6 +1,6 @@
 namespace VBaseProject.Api.Models
 {
-    public class AuthUser
+    public class AuthUserModel
     {
         public string PublicId { get; set; }
         public string Email { get; set; }

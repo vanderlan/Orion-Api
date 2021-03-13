@@ -2,7 +2,7 @@
 
 namespace VBaseProject.Api.Models
 {
-    public class UserApiToken
+    public class UserApiTokenModel
     {
         public string Token { get; set; }
         public string RefreshToken { get; set; }

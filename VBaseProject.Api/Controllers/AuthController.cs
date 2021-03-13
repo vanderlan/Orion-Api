@@ -36,12 +36,12 @@ namespace VBaseProject.Api.Controllers
             return await AuthorizeUser(userOutput);
         }
 
-        [Route("RefreshToken/{refresh}")]
+        [Route("RefreshToken")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> RefreshToken(string refresh)
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
         {
-            var userOutput = _mapper.Map<UserOutput>(await _userService.GetUserByRefreshToken(refresh));
+            var userOutput = _mapper.Map<UserOutput>(await _userService.GetUserByRefreshToken(refreshTokenModel.RefreshToken));
 
             return await AuthorizeUser(userOutput);
         }
@@ -55,7 +55,7 @@ namespace VBaseProject.Api.Controllers
                 var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
 
                 return Ok(
-                  new UserApiToken
+                  new UserApiTokenModel
                   {
                       Token = new JwtSecurityTokenHandler().WriteToken(token),
                       Expiration = token.ValidTo,
@@ -80,7 +80,7 @@ namespace VBaseProject.Api.Controllers
             var token = new JwtSecurityToken(
               issuer: JWT.Issuer,
               audience: JWT.Audience,
-              expires: DateTime.UtcNow.AddDays(JWT.TokenExpirationDays),
+              expires: DateTime.UtcNow.AddMinutes(JWT.TokenExpirationMinutes),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );
