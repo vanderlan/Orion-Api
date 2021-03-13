@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Api.Models;
 using VBaseProject.Entities.Domain;
+using VBaseProject.Service.Extensions;
 using VBaseProject.Service.Interfaces;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
@@ -52,7 +53,7 @@ namespace VBaseProject.Api.Controllers
             {
                 var token = CreateToken(userOutput);
 
-                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().Replace("-", string.Empty) });
+                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSHA512()});
 
                 return Ok(
                   new UserApiTokenModel
