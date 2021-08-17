@@ -6,7 +6,7 @@
 
 *A project reference for creating REST APIs with C# and .NET (v5.0).*
 
-The main objective of starting projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
+The main objective is to start projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
 
 **Libraries**
 
