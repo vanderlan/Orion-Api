@@ -1,12 +1,12 @@
 # **VBase Project**
 
-![.NET](https://github.com/vanderlan/VBaseProject-NetCoreAPI/workflows/.NET/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/VBaseProject-NetCoreAPI/badge.svg)](https://coveralls.io/github/vanderlan/VBaseProject-NetCoreAPI) <a href="https://codeclimate.com/github/vanderlan/VBaseProject-NetCoreAPI/maintainability"><img src="https://api.codeclimate.com/v1/badges/692bddf02255681fe599/maintainability" /></a> [![GitHub release](https://img.shields.io/github/release/vanderlan/VBaseProject-NetCoreAPI.svg)](https://GitHub.com/dotnet/vanderlan/VBaseProject-NetCoreAPI/) [![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/VBaseProject-NetCoreAPI)](https://github.com/vanderlan/VBaseProject-NetCoreAPI)
+![.NET](https://github.com/vanderlan/VBaseProject-NetCoreAPI/workflows/.NET/badge.svg) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/VBaseProject-NetCoreAPI/badge.svg)](https://coveralls.io/github/vanderlan/VBaseProject-NetCoreAPI) <a href="https://codeclimate.com/github/vanderlan/VBaseProject-NetCoreAPI/maintainability"><img src="https://api.codeclimate.com/v1/badges/692bddf02255681fe599/maintainability" /></a> [![GitHub release](https://img.shields.io/github/release/vanderlan/VBaseProject-NetCoreAPI.svg)](https://GitHub.com/vanderlan/VBaseProject-NetCoreAPI/) [![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/VBaseProject-NetCoreAPI)](https://github.com/vanderlan/VBaseProject-NetCoreAPI)
 
 **About this Project**
 
 *A project reference for creating REST APIs with C# and .NET (v5.0).*
 
-The main objective of starting projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
+The main objective is to start projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
 
 **Libraries**
 
