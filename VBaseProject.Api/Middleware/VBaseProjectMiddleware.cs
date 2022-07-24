@@ -79,11 +79,9 @@ namespace VBaseProject.Api.Middleware
 
             _logger.LogError(errrorReturn);
 
-            var responseReturn = JsonConvert.SerializeObject(errorResponse);
-
             context.Response.StatusCode = (int)status;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(responseReturn);
+            await context.Response.WriteAsync(errrorReturn);
         }
     }
 

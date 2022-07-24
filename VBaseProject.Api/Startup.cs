@@ -1,5 +1,4 @@
 using AutoMapper;
-using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -43,7 +42,6 @@ namespace VBaseProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            ValidatorOptions.Global.CascadeMode = CascadeMode.Continue;
 
             ConfigureAuthentication(services);
 
