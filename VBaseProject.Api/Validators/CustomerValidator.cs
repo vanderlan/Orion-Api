@@ -1,6 +1,5 @@
 using FluentValidation;
 using Microsoft.Extensions.Localization;
-using System;
 using VBaseProject.Api.AutoMapper.Input;
 using VBaseProject.Resources;
 using static VBaseProject.Resources.Messages.MessagesKeys;
@@ -13,10 +12,7 @@ namespace VBaseProject.Api.Validators
         {
             RuleFor(c => c)
                 .NotNull()
-                .OnAnyFailure(x =>
-                {
-                    throw new ArgumentNullException(stringLocalizer[CustomerMessages.NullEntity]);
-                });
+                .WithMessage(stringLocalizer[CustomerMessages.NullEntity]);
 
             RuleFor(c => c.Name)
                 .NotEmpty().WithMessage(stringLocalizer[CustomerMessages.InvalidName])
