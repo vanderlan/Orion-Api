@@ -5,11 +5,11 @@ using VBaseProject.Service.Interfaces;
 
 namespace VBaseProject.Service.DependenciesConfig
 {
-    public class DependenciesInjectionConfiguration
+    public static class DependenciesInjectionConfiguration
     {
         public static void Configure(IServiceCollection services, bool isTest = false)
         {
-            //IF TEST the UnitOfWork are configure to use InMemory Database
+            //IF TEST the UnitOfWork are configured to use InMemory Database
             if (!isTest)
             {
                 services.AddScoped<IUnitOfWorkEntity, UnitOfWorkEntity>();

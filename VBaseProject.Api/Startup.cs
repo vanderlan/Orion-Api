@@ -150,9 +150,9 @@ namespace VBaseProject
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateAudience = true,
-                    ValidAudience = JWT.Audience,
-                    ValidIssuer = JWT.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey)),
+                    ValidAudience = Jwt.Audience,
+                    ValidIssuer = Jwt.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwt.SymmetricSecurityKey)),
                     ClockSkew = TimeSpan.Zero
                 };
             });

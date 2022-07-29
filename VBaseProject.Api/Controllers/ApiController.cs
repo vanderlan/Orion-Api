@@ -10,7 +10,7 @@ namespace VBaseProject.Api.Controllers
     {
         protected readonly IMapper _mapper;
         protected AuthUserModel AuthUser => GetAuthenticatedUser();
-        public ApiController(IMapper mapper)
+        protected ApiController(IMapper mapper)
         {
             _mapper = mapper;
             _mapper.ConfigurationProvider.AssertConfigurationIsValid();

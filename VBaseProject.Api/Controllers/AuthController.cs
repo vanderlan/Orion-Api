@@ -76,12 +76,12 @@ namespace VBaseProject.Api.Controllers
                     new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
                 };
 
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey));
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwt.SymmetricSecurityKey));
 
             var token = new JwtSecurityToken(
-              issuer: JWT.Issuer,
-              audience: JWT.Audience,
-              expires: DateTime.UtcNow.AddMinutes(JWT.TokenExpirationMinutes),
+              issuer: Jwt.Issuer,
+              audience: Jwt.Audience,
+              expires: DateTime.UtcNow.AddMinutes(Jwt.TokenExpirationMinutes),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );
