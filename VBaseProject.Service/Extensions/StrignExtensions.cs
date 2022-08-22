@@ -5,20 +5,21 @@ namespace VBaseProject.Service.Extensions
 {
     public static class StrignExtensions
     {
-        #region SHA512
-        public static string ToSHA512(this string text)
+        public static string ToSha512(this string text)
         {
-            var crypt = new SHA512Managed();
-            byte[] crypto = crypt.ComputeHash(Encoding.ASCII.GetBytes(text), 0, Encoding.ASCII.GetByteCount(text));
-            var stringBuilder = new StringBuilder();
+            using SHA512 hashAlgorithm = SHA512.Create();
 
-            foreach (byte theByte in crypto)
+            var byteValue = Encoding.UTF8.GetBytes(text);
+            var byteHash = hashAlgorithm.ComputeHash(byteValue);
+
+            StringBuilder hex = new();
+
+            foreach (var x in byteHash)
             {
-                stringBuilder.Append(theByte.ToString("x2"));
+                hex.Append(string.Format("{0:x2}", x));
             }
 
-            return stringBuilder.ToString();
+            return hex.ToString();
         }
-        #endregion
     }
 }

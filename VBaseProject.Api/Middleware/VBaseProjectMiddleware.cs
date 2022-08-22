@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
@@ -43,37 +42,39 @@ namespace VBaseProject.Api.Middleware
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
+        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
-            var exception = ex;
-
-            var status = exception is NotFoundException ? HttpStatusCode.NotFound :
-                exception is ConflictException ? HttpStatusCode.Conflict :
-                exception is UnauthorizedUserException ? HttpStatusCode.Unauthorized :
-                exception is BusinessException ? HttpStatusCode.BadRequest
-                : HttpStatusCode.InternalServerError;
+            var statusCode = GetStatusCodeByException(exception);
 
             var errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-            var msg = exception.Message;
 
-            if (ex is BusinessException == false && _env.IsDevelopment())
+            if (exception is not BusinessException && _env.IsDevelopment())
             {
-                errorResponse = new ExceptionResponse(msg, NotificationType.Error);
+                errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
             }
-            if (ex is UnauthorizedUserException)
+            if (exception is UnauthorizedUserException)
             {
-                errorResponse = new ExceptionResponse(ex.Message, NotificationType.Error);
+                errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
             }
 
-            if (ex is BusinessException businessException)
+            if (exception is BusinessException businessException)
             {
                 errorResponse.Title = businessException.Title;
             }
 
-            await ProccessResponse(context, status, errorResponse);
+            await ProccessResponseAsync(context, statusCode, errorResponse);
         }
 
-        private async Task ProccessResponse(HttpContext context, HttpStatusCode status, ExceptionResponse errorResponse)
+        private static HttpStatusCode GetStatusCodeByException(Exception exception)
+        {
+            return exception is NotFoundException ? HttpStatusCode.NotFound :
+                exception is ConflictException ? HttpStatusCode.Conflict :
+                exception is UnauthorizedUserException ? HttpStatusCode.Unauthorized :
+                exception is BusinessException ? HttpStatusCode.BadRequest
+                : HttpStatusCode.InternalServerError;
+        }
+
+        private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode status, ExceptionResponse errorResponse)
         {
             var errrorReturn = JsonConvert.SerializeObject(errorResponse);
 
@@ -81,16 +82,8 @@ namespace VBaseProject.Api.Middleware
 
             context.Response.StatusCode = (int)status;
             context.Response.ContentType = "application/json";
-            await context.Response.WriteAsync(errrorReturn);
-        }
-    }
 
-    // Extension method used to add the middleware to the HTTP request pipeline, on Startup.
-    public static class VBaseProjectMiddlewareExtensions
-    {
-        public static IApplicationBuilder UseVBaseProjectMiddleware(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<VBaseProjectMiddleware>();
+            await context.Response.WriteAsync(errrorReturn);
         }
     }
 }

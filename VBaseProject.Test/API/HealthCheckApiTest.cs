@@ -10,6 +10,8 @@ namespace VBaseProject.Test.API
         [Fact]
         public async Task HealthCheckConfigurationTest()
         {
+            Setup();
+
             var successMessageService = "Healthy";
             var result = await _client.GetAsync("/health-check");
 

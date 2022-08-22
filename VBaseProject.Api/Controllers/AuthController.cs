@@ -53,7 +53,7 @@ namespace VBaseProject.Api.Controllers
             {
                 var token = CreateToken(userOutput);
 
-                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSHA512()});
+                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512()});
 
                 return Ok(
                   new UserApiTokenModel

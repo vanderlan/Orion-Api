@@ -34,7 +34,7 @@ namespace VBaseProject.Test.Services
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
             
             Assert.NotNull(userFound);
-            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
+            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSha512(), userFound.Password);
             Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
             Assert.True(userFound.UserId > 0);
 
@@ -51,7 +51,7 @@ namespace VBaseProject.Test.Services
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
 
             Assert.NotNull(userFound);
-            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSHA512(), userFound.Password);
+            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSha512(), userFound.Password);
             Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
 
             await Assert.ThrowsAsync<ConflictException>(() => _userService.AddAsync(UserMotherObject.ValidAdminUser()));
@@ -257,7 +257,7 @@ namespace VBaseProject.Test.Services
             var stringValidTest = "userPawssTest1234A%@&!";
             var expectedResult = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
 
-            Assert.Equal(expectedResult, stringValidTest.ToSHA512());
+            Assert.Equal(expectedResult, stringValidTest.ToSha512());
         }
 
         #endregion

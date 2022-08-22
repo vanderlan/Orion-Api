@@ -10,7 +10,7 @@ namespace VBaseProject.Service.Interfaces
     {
         Task<User> LoginAsync(string email, string password);
         Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken);
-        Task<User> GetUserByRefreshToken(string refresh);
+        Task<User> GetUserByRefreshToken(string refreshToken);
         Task<PagedList<User>> ListPaginate(UserFilter filter);
     }
 }

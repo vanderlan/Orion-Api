@@ -184,7 +184,7 @@ namespace VBaseProject
                 logger.LogInformation($"Environment: {_env.EnvironmentName}");
                 app.UseHsts();
             }
-            app.UseVBaseProjectMiddleware();
+            app.UseMiddleware<VBaseProjectMiddleware>();
 
             //SWAGGER
             app.UseSwagger();

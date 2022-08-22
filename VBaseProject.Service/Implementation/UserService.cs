@@ -28,7 +28,7 @@ namespace VBaseProject.Service.Implementation
         {
             await ValidateUser(user);
 
-            user.Password = user.Password.ToSHA512();
+            user.Password = user.Password.ToSha512();
 
             var added = await _unitOfWork.UserRepository.AddAsync(user);
             await _unitOfWork.CommitAsync();
@@ -43,27 +43,24 @@ namespace VBaseProject.Service.Implementation
 
             var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
 
-            if (userFound != null)
-            {
-                if (userFound.PublicId != user.PublicId)
-                    throw new ConflictException(_messages[UserMessages.EmailExists], _messages[ExceptionsTitles.ValidationError]);
-            }
+            if (userFound != null && userFound.PublicId != user.PublicId)
+                throw new ConflictException(_messages[UserMessages.EmailExists], _messages[ExceptionsTitles.ValidationError]);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string publicId)
         {
-            await _unitOfWork.UserRepository.DeleteAsync(id);
+            await _unitOfWork.UserRepository.DeleteAsync(publicId);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<User> FindByIdAsync(string id)
+        public async Task<User> FindByIdAsync(string publicId)
         {
-            return await _unitOfWork.UserRepository.FindByIdAsync(id);
+            return await _unitOfWork.UserRepository.FindByIdAsync(publicId);
         }
 
         public async Task<User> LoginAsync(string email, string password)
         {
-            var user = await _unitOfWork.UserRepository.LoginAsync(email, password.ToSHA512());
+            var user = await _unitOfWork.UserRepository.LoginAsync(email, password.ToSha512());
 
             return user ?? throw new UnauthorizedUserException(_messages[UserMessages.InvalidCredentials], _messages[ExceptionsTitles.AuthenticationError]);
         }
@@ -100,7 +97,7 @@ namespace VBaseProject.Service.Implementation
             if (string.IsNullOrEmpty(refreshToken))
             {
                 throw new UnauthorizedUserException(
-                    _messages[UserMessages.InvalidRefreshToken], 
+                    _messages[UserMessages.InvalidRefreshToken],
                     _messages[ExceptionsTitles.AuthenticationError]
                 );
             }
@@ -127,5 +124,5 @@ namespace VBaseProject.Service.Implementation
         {
             return await _unitOfWork.UserRepository.ListPaginate(filter);
         }
-   }
+    }
 }
