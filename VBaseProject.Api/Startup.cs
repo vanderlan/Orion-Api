@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -18,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using VBaseProject.Api;
 using VBaseProject.Api.AutoMapper.Config;
 using VBaseProject.Api.Middleware;
+using VBaseProject.Api.Validators;
 using VBaseProject.Service.DependenciesConfig;
 using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
 
@@ -47,16 +48,12 @@ namespace VBaseProject
 
             services.AddControllers();
 
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(ValidateModelStateAttribute));
-            })
-            .AddFluentValidation(options =>
-            {
-                options.RegisterValidatorsFromAssemblyContaining<Startup>();
-            })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization();
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+
+            services.AddMvc().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                             .AddDataAnnotationsLocalization();
 
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
             services.AddHealthChecks();
@@ -172,7 +169,7 @@ namespace VBaseProject
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            var logger = _loggerFactory.CreateLogger<Startup>();
+            ILogger<Startup> logger = _loggerFactory.CreateLogger<Startup>();
 
             //ENVIRONMENT
             if (env.IsDevelopment())
@@ -203,7 +200,7 @@ namespace VBaseProject
 
             app.UseHealthChecks("/health-check");
 
-            var builder = new ConfigurationBuilder()
+            IConfigurationBuilder builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
