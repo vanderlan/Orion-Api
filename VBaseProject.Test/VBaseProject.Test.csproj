@@ -12,27 +12,31 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="coverlet.msbuild" Version="3.1.2">
+    <PackageReference Include="coverlet.msbuild" Version="3.2.0">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.7" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="6.0.7" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.7" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.7" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
-    <PackageReference Include="Moq" Version="4.18.1" />
-    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.12" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="6.0.12" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.12" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageReference Include="Moq" Version="4.18.3" />
+    <PackageReference Include="xunit" Version="2.4.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.12" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VBaseProject.Api\VBaseProject.Api.csproj" />
-    <ProjectReference Include="..\VBaseProject.Service\VBaseProject.Service.csproj" />
+    <ProjectReference Include="..\VBaseProject.Data\VBaseProject.Data.csproj" />
+    <ProjectReference Include="..\VBaseProject.Domain\VBaseProject.Domain.csproj" />
+    <ProjectReference Include="..\VBaseProject.Entities\VBaseProject.Entities.csproj" />
+    <ProjectReference Include="..\VBaseProject.Ioc\VBaseProject.Ioc.csproj" />
+    <ProjectReference Include="..\VBaseProject.Resources\VBaseProject.Resources.csproj" />
   </ItemGroup>
 
 </Project>

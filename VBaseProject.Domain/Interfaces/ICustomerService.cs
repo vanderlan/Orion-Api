@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Service.Base;
+using VBaseProject.Domain.Base;
 
-namespace VBaseProject.Service.Interfaces
+namespace VBaseProject.Domain.Interfaces
 {
     public interface ICustomerService : IBaseService<Customer>
     {

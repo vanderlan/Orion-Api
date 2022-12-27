@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Data.Context;
 using VBaseProject.Data.Repository.Generic;
-using VBaseProject.Data.Repository.Interfaces;
+using VBaseProject.Domain.Repositories;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;

@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Api.Models;
 using VBaseProject.Entities.Domain;
-using VBaseProject.Service.Extensions;
-using VBaseProject.Service.Interfaces;
-using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
+using VBaseProject.Domain.Extensions;
+using VBaseProject.Domain.Interfaces;
+using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject.Api.Controllers
 {
@@ -53,7 +53,7 @@ namespace VBaseProject.Api.Controllers
             {
                 var token = CreateToken(userOutput);
 
-                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSHA512()});
+                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512()});
 
                 return Ok(
                   new UserApiTokenModel
@@ -76,12 +76,12 @@ namespace VBaseProject.Api.Controllers
                     new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
                 };
 
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey));
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwt.SymmetricSecurityKey));
 
             var token = new JwtSecurityToken(
-              issuer: JWT.Issuer,
-              audience: JWT.Audience,
-              expires: DateTime.UtcNow.AddMinutes(JWT.TokenExpirationMinutes),
+              issuer: Jwt.Issuer,
+              audience: Jwt.Audience,
+              expires: DateTime.UtcNow.AddMinutes(Jwt.TokenExpirationMinutes),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );

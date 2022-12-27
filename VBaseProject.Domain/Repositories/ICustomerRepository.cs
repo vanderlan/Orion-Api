@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
-using VBaseProject.Data.Repository.Generic;
+using VBaseProject.Domain.Repositories.Base;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
 
-namespace VBaseProject.Data.Repository.Interfaces
+namespace VBaseProject.Domain.Repositories
 {
     public interface ICustomerRepository : IBaseEntityRepository<Customer>
     {

@@ -15,7 +15,7 @@ namespace VBaseProject.Test.Configuration
 
         public ApiTestInitializer()
         {
-            Setup();
+
         }
 
         public void Setup()
@@ -25,7 +25,7 @@ namespace VBaseProject.Test.Configuration
             base.ConfigureWebHost(builder);
 
             _client = Server.CreateClient();
-            
+
             AuthUser();
 
             _client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthToken);
@@ -33,9 +33,9 @@ namespace VBaseProject.Test.Configuration
 
         public void AuthUser()
         {
-            var result = _client.PostAsync("/api/Auth/Login", GetStringContent(new UserLoginModel { Email = "vanderlan.gs@gmail.com", Password = "123" })).Result;
+            var result = _client.PostAsync("/api/Auth/Login", GetStringContent(new UserLoginModel { Email = "vanderlan.gs@gmail.com", Password = "123" })).GetAwaiter().GetResult();
 
-            var content = result.Content.ReadAsStringAsync().Result;
+            var content = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
             var tokenResult = JsonConvert.DeserializeObject<UserApiTokenModel>(content);
 

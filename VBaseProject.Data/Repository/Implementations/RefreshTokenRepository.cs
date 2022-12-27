@@ -1,6 +1,6 @@
 using VBaseProject.Data.Context;
 using VBaseProject.Data.Repository.Generic;
-using VBaseProject.Data.Repository.Interfaces;
+using VBaseProject.Domain.Repositories;
 using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Data.Repository.Implementations

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using VBaseProject.Data.UnitOfWork;
-using VBaseProject.Service.DependenciesConfig;
+using VBaseProject.Domain.Repositories.UnitOfWork;
+using VBaseProject.Ioc.Dependencies;
 
 namespace VBaseProject.Test.Configuration
 {
@@ -12,7 +13,7 @@ namespace VBaseProject.Test.Configuration
         {
             var serviceCollection = new ServiceCollection();
 
-            DependenciesInjectionConfiguration.Configure(serviceCollection, true);
+            serviceCollection.AddDomainServices(true);
 
             serviceCollection.AddTransient<IUnitOfWorkEntity>(s => new UnitOfWorkEntity(TestBootstrapper.GetInMemoryDbContextOptions()));
             serviceCollection.AddLogging();

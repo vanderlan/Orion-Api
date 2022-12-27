@@ -3,13 +3,15 @@ using System.Threading.Tasks;
 using VBaseProject.Test.Configuration;
 using Xunit;
 
-namespace VBaseProject.Test.API
+namespace VBaseProject.Test.Api
 {
     public class HealthCheckApiTest: ApiTestInitializer
     {
         [Fact]
         public async Task HealthCheckConfigurationTest()
         {
+            Setup();
+
             var successMessageService = "Healthy";
             var result = await _client.GetAsync("/health-check");
 

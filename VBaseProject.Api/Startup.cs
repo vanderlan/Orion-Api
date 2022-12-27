@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -18,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using VBaseProject.Api;
 using VBaseProject.Api.AutoMapper.Config;
 using VBaseProject.Api.Middleware;
-using VBaseProject.Service.DependenciesConfig;
-using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
+using VBaseProject.Api.Validators;
+using VBaseProject.Ioc.Dependencies;
+using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject
 {
@@ -47,16 +48,12 @@ namespace VBaseProject
 
             services.AddControllers();
 
-            services.AddMvc(options =>
-            {
-                options.Filters.Add(typeof(ValidateModelStateAttribute));
-            })
-            .AddFluentValidation(options =>
-            {
-                options.RegisterValidatorsFromAssemblyContaining<Startup>();
-            })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization();
+            services.AddFluentValidationAutoValidation();
+            services.AddFluentValidationClientsideAdapters();
+            services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+
+            services.AddMvc().AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+                             .AddDataAnnotationsLocalization();
 
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
             services.AddHealthChecks();
@@ -64,7 +61,7 @@ namespace VBaseProject
             ConfigureSwagger(services);
             ConfigureApiVersioning(services);
 
-            DependenciesInjectionConfiguration.Configure(services);
+            services.AddDomainServices();
             services.AddAutoMapper(typeof(Startup));
             ConfigureMapper(services);
         }
@@ -150,9 +147,9 @@ namespace VBaseProject
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateAudience = true,
-                    ValidAudience = JWT.Audience,
-                    ValidIssuer = JWT.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JWT.SymmetricSecurityKey)),
+                    ValidAudience = Jwt.Audience,
+                    ValidIssuer = Jwt.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwt.SymmetricSecurityKey)),
                     ClockSkew = TimeSpan.Zero
                 };
             });
@@ -172,7 +169,7 @@ namespace VBaseProject
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            var logger = _loggerFactory.CreateLogger<Startup>();
+            ILogger<Startup> logger = _loggerFactory.CreateLogger<Startup>();
 
             //ENVIRONMENT
             if (env.IsDevelopment())
@@ -184,7 +181,7 @@ namespace VBaseProject
                 logger.LogInformation($"Environment: {_env.EnvironmentName}");
                 app.UseHsts();
             }
-            app.UseVBaseProjectMiddleware();
+            app.UseMiddleware<VBaseProjectMiddleware>();
 
             //SWAGGER
             app.UseSwagger();
@@ -203,7 +200,7 @@ namespace VBaseProject
 
             app.UseHealthChecks("/health-check");
 
-            var builder = new ConfigurationBuilder()
+            IConfigurationBuilder builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)

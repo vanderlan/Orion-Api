@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
-using VBaseProject.Data.UnitOfWork;
+using VBaseProject.Domain.Exceptions;
+using VBaseProject.Domain.Interfaces;
+using VBaseProject.Domain.Repositories.UnitOfWork;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Service.Exceptions;
-using VBaseProject.Service.Interfaces;
 
-namespace VBaseProject.Service.Implementation
+namespace VBaseProject.Domain.Implementation
 {
     public class CustomerService : ICustomerService
     {
@@ -25,22 +25,22 @@ namespace VBaseProject.Service.Implementation
             return added;
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(string publicId)
         {
-            var item = await FindByIdAsync(id);
+            var item = await FindByIdAsync(publicId);
 
             if (item == null)
             {
-                throw new NotFoundException(id);
+                throw new NotFoundException(publicId);
             }
 
-            await _unitOfWork.CustomerRepository.DeleteAsync(id);
+            await _unitOfWork.CustomerRepository.DeleteAsync(publicId);
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<Customer> FindByIdAsync(string id)
+        public async Task<Customer> FindByIdAsync(string publicId)
         {
-            return await _unitOfWork.CustomerRepository.FindByIdAsync(id);
+            return await _unitOfWork.CustomerRepository.FindByIdAsync(publicId);
         }
 
         public async Task<PagedList<Customer>> ListPaginate(CustomerFilter filter)

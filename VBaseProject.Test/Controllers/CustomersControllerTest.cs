@@ -7,7 +7,7 @@ using VBaseProject.Api.Controllers;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Service.Interfaces;
+using VBaseProject.Domain.Interfaces;
 using VBaseProject.Test.Controllers.BaseController;
 using VBaseProject.Test.MotherObjects;
 using Xunit;

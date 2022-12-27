@@ -1,7 +1,7 @@
-using VBaseProject.Data.Repository.Generic;
+using VBaseProject.Domain.Repositories.Base;
 using VBaseProject.Entities.Domain;
 
-namespace VBaseProject.Data.Repository.Interfaces
+namespace VBaseProject.Domain.Repositories
 {
     public interface IRefreshTokenRepository : IBaseEntityRepository<RefreshToken>
     {
