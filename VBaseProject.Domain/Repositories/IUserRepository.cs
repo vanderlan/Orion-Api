@@ -1,16 +1,15 @@
 using System.Threading.Tasks;
+using VBaseProject.Domain.Repositories.Base;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Service.Base;
 
-namespace VBaseProject.Service.Interfaces
+namespace VBaseProject.Domain.Repositories
 {
-    public interface IUserService : IBaseService<User>
+    public interface IUserRepository : IBaseEntityRepository<User>
     {
         Task<User> LoginAsync(string email, string password);
-        Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken);
-        Task<User> GetUserByRefreshToken(string refreshToken);
         Task<PagedList<User>> ListPaginate(UserFilter filter);
+        Task<User> FindByEmailAsync(string email);
     }
 }

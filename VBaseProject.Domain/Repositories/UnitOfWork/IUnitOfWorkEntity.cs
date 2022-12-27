@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
-using VBaseProject.Data.Repository.Interfaces;
 
-namespace VBaseProject.Data.UnitOfWork
+namespace VBaseProject.Domain.Repositories.UnitOfWork
 {
     public interface IUnitOfWorkEntity
     {

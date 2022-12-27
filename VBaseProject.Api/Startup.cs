@@ -22,8 +22,8 @@ using System.Text;
 using VBaseProject.Api.AutoMapper.Config;
 using VBaseProject.Api.Middleware;
 using VBaseProject.Api.Validators;
-using VBaseProject.Service.DependenciesConfig;
-using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
+using VBaseProject.Ioc.Dependencies;
+using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject
 {
@@ -61,7 +61,7 @@ namespace VBaseProject
             ConfigureSwagger(services);
             ConfigureApiVersioning(services);
 
-            DependenciesInjectionConfiguration.Configure(services);
+            services.AddDomainServices();
             services.AddAutoMapper(typeof(Startup));
             ConfigureMapper(services);
         }

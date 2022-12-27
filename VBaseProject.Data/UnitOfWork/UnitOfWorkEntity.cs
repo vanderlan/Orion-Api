@@ -5,7 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Data.Context;
 using VBaseProject.Data.Repository.Implementations;
-using VBaseProject.Data.Repository.Interfaces;
+using VBaseProject.Domain.Repositories;
+using VBaseProject.Domain.Repositories.UnitOfWork;
 
 namespace VBaseProject.Data.UnitOfWork
 {

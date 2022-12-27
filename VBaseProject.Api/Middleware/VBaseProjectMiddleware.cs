@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using VBaseProject.Service.Exceptions;
+using VBaseProject.Domain.Exceptions;
 
 namespace VBaseProject.Api.Middleware
 {

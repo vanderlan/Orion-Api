@@ -1,4 +1,4 @@
-namespace VBaseProject.Service.Authentication
+namespace VBaseProject.Domain.Authentication
 {
     public static class AuthenticationConfiguration
     {

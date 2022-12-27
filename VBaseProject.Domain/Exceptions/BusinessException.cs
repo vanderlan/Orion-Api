@@ -1,6 +1,6 @@
 using System;
 
-namespace VBaseProject.Service.Exceptions
+namespace VBaseProject.Domain.Exceptions
 {
     [Serializable]
     public class BusinessException : Exception

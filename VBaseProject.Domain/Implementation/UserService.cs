@@ -1,17 +1,17 @@
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
-using VBaseProject.Data.UnitOfWork;
+using VBaseProject.Domain.Exceptions;
+using VBaseProject.Domain.Extensions;
+using VBaseProject.Domain.Interfaces;
+using VBaseProject.Domain.Repositories.UnitOfWork;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
 using VBaseProject.Resources;
-using VBaseProject.Service.Exceptions;
-using VBaseProject.Service.Extensions;
-using VBaseProject.Service.Interfaces;
 using static VBaseProject.Resources.Messages.MessagesKeys;
 
-namespace VBaseProject.Service.Implementation
+namespace VBaseProject.Domain.Implementation
 {
     public class UserService : IUserService
     {

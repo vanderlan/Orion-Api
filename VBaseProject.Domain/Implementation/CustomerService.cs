@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
-using VBaseProject.Data.UnitOfWork;
+using VBaseProject.Domain.Exceptions;
+using VBaseProject.Domain.Interfaces;
+using VBaseProject.Domain.Repositories.UnitOfWork;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Service.Exceptions;
-using VBaseProject.Service.Interfaces;
 
-namespace VBaseProject.Service.Implementation
+namespace VBaseProject.Domain.Implementation
 {
     public class CustomerService : ICustomerService
     {

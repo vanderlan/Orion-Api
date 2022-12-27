@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\VBaseProject.Data\VBaseProject.Data.csproj" />
-    <ProjectReference Include="..\VBaseProject.Entities\VBaseProject.Entities.csproj" />
-    <ProjectReference Include="..\VBaseProject.Resources\VBaseProject.Resources.csproj" />
+    <ProjectReference Include="..\VBaseProject.Domain\VBaseProject.Domain.csproj" />
   </ItemGroup>
 
 </Project>

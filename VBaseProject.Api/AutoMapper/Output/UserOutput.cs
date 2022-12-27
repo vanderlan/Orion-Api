@@ -1,6 +1,6 @@
 
 using VBaseProject.Entities.Enuns;
-using VBaseProject.Service.Authentication;
+using VBaseProject.Domain.Authentication;
 
 namespace VBaseProject.Api.AutoMapper.Output
 {

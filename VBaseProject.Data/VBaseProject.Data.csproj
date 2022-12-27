@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\VBaseProject.Domain\VBaseProject.Domain.csproj" />
     <ProjectReference Include="..\VBaseProject.Entities\VBaseProject.Entities.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace VBaseProject.Service.Extensions
+namespace VBaseProject.Domain.Extensions
 {
     public static class StrignExtensions
     {

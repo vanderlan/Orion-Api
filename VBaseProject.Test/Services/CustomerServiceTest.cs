@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using VBaseProject.Entities.Filter;
-using VBaseProject.Service.Exceptions;
-using VBaseProject.Service.Interfaces;
+using VBaseProject.Domain.Exceptions;
+using VBaseProject.Domain.Interfaces;
 using VBaseProject.Test.Configuration;
 using VBaseProject.Test.MotherObjects;
 using VBaseProject.Test.Services.BaseService;

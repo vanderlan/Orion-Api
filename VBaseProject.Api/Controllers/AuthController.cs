@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Api.Models;
 using VBaseProject.Entities.Domain;
-using VBaseProject.Service.Extensions;
-using VBaseProject.Service.Interfaces;
-using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
+using VBaseProject.Domain.Extensions;
+using VBaseProject.Domain.Interfaces;
+using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject.Api.Controllers
 {

@@ -1,4 +1,4 @@
-namespace VBaseProject.Service.Exceptions
+namespace VBaseProject.Domain.Exceptions
 {
     public class ExceptionResponse
     {

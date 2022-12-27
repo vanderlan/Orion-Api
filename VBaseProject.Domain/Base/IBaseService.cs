@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace VBaseProject.Service.Base
+namespace VBaseProject.Domain.Base
 {
     public interface IBaseService<T> where T : class
     {

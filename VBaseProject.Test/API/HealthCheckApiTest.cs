@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using VBaseProject.Test.Configuration;
 using Xunit;
 
-namespace VBaseProject.Test.API
+namespace VBaseProject.Test.Api
 {
     public class HealthCheckApiTest: ApiTestInitializer
     {

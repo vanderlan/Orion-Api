@@ -8,8 +8,8 @@ using VBaseProject.Api.AutoMapper.Output;
 using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
-using VBaseProject.Service.Interfaces;
-using static VBaseProject.Service.Authentication.AuthenticationConfiguration;
+using VBaseProject.Domain.Interfaces;
+using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject.Api.Controllers
 {
