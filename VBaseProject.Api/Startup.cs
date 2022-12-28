@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using VBaseProject.Api.AutoMapper.Config;
+using VBaseProject.Api.Jwt;
 using VBaseProject.Api.Middleware;
 using VBaseProject.Api.Validators;
 using VBaseProject.Ioc.Dependencies;
-using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
 
 namespace VBaseProject
 {
@@ -122,8 +122,10 @@ namespace VBaseProject
             });
         }
 
-        private static void ConfigureAuthentication(IServiceCollection services)
+        private void ConfigureAuthentication(IServiceCollection services)
         {
+            var jwtConfiguration = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+
             services.AddIdentity<IdentityUser, IdentityRole>(
                             option =>
                             {
@@ -147,9 +149,9 @@ namespace VBaseProject
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateAudience = true,
-                    ValidAudience = Jwt.Audience,
-                    ValidIssuer = Jwt.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwt.SymmetricSecurityKey)),
+                    ValidAudience = jwtConfiguration.Audience,
+                    ValidIssuer = jwtConfiguration.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SymmetricSecurityKey)),
                     ClockSkew = TimeSpan.Zero
                 };
             });
@@ -163,8 +165,7 @@ namespace VBaseProject
                 mc.AddProfile(new DomainToOutputProfile());
             });
 
-            IMapper mapper = mappingConfig.CreateMapper();
-            services.AddScoped(_ => { return mapper; });
+            services.AddScoped(_ => { return mappingConfig.CreateMapper(); });
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
@@ -178,7 +179,7 @@ namespace VBaseProject
             }
             else
             {
-                logger.LogInformation($"Environment: {_env.EnvironmentName}");
+                logger.LogInformation("Environment: {Env}", _env.EnvironmentName);
                 app.UseHsts();
             }
             app.UseMiddleware<VBaseProjectMiddleware>();
@@ -200,7 +201,7 @@ namespace VBaseProject
 
             app.UseHealthChecks("/health-check");
 
-            IConfigurationBuilder builder = new ConfigurationBuilder()
+            var builder = new ConfigurationBuilder()
                .SetBasePath(env.ContentRootPath)
                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)

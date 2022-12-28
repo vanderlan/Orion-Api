@@ -1,6 +1,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,11 +9,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using VBaseProject.Api.AutoMapper.Output;
+using VBaseProject.Api.Jwt;
 using VBaseProject.Api.Models;
-using VBaseProject.Entities.Domain;
 using VBaseProject.Domain.Extensions;
 using VBaseProject.Domain.Interfaces;
-using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
+using VBaseProject.Entities.Domain;
 
 namespace VBaseProject.Api.Controllers
 {
@@ -21,10 +22,12 @@ namespace VBaseProject.Api.Controllers
     public class AuthController : ApiController
     {
         private readonly IUserService _userService;
+        private readonly IConfiguration _configuration;
 
-        public AuthController(IUserService userService, IMapper mapper) : base(mapper)
+        public AuthController(IUserService userService, IMapper mapper, IConfiguration configuration) : base(mapper)
         {
             _userService = userService;
+            _configuration = configuration;
         }
 
         [Route("Login")]
@@ -67,8 +70,10 @@ namespace VBaseProject.Api.Controllers
             return Unauthorized();
         }
 
-        private static JwtSecurityToken CreateToken(UserOutput userOutput)
+        private JwtSecurityToken CreateToken(UserOutput userOutput)
         {
+            var jwtConfiguration = _configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+
             var claim = new[] {
                     new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
                     new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
@@ -76,12 +81,12 @@ namespace VBaseProject.Api.Controllers
                     new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
                 };
 
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Jwt.SymmetricSecurityKey));
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SymmetricSecurityKey));
 
             var token = new JwtSecurityToken(
-              issuer: Jwt.Issuer,
-              audience: Jwt.Audience,
-              expires: DateTime.UtcNow.AddMinutes(Jwt.TokenExpirationMinutes),
+              issuer: jwtConfiguration.Issuer,
+              audience: jwtConfiguration.Audience,
+              expires: DateTime.UtcNow.AddMinutes(jwtConfiguration.TokenExpirationMinutes),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );

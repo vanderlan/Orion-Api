@@ -9,7 +9,7 @@ using VBaseProject.Entities.Domain;
 using VBaseProject.Entities.Filter;
 using VBaseProject.Entities.ValueObjects.Pagination;
 using VBaseProject.Domain.Interfaces;
-using static VBaseProject.Domain.Authentication.AuthenticationConfiguration;
+using static VBaseProject.Domain.Authentication.AuthorizationConfiguration;
 
 namespace VBaseProject.Api.Controllers
 {
