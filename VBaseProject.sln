@@ -31,6 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\docker.yml = .github\workflows\docker.yml
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
+		.github\workflows\sonar.yml = .github\workflows\sonar.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - INFRA", "3 - INFRA", "{434E301F-C36C-4203-B334-D3948130B660}"
