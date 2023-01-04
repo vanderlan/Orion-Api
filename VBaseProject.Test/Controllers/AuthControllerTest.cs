@@ -9,6 +9,8 @@ using VBaseProject.Domain.Interfaces;
 using VBaseProject.Test.Controllers.BaseController;
 using VBaseProject.Test.MotherObjects;
 using Xunit;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace VBaseProject.Test.Controllers
 {
@@ -100,7 +102,19 @@ namespace VBaseProject.Test.Controllers
             userServiceMock.Setup(x => x.AddRefreshToken(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
             userServiceMock.Setup(x => x.GetUserByRefreshToken(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
 
-            authController = new AuthController(userServiceMock.Object, _mapper);
+            //Arrange
+            var inMemorySettings = new Dictionary<string, string> {
+                {"JwtConfiguration:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
+                {"JwtConfiguration:Issuer", "http://www.myapplication.com"},
+                {"JwtConfiguration:Audience", "http://www.myapplication.com"},
+                {"JwtConfiguration:TokenExpirationMinutes", "15"}
+            };
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemorySettings)
+                .Build();
+
+            authController = new AuthController(userServiceMock.Object, _mapper, configuration);
         }
     }
 }
