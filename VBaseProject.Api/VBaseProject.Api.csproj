@@ -1,27 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net7.0</TargetFramework>
     <AssemblyName>VBaseProject.Api</AssemblyName>
     <UserSecretsId>7401dc57-e892-498d-a628-03091ec95c6a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="logs\**" />
-    <Compile Remove="Properties\PublishProfiles\**" />
-    <Compile Remove="wwwroot\**" />
-    <Content Remove="logs\**" />
-    <Content Remove="Properties\PublishProfiles\**" />
-    <Content Remove="wwwroot\**" />
-    <EmbeddedResource Remove="logs\**" />
-    <EmbeddedResource Remove="Properties\PublishProfiles\**" />
-    <EmbeddedResource Remove="wwwroot\**" />
-    <None Remove="logs\**" />
-    <None Remove="Properties\PublishProfiles\**" />
-    <None Remove="wwwroot\**" />
-    <_WebToolingArtifacts Remove="Properties\PublishProfiles\**" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
@@ -30,7 +14,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.12" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Server.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
@@ -39,13 +23,13 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Routing.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="6.0.12" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.11" />
-    <PackageReference Include="NLog" Version="5.1.0" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.1" />
+    <PackageReference Include="NLog" Version="5.1.1" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="5.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 

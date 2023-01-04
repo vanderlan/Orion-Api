@@ -21,7 +21,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D8CC498-597C-4415-95BF-48E623039F90}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
-		.editorconfig = .editorconfig
 		azure-pipelines.yml = azure-pipelines.yml
 		docker-compose.yaml = docker-compose.yaml
 		Dockerfile = Dockerfile
