@@ -24,7 +24,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task LoginValidTest()
+        public async Task Login_WithValidCredentials_ReturnsOk()
         {
             var result = await authController.Login(
                 new UserLoginModel 
@@ -46,7 +46,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task LoginInvalidTest()
+        public async Task Login_WithInvalidCredentials_RetunsUnauthorized()
         {
             var result = await authController.Login(
                 new UserLoginModel
@@ -63,7 +63,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task RefreshTokenValidTest()
+        public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
         {
             var result = await authController.RefreshToken(
                 RefreshTokenMotherObject.ValidRefreshTokenModel()
@@ -80,7 +80,7 @@ namespace VBaseProject.Test.Controllers
             Assert.True(userApiToken.Expiration > DateTime.Now);
         }
         [Fact]
-        public async Task RefreshTokenInValidTest()
+        public async Task RefreshToken_WithInvalidRefreshToken_ReturnsUnauthorized()
         {
             var result = await authController.RefreshToken(
                 new RefreshTokenModel { RefreshToken = null}
