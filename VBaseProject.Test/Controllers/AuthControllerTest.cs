@@ -99,8 +99,8 @@ namespace VBaseProject.Test.Controllers
             userServiceMock.Setup(x => x.LoginAsync(UserMotherObject.ValidAdminUser().Email, UserMotherObject.ValidAdminUser().Password))
                 .ReturnsAsync(UserMotherObject.ValidAdminUser());
 
-            userServiceMock.Setup(x => x.AddRefreshToken(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
-            userServiceMock.Setup(x => x.GetUserByRefreshToken(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
+            userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
+            userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
 
             //Arrange
             var inMemorySettings = new Dictionary<string, string> {

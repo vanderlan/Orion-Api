@@ -1,7 +1,7 @@
 ﻿namespace VBaseProject.Resources.Messages
 {
     /// <summary>
-    /// Update All Resoure Files to matain the globalization support
+    /// Update all Resource Files to mantain the globalization support
     /// </summary>
     public static class MessagesKeys
     {

@@ -69,7 +69,7 @@ namespace VBaseProject.Test.Services
             var userSaved = await _userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await _userService.FindByIdAsync(userSaved.PublicId);
 
-            var userPaginated = await _userService.ListPaginate(
+            var userPaginated = await _userService.ListPaginateAsync(
                 new UserFilter {
                     Query = UserMotherObject.ValidAdminUser().Name,
                     Entity = new User 
@@ -192,9 +192,9 @@ namespace VBaseProject.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            var refreshTokenAdded = await _userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            var refreshTokenAdded = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var userByRefreshToken = await _userService.GetUserByRefreshToken(refreshTokenAdded.Refreshtoken);
+            var userByRefreshToken = await _userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken);
 
             Assert.NotNull(userByRefreshToken);
 
@@ -219,9 +219,9 @@ namespace VBaseProject.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            await _userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            await _userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.GetUserByRefreshToken(null));
+            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.GetUserByRefreshTokenAsync(null));
 
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
 
@@ -242,9 +242,9 @@ namespace VBaseProject.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            await _userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            await _userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.GetUserByRefreshToken("wrong refresh token"));
+            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _userService.GetUserByRefreshTokenAsync("wrong refresh token"));
 
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
 

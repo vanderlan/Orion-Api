@@ -103,7 +103,7 @@ namespace VBaseProject.Test.Controllers
             userServiceMock.Setup(x => x.AddAsync(It.IsAny<User>())).ReturnsAsync(UserMotherObject.ValidAdminUser());
             userServiceMock.Setup(x => x.UpdateAsync(It.IsAny<User>())).Verifiable();
             userServiceMock.Setup(x => x.DeleteAsync(UserMotherObject.ValidAdminUser().PublicId)).Verifiable();
-            userServiceMock.Setup(x => x.ListPaginate(It.IsAny<UserFilter>())).
+            userServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<UserFilter>())).
                 ReturnsAsync(userListPaginated);
 
             _usersController = new UsersController(userServiceMock.Object, _mapper);
