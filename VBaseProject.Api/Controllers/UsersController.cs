@@ -30,7 +30,7 @@ namespace VBaseProject.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromQuery] UserFilter filter)
         {
-            var user = await _userService.ListPaginate(filter);
+            var user = await _userService.ListPaginateAsync(filter);
 
             var userOutputList = _mapper.Map<PagedList<UserOutput>>(user);
 

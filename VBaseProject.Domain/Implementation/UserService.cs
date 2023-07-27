@@ -79,12 +79,12 @@ namespace VBaseProject.Domain.Implementation
             await _unitOfWork.CommitAsync();
         }
 
-        public async Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken)
+        public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
         {
-            var existentRt = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Email == refreshToken.Email);
+            var existantRt = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Email == refreshToken.Email);
 
-            if (existentRt.Any())
-                return existentRt.First();
+            if (existantRt.Any())
+                return existantRt.First();
 
             var added = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
             await _unitOfWork.CommitAsync();
@@ -92,7 +92,7 @@ namespace VBaseProject.Domain.Implementation
             return added;
         }
 
-        public async Task<User> GetUserByRefreshToken(string refreshToken)
+        public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
         {
             if (string.IsNullOrEmpty(refreshToken))
             {
@@ -120,7 +120,7 @@ namespace VBaseProject.Domain.Implementation
             throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
         }
 
-        public async Task<PagedList<User>> ListPaginate(UserFilter filter)
+        public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
         {
             return await _unitOfWork.UserRepository.ListPaginate(filter);
         }

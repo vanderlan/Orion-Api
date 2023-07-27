@@ -9,8 +9,8 @@ namespace VBaseProject.Domain.Interfaces
     public interface IUserService : IBaseService<User>
     {
         Task<User> LoginAsync(string email, string password);
-        Task<RefreshToken> AddRefreshToken(RefreshToken refreshToken);
-        Task<User> GetUserByRefreshToken(string refreshToken);
-        Task<PagedList<User>> ListPaginate(UserFilter filter);
+        Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken);
+        Task<User> GetUserByRefreshTokenAsync(string refreshToken);
+        Task<PagedList<User>> ListPaginateAsync(UserFilter filter);
     }
 }

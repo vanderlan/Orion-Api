@@ -8,7 +8,7 @@ namespace VBaseProject.Test.Api
     public class HealthCheckApiTest: ApiTestInitializer
     {
         [Fact]
-        public async Task HealthCheckConfigurationTest()
+        public async Task GetAsync_HealthCheck_ReturnsHealthy()
         {
             Setup();
 

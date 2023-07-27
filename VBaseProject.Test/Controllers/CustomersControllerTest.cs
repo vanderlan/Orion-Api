@@ -24,7 +24,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task GetCustomerValidTest()
+        public async Task GetCustomerById_WithValidId_ReturnsValidCustomer()
         {
             var result = await _customersController.Get(CustomerMotherObject.ValidCustomer().PublicId);
 
@@ -39,7 +39,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task CreateCustomerValidTest()
+        public async Task PostCustomer_WithValidData_CreateNewCustomer()
         {
             var result = await _customersController.Post(CustomerMotherObject.ValidCustomerInput());
 
@@ -53,7 +53,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task EditCustomerValidTest()
+        public async Task PutCustomer_WithValidData_EditCustomer()
         {
             var result = await _customersController.Put(CustomerMotherObject.ValidCustomer().PublicId, CustomerMotherObject.ValidCustomerInput());
 
@@ -64,7 +64,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task DeleteCustomerValidTest()
+        public async Task DeleteCustomer_WithValidId_DeleteCustomer()
         {
             var result = await _customersController.Delete(CustomerMotherObject.ValidCustomer().PublicId);
 
@@ -75,7 +75,7 @@ namespace VBaseProject.Test.Controllers
         }
 
         [Fact]
-        public async Task ListCustomersTest()
+        public async Task GetCustomers_WithPagination_ReturnsAllCustomers()
         {
             var result = await _customersController.Get(new CustomerFilter());
 
@@ -85,7 +85,6 @@ namespace VBaseProject.Test.Controllers
             Assert.Equal(4, customersPagedList.Count);
             Assert.Equal(200, contentResult.StatusCode);
         }
-
 
         private void SetupServiceMock()
         {
