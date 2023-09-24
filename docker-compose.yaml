@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:5000"
-    container_name: vbaseproject-api
+    container_name: orion-api
     networks:
       - backend-network
 networks:
