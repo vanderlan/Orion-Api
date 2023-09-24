@@ -69,7 +69,7 @@ namespace Orion.Test.Services
             var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await userService.FindByIdAsync(userSaved.PublicId);
 
-            var userPaginated = await userService.ListPaginate(
+            var userPaginated = await userService.ListPaginateAsync(
                 new UserFilter {
                     Query = UserMotherObject.ValidAdminUser().Name,
                     Entity = new User 
@@ -192,9 +192,9 @@ namespace Orion.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            var refreshTokenAdded = await userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var userByRefreshToken = await userService.GetUserByRefreshToken(refreshTokenAdded.Refreshtoken);
+            var userByRefreshToken = await userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken);
 
             Assert.NotNull(userByRefreshToken);
 
@@ -219,9 +219,9 @@ namespace Orion.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            await userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshToken(null));
+            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(null));
 
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
 
@@ -242,9 +242,9 @@ namespace Orion.Test.Services
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            await userService.AddRefreshToken(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshToken("wrong refresh token"));
+            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync("wrong refresh token"));
 
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
 
@@ -254,8 +254,8 @@ namespace Orion.Test.Services
         [Fact]
         public void CryptoSha512Test()
         {
-            var stringValidTest = "userPawssTest1234A%@&!";
-            var expectedResult = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
+            const string stringValidTest = "userPawssTest1234A%@&!";
+            const string expectedResult = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
 
             Assert.Equal(expectedResult, stringValidTest.ToSha512());
         }

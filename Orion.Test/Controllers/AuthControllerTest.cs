@@ -24,7 +24,7 @@ namespace Orion.Test.Controllers
         }
 
         [Fact]
-        public async Task LoginValidTest()
+        public async Task Login_WithValidCredentials_ReturnsOk()
         {
             var result = await _authController.Login(
                 new UserLoginModel 
@@ -46,7 +46,7 @@ namespace Orion.Test.Controllers
         }
 
         [Fact]
-        public async Task LoginInvalidTest()
+        public async Task Login_WithInvalidCredentials_RetunsUnauthorized()
         {
             var result = await _authController.Login(
                 new UserLoginModel
@@ -63,7 +63,7 @@ namespace Orion.Test.Controllers
         }
 
         [Fact]
-        public async Task RefreshTokenValidTest()
+        public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
         {
             var result = await _authController.RefreshToken(
                 RefreshTokenMotherObject.ValidRefreshTokenModel()
@@ -80,7 +80,7 @@ namespace Orion.Test.Controllers
             Assert.True(userApiToken.Expiration > DateTime.Now);
         }
         [Fact]
-        public async Task RefreshTokenInValidTest()
+        public async Task RefreshToken_WithInvalidRefreshToken_ReturnsUnauthorized()
         {
             var result = await _authController.RefreshToken(
                 new RefreshTokenModel { RefreshToken = null}
@@ -99,8 +99,8 @@ namespace Orion.Test.Controllers
             userServiceMock.Setup(x => x.LoginAsync(UserMotherObject.ValidAdminUser().Email, UserMotherObject.ValidAdminUser().Password))
                 .ReturnsAsync(UserMotherObject.ValidAdminUser());
 
-            userServiceMock.Setup(x => x.AddRefreshToken(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
-            userServiceMock.Setup(x => x.GetUserByRefreshToken(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
+            userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
+            userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
 
             //Arrange
             var inMemorySettings = new Dictionary<string, string> {

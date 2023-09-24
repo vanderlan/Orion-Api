@@ -45,7 +45,7 @@ namespace Orion.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
         {
-            var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshToken(refreshTokenModel.RefreshToken));
+            var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshTokenAsync(refreshTokenModel.RefreshToken));
 
             return await AuthorizeUser(userOutput);
         }
@@ -56,7 +56,7 @@ namespace Orion.Api.Controllers
             {
                 var token = CreateToken(userOutput);
 
-                var refreshToken = await _userService.AddRefreshToken(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512()});
+                var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512()});
 
                 return Ok(
                   new UserApiTokenModel
