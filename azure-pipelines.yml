@@ -24,8 +24,8 @@ steps:
       displayName: "Test"
       inputs:
         command: test
-        projects: 'VBaseProject.Test/VBaseProject.Test.csproj'
-        arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[VBaseProject.*]*" /p:Exclude="[*Test]*"'
+        projects: 'Orion.Test/Orion.Test.csproj'
+        arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Include="[Orion.*]*" /p:Exclude="[*Test]*"'
     
     - task: codecoveragecomparerbt@1
       displayName: 'Code Coverage'
@@ -57,7 +57,7 @@ steps:
       displayName: 'Docker Hub Publish'
       inputs:
         containerRegistry: 'Docker Hub'
-        repository: 'vanderlangs/vbaseprojectapi'
+        repository: 'vanderlangs/orion-api'
         tags: |
             $(Build.BuildId)
             latest
