@@ -57,7 +57,7 @@ steps:
       displayName: 'Docker Hub Publish'
       inputs:
         containerRegistry: 'Docker Hub'
-        repository: 'vanderlangs/orionapi'
+        repository: 'vanderlangs/orion-api'
         tags: |
             $(Build.BuildId)
             latest
