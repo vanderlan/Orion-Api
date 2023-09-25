@@ -81,10 +81,10 @@ namespace Orion.Domain.Implementation
 
         public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
         {
-            var existantRt = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Email == refreshToken.Email);
+            var existantRefresToken = await _unitOfWork.RefreshTokenRepository.GetByAsync(x => x.Email == refreshToken.Email);
 
-            if (existantRt.Any())
-                return existantRt.First();
+            if (existantRefresToken.Any())
+                return existantRefresToken.First();
 
             var added = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
             await _unitOfWork.CommitAsync();
@@ -102,11 +102,11 @@ namespace Orion.Domain.Implementation
                 );
             }
 
-            var token = await _unitOfWork.RefreshTokenRepository.GetBy(x => x.Refreshtoken.Equals(refreshToken));
+            var token = await _unitOfWork.RefreshTokenRepository.GetByAsync(x => x.Refreshtoken.Equals(refreshToken));
 
             if (token != null && token.Any())
             {
-                var user = await _unitOfWork.UserRepository.GetBy(x => x.Email == token.First().Email);
+                var user = await _unitOfWork.UserRepository.GetByAsync(x => x.Email == token.First().Email);
 
                 if (user.Any())
                 {
@@ -122,7 +122,7 @@ namespace Orion.Domain.Implementation
 
         public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
         {
-            return await _unitOfWork.UserRepository.ListPaginate(filter);
+            return await _unitOfWork.UserRepository.ListPaginateAsync(filter);
         }
     }
 }

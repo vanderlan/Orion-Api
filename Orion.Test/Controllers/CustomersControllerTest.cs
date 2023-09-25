@@ -26,11 +26,13 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task GetCustomerById_WithValidId_ReturnsValidCustomer()
         {
+            //arrange & act
             var result = await _customersController.Get(CustomerMotherObject.ValidCustomer().PublicId);
 
             var contentResult = (OkObjectResult) result;
             var customer = (CustomerOutput) contentResult.Value;
 
+            //assert
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
@@ -41,11 +43,13 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task PostCustomer_WithValidData_CreateNewCustomer()
         {
+            //arrange & act
             var result = await _customersController.Post(CustomerMotherObject.ValidCustomerInput());
 
             var contentResult = (CreatedResult) result;
             var contentResultObject = (CustomerOutput)contentResult.Value;
-
+            
+            //assert
             Assert.IsType<CreatedResult>(contentResult);
             Assert.Equal(201, contentResult.StatusCode);
             Assert.NotNull(contentResult.Value);
@@ -55,10 +59,12 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task PutCustomer_WithValidData_EditCustomer()
         {
+            //arrange & act
             var result = await _customersController.Put(CustomerMotherObject.ValidCustomer().PublicId, CustomerMotherObject.ValidCustomerInput());
 
             var contentResult = (AcceptedResult)result;
 
+            //assert
             Assert.IsType<AcceptedResult>(contentResult);
             Assert.Equal(202, contentResult.StatusCode);
         }
@@ -66,10 +72,12 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task DeleteCustomer_WithValidId_DeleteCustomer()
         {
+            //arrange & act
             var result = await _customersController.Delete(CustomerMotherObject.ValidCustomer().PublicId);
 
             var contentResult = (NoContentResult)result;
 
+            //assert
             Assert.IsType<NoContentResult>(contentResult);
             Assert.Equal(204, contentResult.StatusCode);
         }
@@ -77,12 +85,17 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task GetCustomers_WithPagination_ReturnsAllCustomers()
         {
+            //arrange
+            var expectedCount = 4;
+            
+            //act
             var result = await _customersController.Get(new CustomerFilter());
 
             var contentResult = (OkObjectResult)result;
             var customersPagedList = (PagedList<CustomerOutput>)contentResult.Value;
 
-            Assert.Equal(4, customersPagedList.Count);
+            //assert
+            Assert.Equal(expectedCount, customersPagedList.Count);
             Assert.Equal(200, contentResult.StatusCode);
         }
 
@@ -103,7 +116,7 @@ namespace Orion.Test.Controllers
             customerServiceMock.Setup(x => x.AddAsync(It.IsAny<Customer>())).ReturnsAsync(CustomerMotherObject.ValidCustomer());
             customerServiceMock.Setup(x => x.UpdateAsync(It.IsAny<Customer>())).Verifiable();
             customerServiceMock.Setup(x => x.DeleteAsync(CustomerMotherObject.ValidCustomer().PublicId)).Verifiable();
-            customerServiceMock.Setup(x => x.ListPaginate(It.IsAny<CustomerFilter>())).
+            customerServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<CustomerFilter>())).
                 ReturnsAsync(customerListPaginated);
 
             _customersController = new CustomersController(customerServiceMock.Object, Mapper);

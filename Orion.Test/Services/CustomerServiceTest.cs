@@ -19,26 +19,31 @@ namespace Orion.Test.Services
 		}
 
 		[Fact]
-		public async Task AddValidCustomerTest()
+		public async Task AddAsync_WithValidData_AddCustomerAsSuccess()
 		{
+			//arrange
 			using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
+			//act
 			var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerFound = await customerService.FindByIdAsync(customerSaved.PublicId);
 
+			//assert
 			Assert.NotNull(customerFound);
 			Assert.Equal(CustomerMotherObject.ValidCustomer().Name, customerFound.Name);
 			Assert.True(customerFound.CustomerId > 0);
 		}
 
 		[Fact]
-		public async Task RemoveCustomerTest()
+		public async Task DeleteAsync_WithExistantId_RemoveCustomerAsSuccess()
 		{
-			using var scope = ServiceProvider.CreateScope();
+            //arrange
+            using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
-			var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+            //act
+            var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerFound = await customerService.FindByIdAsync(customerSaved.PublicId);
 
 			Assert.NotNull(customerFound);
@@ -49,82 +54,92 @@ namespace Orion.Test.Services
 
 			Assert.Null(customerDeleted);
 		}
+
 		[Fact]
-		public async Task RemoveCustomerNotFoundTest()
+		public async Task DeleteAsync_NotFound_ThrowsNotFoundException()
 		{
-			using var scope = ServiceProvider.CreateScope();
+            //arrange
+            using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
-			await Assert.ThrowsAsync<NotFoundException>(() => customerService.DeleteAsync("invalid_id"));
+            //act & assert
+            await Assert.ThrowsAsync<NotFoundException>(() => customerService.DeleteAsync("invalid_id"));
 		}
 
 		[Fact]
-		public async Task EditCustomerTest()
+		public async Task UpdateAsync_WithValidData_UpdateCustomerAsSuccess()
 		{
-			using var scope = ServiceProvider.CreateScope();
+            //arrange
+            using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
 			var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerFound = await customerService.FindByIdAsync(customerSaved.PublicId);
 
-			Assert.NotNull(customerFound);
-
+			//act
 			customerFound.Name = "Jane";
-
 			await customerService.UpdateAsync(customerFound);
 			await customerService.FindByIdAsync(customerSaved.PublicId);
 
 			var customerEdited = await customerService.FindByIdAsync(customerSaved.PublicId);
 
+			//assert
 			Assert.Equal(customerFound.Name, customerEdited.Name);
 		}
 
 		[Fact]
-		public async Task ListCustomerPaginatedTest()
+		public async Task ListPaginateAsync_WithEmptyFilter_GetAllfCustomers()
 		{
-			using var scope = ServiceProvider.CreateScope();
+            //arrange
+            using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
-			var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+            //act
+            var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerSaved2 = await customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
 
-			var customerList = await customerService.ListPaginate(new CustomerFilter { });
+			var customerList = await customerService.ListPaginateAsync(new CustomerFilter { });
 
+			//aseert
 			Assert.NotNull(customerList);
-
 			Assert.True(customerList.Items.Where(x => x.Name.Equals(CustomerMotherObject.ValidCustomer().Name)).Any());
 			Assert.True(customerList.Items.Where(x => x.Name.Equals(CustomerMotherObject.ValidCustomer2().Name)).Any());
 		}
 
 		[Fact]
-		public async Task ListCustomerPaginatedFilterByNameTest()
+		public async Task ListPaginateAsync_WithFilterByName_GetAllMatchedCustomers()
 		{
-			using var scope = ServiceProvider.CreateScope();
+            //arrange
+            using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
-			var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+            //act
+            var customerSaved = await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
 			var customerSaved2 = await customerService.AddAsync(CustomerMotherObject.ValidCustomer2());
 
-			var customerList = await customerService.ListPaginate(new CustomerFilter { Query = CustomerMotherObject.ValidCustomer().Name });
+			var customerList = await customerService.ListPaginateAsync(new CustomerFilter { Query = CustomerMotherObject.ValidCustomer().Name });
 
+			//assert
 			Assert.NotNull(customerList);
-
 			Assert.True(customerList.Items.Where(x => x.Name.Equals(CustomerMotherObject.ValidCustomer().Name)).Any());
 			Assert.False(customerList.Items.Where(x => x.Name.Equals(CustomerMotherObject.ValidCustomer2().Name)).Any());
 		}
 
-		[Fact]
-		public async Task ListCustomerPaginatedQuantityTest()
+		[Theory]
+		[InlineData(1)]
+		[InlineData(2)]
+		[InlineData(3)]
+		public async Task ListPaginateAsync_WithConfiguredQuantiry_ReturnsListWithTheExpctedQuantity(int expectedQuantity)
 		{
-			const int expectedQuantity = 1;
-
+            //arrange
 			using var scope = ServiceProvider.CreateScope();
 			var customerService = scope.ServiceProvider.GetService<ICustomerService>();
 
-			await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+            //act
+            await customerService.AddAsync(CustomerMotherObject.ValidCustomer());
+			var customerList = await customerService.ListPaginateAsync(new CustomerFilter { Quantity = expectedQuantity });
 
-			var customerList = await customerService.ListPaginate(new CustomerFilter { Quantity = expectedQuantity });
-
+			//assert
 			Assert.NotNull(customerList);
 			Assert.Equal(expectedQuantity, customerList.Items.Count);
 		}

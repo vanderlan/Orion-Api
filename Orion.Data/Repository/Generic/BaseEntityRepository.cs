@@ -39,7 +39,7 @@ namespace Orion.Data.Repository.Generic
             return await DataContext.Set<T>().FirstOrDefaultAsync(x => x.PublicId == publicId);
         }
 
-        public async Task<IEnumerable<T>> GetBy(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> GetByAsync(Expression<Func<T, bool>> predicate)
         {
             return await DataContext.Set<T>().Where(predicate).ToListAsync();
         }

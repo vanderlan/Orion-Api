@@ -24,13 +24,15 @@ namespace Orion.Test.Controllers
         }
 
         [Fact]
-        public async Task GetUserValidTest()
+        public async Task GetUsertById_WithValidId_ReturnsValidCustomer()
         {
+            //arrange & act
             var result = await _usersController.Get(UserMotherObject.ValidAdminUser().PublicId);
 
             var contentResult = (OkObjectResult) result;
             var user = (UserOutput) contentResult.Value;
 
+            //assert
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
@@ -40,51 +42,58 @@ namespace Orion.Test.Controllers
         }
 
         [Fact]
-        public async Task CreateUserValidTest()
+        public async Task PostUser_WithValidData_CreateAUser()
         {
+            //arrange & act
             var result = await _usersController.Post(UserMotherObject.ValidAdminUserInput());
 
             var contentResult = (CreatedResult) result;
 
+            //assert
             Assert.IsType<CreatedResult>(contentResult);
             Assert.Equal(201, contentResult.StatusCode);
         }
 
 
         [Fact]
-        public async Task EditUserValidTest()
+        public async Task PutUser_WithValidData_UpdateUser()
         {
+            //arrange & act
             var result = await _usersController.Put(UserMotherObject.ValidAdminUser().PublicId, UserMotherObject.ValidAdminUserInput());
 
             var contentResult = (AcceptedResult) result;
 
+            //assert
             Assert.IsType<AcceptedResult>(contentResult);
             Assert.Equal(202, contentResult.StatusCode);
         }
 
         [Fact]
-        public async Task DeleteUserValidTest()
+        public async Task DeleteUser_WithExistantId_DeleteUser()
         {
+            //arrange & act
             var result = await _usersController.Delete(UserMotherObject.ValidAdminUser().PublicId);
 
             var contentResult = (NoContentResult)result;
 
+            //assert
             Assert.IsType<NoContentResult>(contentResult);
             Assert.Equal(204, contentResult.StatusCode);
         }
 
         [Fact]
-        public async Task ListUsersTest()
+        public async Task GetUsers_WithValidFilter_ReturnsAListOfUsers()
         {
+            //arrange & act
             var result = await _usersController.Get(new UserFilter());
 
             var contentResult = (OkObjectResult) result;
             var userPagedList = (PagedList<UserOutput>) contentResult.Value;
 
+            //assert
             Assert.Equal(4, userPagedList.Count);
             Assert.Equal(200, contentResult.StatusCode);
         }
-
 
         private void SetupServiceMock()
         {
