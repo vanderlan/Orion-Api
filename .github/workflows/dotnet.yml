@@ -24,12 +24,12 @@ jobs:
       run: dotnet test --no-build --verbosity normal
     - name: Code Coverage
       run: |
-        cd ./VBaseProject.Test/
+        cd ./Orion.Test/
         dotnet add package coverlet.msbuild
         dotnet test /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
     - name: Publish coverage report to coveralls.io
       uses: coverallsapp/github-action@v1.0.1
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
-        path-to-lcov: ./VBaseProject.Test/TestResults/coverage.info   
+        path-to-lcov: ./Orion.Test/TestResults/coverage.info   
     

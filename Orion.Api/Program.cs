@@ -30,6 +30,7 @@ namespace Orion.Api
 
         private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseUrls("http://*:5000")
                 .UseStartup<Startup>()
                 .UseIISIntegration()
                 .ConfigureLogging((context, logging) =>
