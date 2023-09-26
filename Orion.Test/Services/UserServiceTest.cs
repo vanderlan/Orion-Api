@@ -25,14 +25,18 @@ namespace Orion.Test.Services
 
         #region User CRUD tests
         [Fact]
-        public async Task AddValidUserTest()
+        public async Task AddAsync_WithValidData_AddUserAsSuccess()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
+            //act
             var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            
             var userFound = await userService.FindByIdAsync(userSaved.PublicId);
             
+            //assert
             Assert.NotNull(userFound);
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSha512(), userFound.Password);
             Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
@@ -42,8 +46,9 @@ namespace Orion.Test.Services
         }
 
         [Fact]
-        public async Task AddDuplicatedUserTest()
+        public async Task AddAsync_DuplicatedUser_ThrowsConflictException()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
@@ -54,13 +59,15 @@ namespace Orion.Test.Services
             Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSha512(), userFound.Password);
             Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
 
+            //act && assert
             await Assert.ThrowsAsync<ConflictException>(() => userService.AddAsync(UserMotherObject.ValidAdminUser()));
 
             await userService.DeleteAsync(userFound.PublicId);
         }
         [Fact]
-        public async Task ListUserPaginatedFilterTest()
+        public async Task ListPaginateAsync_WithFilterByName_GetAllMatchedUsers()
         {
+            //arrange
             var userCount = 1;
 
             using var scope = ServiceProvider.CreateScope();
@@ -69,6 +76,7 @@ namespace Orion.Test.Services
             var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await userService.FindByIdAsync(userSaved.PublicId);
 
+            //act
             var userPaginated = await userService.ListPaginateAsync(
                 new UserFilter {
                     Query = UserMotherObject.ValidAdminUser().Name,
@@ -78,6 +86,7 @@ namespace Orion.Test.Services
                     } 
                 });
 
+            //assert
             Assert.Equal(userCount, userPaginated.Count);
             Assert.Contains(userPaginated.Items, x => x.Name == UserMotherObject.ValidAdminUser().Name);
 
@@ -85,17 +94,20 @@ namespace Orion.Test.Services
         }
 
         [Fact]
-        public async Task AddInvalidUserTest()
+        public async Task AddAsync_WithInvalidData_ThrowsBusinessException()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
+            //act & assert
             await Assert.ThrowsAsync<BusinessException>(() => userService.AddAsync(UserMotherObject.InvalidAdminUserWihoutPassword()));
         }
 
         [Fact]
-        public async Task RemoveUserTest()
+        public async Task DeleteAsync_WithExistantId_RemoveUserAsSuccess()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
@@ -104,16 +116,19 @@ namespace Orion.Test.Services
 
             Assert.NotNull(userFound);
 
+            //act
             await userService.DeleteAsync(userFound.PublicId);
 
             var userDeleted = await userService.FindByIdAsync(userSaved.PublicId);
 
+            //assert
             Assert.Null(userDeleted);
         }
 
         [Fact]
-        public async Task EditUserTest()
+        public async Task UpdateAsync_WithValidData_UpdateUserAsSuccess()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
@@ -129,8 +144,10 @@ namespace Orion.Test.Services
             await userService.UpdateAsync(userFound);
             await userService.FindByIdAsync(userSaved.PublicId);
 
+            //act
             var userEdited = await userService.FindByIdAsync(userSaved.PublicId);
 
+            //assert
             Assert.Equal(userFound.Email, userEdited.Email);
             Assert.Equal(userFound.Password, userEdited.Password);
             Assert.Equal(userFound.Name, userEdited.Name);
@@ -142,8 +159,9 @@ namespace Orion.Test.Services
 
         #region User Authentication tests
         [Fact]
-        public async Task LoginValidTest()
+        public async Task LoginAsync_WithValidCredentials_LoginAsSuccess()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
@@ -152,10 +170,11 @@ namespace Orion.Test.Services
 
             Assert.NotNull(userFound);
 
+            //act
             var userLoged = await userService.LoginAsync(userFound.Email, UserMotherObject.ValidAdminUser().Password);
 
+            //assert
             Assert.NotNull(userLoged);
-
             Assert.Equal(userLoged.Email, userAdded.Email);
             Assert.Equal(userLoged.Password, userAdded.Password);
             Assert.Equal(userLoged.Name, userAdded.Name);
@@ -164,24 +183,26 @@ namespace Orion.Test.Services
         }
 
         [Fact]
-        public async Task LoginInvalidPassTest()
+        public async Task LoginAsync_WithInvalidCredentials_ThrowsUnauthorizedUserException()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
             var userAdded = await userService.AddAsync(UserMotherObject.ValidAdminUser());
             var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
-            Assert.NotNull(userFound);
-
+            //act & assert
             await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.LoginAsync(userFound.Email, "wrong pass"));
+            Assert.NotNull(userFound);
 
             await userService.DeleteAsync(userFound.PublicId);
         }
 
         [Fact]
-        public async Task AddRefreshTokenValidTest()
+        public async Task RefreshTokenAddAync_WithValidEmail_AddARefreskToken()
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
@@ -194,10 +215,11 @@ namespace Orion.Test.Services
 
             var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
+            //act
             var userByRefreshToken = await userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken);
 
+            //assert
             Assert.NotNull(userByRefreshToken);
-
             Assert.Equal(userByRefreshToken.Email, userAdded.Email);
             Assert.Equal(userByRefreshToken.Password, userAdded.Password);
             Assert.Equal(userByRefreshToken.Name, userAdded.Name);
@@ -205,9 +227,12 @@ namespace Orion.Test.Services
             await userService.DeleteAsync(userFound.PublicId);
         }
 
-        [Fact]
-        public async Task RefreshTokenNullTest()
+        [Theory]
+        [InlineData(null)]
+        [InlineData("Invalid refresh token")]
+        public async Task GetUserByRefreshTokenAsync_WithInvalidId_ThrowsUnauthorizedUserException(string refreshTokenId)
         {
+            //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
             var messages = scope.ServiceProvider.GetService<IStringLocalizer<OrionResources>>();
@@ -221,31 +246,10 @@ namespace Orion.Test.Services
 
             await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
 
-            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(null));
+            //act
+            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(refreshTokenId));
 
-            Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
-
-            await userService.DeleteAsync(userFound.PublicId);
-        }
-
-        [Fact]
-        public async Task RefreshTokenInvalidTest()
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var userService = scope.ServiceProvider.GetService<IUserService>();
-            var messages = scope.ServiceProvider.GetService<IStringLocalizer<OrionResources>>();
-
-            var userAdded = await userService.AddAsync(UserMotherObject.ValidAdminUser());
-            var userFound = await userService.FindByIdAsync(userAdded.PublicId);
-
-            Assert.NotNull(userFound);
-
-            var refreshToken = Guid.NewGuid().ToString();
-
-            await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
-
-            var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync("wrong refresh token"));
-
+            //assert
             Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
 
             await userService.DeleteAsync(userFound.PublicId);
@@ -254,10 +258,10 @@ namespace Orion.Test.Services
         [Fact]
         public void CryptoSha512Test()
         {
-            const string stringValidTest = "userPawssTest1234A%@&!";
-            const string expectedResult = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
+            const string passwordTest = "userPawssTest1234A%@&!";
+            const string expectedHash = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
 
-            Assert.Equal(expectedResult, stringValidTest.ToSha512());
+            Assert.Equal(expectedHash, passwordTest.ToSha512());
         }
 
         #endregion

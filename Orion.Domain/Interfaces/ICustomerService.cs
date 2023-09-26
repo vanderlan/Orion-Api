@@ -8,6 +8,6 @@ namespace Orion.Domain.Interfaces
 {
     public interface ICustomerService : IBaseService<Customer>
     {
-        Task<PagedList<Customer>> ListPaginate(CustomerFilter filter);
+        Task<PagedList<Customer>> ListPaginateAsync(CustomerFilter filter);
     }
 }

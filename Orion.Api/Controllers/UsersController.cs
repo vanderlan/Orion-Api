@@ -45,6 +45,9 @@ namespace Orion.Api.Controllers
             var user = await _userService.FindByIdAsync(id);
             var userOutput = Mapper.Map<UserOutput>(user);
 
+            if (userOutput is null) 
+                return NotFound();
+
             return Ok(userOutput);
         }
 

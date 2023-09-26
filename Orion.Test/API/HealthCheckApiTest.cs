@@ -10,11 +10,14 @@ namespace Orion.Test.API
         [Fact]
         public async Task GetAsync_HealthCheck_ReturnsHealthy()
         {
+            //arrange
             Setup();
-
             var successMessageService = "Healthy";
+
+            //act
             var result = await Client.GetAsync("/health-check");
 
+            //assert
             var content = await result.Content.ReadAsStringAsync();
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

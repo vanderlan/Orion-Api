@@ -43,7 +43,7 @@ namespace Orion.Domain.Implementation
             return await _unitOfWork.CustomerRepository.FindByIdAsync(publicId);
         }
 
-        public async Task<PagedList<Customer>> ListPaginate(CustomerFilter filter)
+        public async Task<PagedList<Customer>> ListPaginateAsync(CustomerFilter filter)
         {
             return await _unitOfWork.CustomerRepository.ListPaginate(filter);
         }

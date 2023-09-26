@@ -1,7 +1,5 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 
-EXPOSE 5000
-
 WORKDIR /app
 
 COPY . .

@@ -7,10 +7,8 @@ namespace Orion.Domain.Extensions
     {
         public static string ToSha512(this string text)
         {
-            using SHA512 hashAlgorithm = SHA512.Create();
-
             var byteValue = Encoding.UTF8.GetBytes(text);
-            var byteHash = hashAlgorithm.ComputeHash(byteValue);
+            var byteHash = SHA512.HashData(byteValue);
 
             StringBuilder hex = new();
 

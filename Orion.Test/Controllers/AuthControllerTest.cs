@@ -26,6 +26,7 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task Login_WithValidCredentials_ReturnsOk()
         {
+            //arrange & act
             var result = await _authController.Login(
                 new UserLoginModel 
                 { 
@@ -37,6 +38,7 @@ namespace Orion.Test.Controllers
             var contentResult = (OkObjectResult) result;
             var userApiToken = (UserApiTokenModel) contentResult.Value;
 
+            //assert
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
@@ -48,6 +50,7 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task Login_WithInvalidCredentials_RetunsUnauthorized()
         {
+            //arrange & act
             var result = await _authController.Login(
                 new UserLoginModel
                 {
@@ -58,6 +61,7 @@ namespace Orion.Test.Controllers
 
             var contentResult = (UnauthorizedResult)result;
 
+            //assert
             Assert.IsType<UnauthorizedResult>(contentResult);
             Assert.Equal(401, contentResult.StatusCode);
         }
@@ -65,6 +69,8 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
         {
+            //arrange & act
+
             var result = await _authController.RefreshToken(
                 RefreshTokenMotherObject.ValidRefreshTokenModel()
             );
@@ -72,6 +78,7 @@ namespace Orion.Test.Controllers
             var contentResult = (OkObjectResult)result;
             var userApiToken = (UserApiTokenModel)contentResult.Value;
 
+            //asert
             Assert.IsType<OkObjectResult>(contentResult);
             Assert.Equal(200, contentResult.StatusCode);
 
@@ -82,12 +89,14 @@ namespace Orion.Test.Controllers
         [Fact]
         public async Task RefreshToken_WithInvalidRefreshToken_ReturnsUnauthorized()
         {
+            //arrange & act
             var result = await _authController.RefreshToken(
                 new RefreshTokenModel { RefreshToken = null}
             );
 
             var contentResult = (UnauthorizedResult)result;
 
+            //assert
             Assert.IsType<UnauthorizedResult>(contentResult);
             Assert.Equal(401, contentResult.StatusCode);
         }
@@ -102,7 +111,6 @@ namespace Orion.Test.Controllers
             userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
             userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
 
-            //Arrange
             var inMemorySettings = new Dictionary<string, string> {
                 {"JwtConfiguration:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
                 {"JwtConfiguration:Issuer", "http://www.myapplication.com"},

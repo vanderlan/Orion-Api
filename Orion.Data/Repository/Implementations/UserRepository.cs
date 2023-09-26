@@ -23,7 +23,7 @@ namespace Orion.Data.Repository.Implementations
             return user ?? null;
         }
 
-        public async Task<PagedList<User>> ListPaginate(UserFilter filter)
+        public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
         {
             var pagination = (filter.Page * filter.Quantity) - filter.Quantity;
 

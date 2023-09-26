@@ -30,7 +30,7 @@ namespace Orion.Api.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         public async Task<IActionResult> Get([FromQuery] CustomerFilter filter)
         {
-            var customer = await _customerService.ListPaginate(filter);
+            var customer = await _customerService.ListPaginateAsync(filter);
 
             var customerOutputList = Mapper.Map<PagedList<CustomerOutput>>(customer);
 
