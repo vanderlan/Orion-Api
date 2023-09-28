@@ -54,3 +54,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 **Todo**
 
 	1. API Test.
+
+**Run database migrations**
+	
+	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
