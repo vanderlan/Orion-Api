@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Orion.Data.Mapping;
 using Orion.Entities.Domain;
+using Microsoft.Extensions.Configuration;
 
 namespace Orion.Data.Context
 {
@@ -12,10 +12,11 @@ namespace Orion.Data.Context
     {
         public ModelBuilder ModelBuilder { get; private set; }
 
-        public DataContext() : base(GetDefaultOptions())
+        public DataContext(IConfiguration configuration) : base(GetDefaultOptions(configuration))
         {
 
         }
+
         public DataContext(DbContextOptions options) : base(options)
         {
 
@@ -27,9 +28,9 @@ namespace Orion.Data.Context
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         #endregion
 
-        private static DbContextOptions GetDefaultOptions()
+        private static DbContextOptions GetDefaultOptions(IConfiguration configuration)
         {
-            var connectionString = "Data Source=.\\SQLEXPRESS;Initial Catalog=Orion;Integrated Security=True;MultipleActiveResultSets=True;";
+            var connectionString = configuration.GetSection("DatabaseOptions:ConnectionString").Value;
 
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
         }
@@ -40,7 +41,7 @@ namespace Orion.Data.Context
             modelBuilder.ApplyConfiguration(new UserMapping());
             modelBuilder.ApplyConfiguration(new RefreshTokenMapping());
 
-            foreach (IMutableEntityType entityType in modelBuilder.Model.GetEntityTypes())
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 modelBuilder.Entity(entityType.ClrType).ToTable(entityType.ClrType.Name);
             }
