@@ -137,7 +137,7 @@ namespace Orion.Api
             services.AddScoped(_ => mappingConfig.CreateMapper());
         }
 
-        public static void ConfigureApp(this IApplicationBuilder app, IHostEnvironment env)
+        public static void ConfigureApp(this IApplicationBuilder app)
         {
             app.UseMiddleware<OrionMiddleware>();
 
@@ -158,12 +158,6 @@ namespace Orion.Api
 
             app.UseHealthChecks("/health-check");
 
-            var builder = new ConfigurationBuilder()
-               .SetBasePath(env.ContentRootPath)
-               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-               .AddEnvironmentVariables();
-            
             app.UseRouting();
 
             app.UseAuthentication();

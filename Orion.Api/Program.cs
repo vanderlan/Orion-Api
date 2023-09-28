@@ -6,6 +6,6 @@ builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.ConfigureApp(builder.Environment);
+app.ConfigureApp();
 
 app.Run();
