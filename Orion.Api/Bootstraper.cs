@@ -1,22 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Text;
 using AutoMapper;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Orion.Api.AutoMapper.Config;
@@ -24,27 +13,18 @@ using Orion.Api.Jwt;
 using Orion.Api.Middleware;
 using Orion.Api.Validators;
 using Orion.Ioc.Dependencies;
+using System.Globalization;
+using System.Text;
 
 namespace Orion.Api
 {
-    public class Startup
+    public static class Bootstraper
     {
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly IWebHostEnvironment _env;
-        private IConfiguration Configuration { get; set; }
-
-        public Startup(IConfiguration configuration, IWebHostEnvironment env, ILoggerFactory loggerFactory)
-        {
-            _loggerFactory = loggerFactory;
-            _env = env;
-            Configuration = configuration;
-        }
-
-        public void ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddCors();
 
-            ConfigureAuthentication(services);
+            ConfigureAuthentication(services, configuration);
 
             services.AddControllers();
 
@@ -62,7 +42,7 @@ namespace Orion.Api
             ConfigureApiVersioning(services);
 
             services.AddDomainServices();
-            services.AddAutoMapper(typeof(Startup));
+            
             ConfigureMapper(services);
         }
 
@@ -122,21 +102,10 @@ namespace Orion.Api
             });
         }
 
-        private void ConfigureAuthentication(IServiceCollection services)
+        private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
         {
-            var jwtConfiguration = Configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
-
-            services.AddIdentity<IdentityUser, IdentityRole>(
-                            option =>
-                            {
-                                option.Password.RequireDigit = false;
-                                option.Password.RequiredLength = 6;
-                                option.Password.RequireNonAlphanumeric = false;
-                                option.Password.RequireUppercase = false;
-                                option.Password.RequireLowercase = false;
-                            }
-                        ).AddDefaultTokenProviders();
-
+            var jwtConfiguration = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
+          
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -157,7 +126,7 @@ namespace Orion.Api
             });
         }
 
-        public void ConfigureMapper(IServiceCollection services)
+        public static void ConfigureMapper(IServiceCollection services)
         {
             var mappingConfig = new MapperConfiguration(mc =>
             {
@@ -168,20 +137,8 @@ namespace Orion.Api
             services.AddScoped(_ => mappingConfig.CreateMapper());
         }
 
-        public void Configure(IApplicationBuilder app, IHostEnvironment env)
+        public static void ConfigureApp(this IApplicationBuilder app)
         {
-            var logger = _loggerFactory.CreateLogger<Startup>();
-
-            //ENVIRONMENT
-            if (env.IsDevelopment())
-            {
-                logger.LogInformation("Development environment");
-            }
-            else
-            {
-                logger.LogInformation("Environment: {Env}", _env.EnvironmentName);
-                app.UseHsts();
-            }
             app.UseMiddleware<OrionMiddleware>();
 
             //SWAGGER
@@ -201,13 +158,6 @@ namespace Orion.Api
 
             app.UseHealthChecks("/health-check");
 
-            var builder = new ConfigurationBuilder()
-               .SetBasePath(env.ContentRootPath)
-               .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-               .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
-               .AddEnvironmentVariables();
-
-            Configuration = builder.Build();
             app.UseRouting();
 
             app.UseAuthentication();

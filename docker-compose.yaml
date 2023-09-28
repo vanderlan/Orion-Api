@@ -6,8 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:5000"
-    container_name: orion-api
+      - "5010:80"
+    container_name: orion
     networks:
       - backend-network
 networks:

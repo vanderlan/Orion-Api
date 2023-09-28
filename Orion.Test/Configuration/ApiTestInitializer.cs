@@ -1,40 +1,51 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Text;
-using Orion.Api;
 using Orion.Api.Models;
+using System;
+using System.Net.Http;
+using System.Text;
 
 namespace Orion.Test.Configuration
 {
-    public abstract class ApiTestInitializer : WebApplicationFactory<Startup>
+    public abstract class ApiTestInitializer : IDisposable
     {
-        protected HttpClient Client;
         protected string AuthToken;
+
+        protected readonly HttpClient Client;
+        protected readonly HttpClient AuthenticatedClient;
+        protected IServiceProvider ServiceProvider { get; private set; }
+
 
         public ApiTestInitializer()
         {
+            var appFactory = new WebApplicationFactory<Program>()
+               .WithWebHostBuilder(builder =>
+               {
+                   var config = new ConfigurationBuilder()
+                       .AddJsonFile("appsettings.Test.json", optional: false, reloadOnChange: true)
+                       .Build();
 
-        }
-
-        public void Setup()
-        {
-            var builder = new WebHostBuilder();
-
-            base.ConfigureWebHost(builder);
-
-            Client = Server.CreateClient();
-
-            AuthUser();
-
-            Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AuthToken);
+                   builder
+                       .UseConfiguration(config)
+                       .ConfigureServices(services =>
+                       {
+                       });
+               });
+            ServiceProvider = appFactory.Services;
+            Client = appFactory.CreateClient();
+            AuthenticatedClient = appFactory.CreateClient();
         }
 
         public void AuthUser()
         {
-            var result = Client.PostAsync("/api/Auth/Login", GetStringContent(new UserLoginModel { Email = "vanderlan.gs@gmail.com", Password = "123" })).GetAwaiter().GetResult();
+            var result = Client.PostAsync("/api/Auth/Login", GetStringContent(
+                new UserLoginModel { 
+                    Email = "vanderlan.gs@gmail.com", 
+                    Password = "123" 
+                }))
+                .GetAwaiter().GetResult();
 
             var content = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
@@ -48,12 +59,25 @@ namespace Orion.Test.Configuration
             return new StringContent(JsonConvert.SerializeObject(obj), Encoding.Default, "application/json");
         }
 
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            builder.UseEnvironment("Test")
-                .UseStartup<Startup>();
+        private bool _disposedValue = false;
 
-            base.ConfigureWebHost(builder);
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+               _disposedValue = true;
+            }
+        }
+
+        ~ApiTestInitializer()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
