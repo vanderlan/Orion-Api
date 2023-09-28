@@ -11,7 +11,6 @@ namespace Orion.Test.API
         public async Task GetAsync_HealthCheck_ReturnsHealthy()
         {
             //arrange
-            Setup();
             var successMessageService = "Healthy";
 
             //act

@@ -1,43 +1,11 @@
-using System;
-using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Logging;
-using NLog;
-using NLog.Web;
+using Orion.Api;
 
-namespace Orion.Api
-{
-    public static class Program
-    {
-        public static void Main(string[] args)
-        {
-            var logger = NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+var builder = WebApplication.CreateBuilder(args);
 
-            try
-            {
-                CreateWebHostBuilder(args).Build().Run();
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex, "Stopped program because of exception");
-                throw;
-            }
-            finally
-            {
-                LogManager.Shutdown();
-            }
-        }
+builder.Services.ConfigureServices(builder.Configuration);
 
-        private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5000")
-                .UseStartup<Startup>()
-                .UseIISIntegration()
-                .ConfigureLogging((context, logging) =>
-                {
-                    logging.ClearProviders();
-                    logging.AddConsole();
-                }).UseNLog();
+var app = builder.Build();
 
-    }
-}
+app.ConfigureApp(builder.Environment);
+
+app.Run();
