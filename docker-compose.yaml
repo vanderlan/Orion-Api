@@ -7,9 +7,40 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5010:80"
-    container_name: orion
+    container_name: orion-api
     networks:
       - backend-network
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.13
+    volumes:
+        - elasticsearch-data:/usr/share/elasticsearch/data
+    container_name: orion-api-elasticsearch
+    ports:
+        - "9200:9200"
+    environment:
+        - xpack.monitoring.enabled-true
+        - xpack.watcher.enable-false
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - discovery.type=single-node
+    networks:
+        - backend-network
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.13
+    container_name: orion-api-kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://localhost:9200
+    networks:
+      - backend-network
+
 networks:
     backend-network:
         driver: bridge
+  
+volumes:
+    elasticsearch-data:

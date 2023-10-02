@@ -13,10 +13,13 @@ using Orion.Api.Jwt;
 using Orion.Api.Middleware;
 using Orion.Api.Validators;
 using Orion.Ioc.Dependencies;
+using Serilog.Sinks.Elasticsearch;
+using Serilog;
 using System.Globalization;
+using System.Reflection;
 using System.Text;
 
-namespace Orion.Api
+namespace Orion.Api.Configuration
 {
     public static class Bootstraper
     {
@@ -42,7 +45,7 @@ namespace Orion.Api
             ConfigureApiVersioning(services);
 
             services.AddDomainServices();
-            
+
             ConfigureMapper(services);
         }
 
@@ -68,7 +71,7 @@ namespace Orion.Api
                 {
                     Version = "v1",
                     Title = "Orion API",
-                    Description = "Orion - API Description Here!"
+                    Description = "Orion API - A project reference for creating REST APIs with C# and .NET (v7.0)"
                 });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -105,7 +108,7 @@ namespace Orion.Api
         private static void ConfigureAuthentication(IServiceCollection services, IConfiguration configuration)
         {
             var jwtConfiguration = configuration.GetSection("JwtConfiguration").Get<JwtConfiguration>();
-          
+
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -145,7 +148,7 @@ namespace Orion.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
             });
 
             //CORS, Origin|Methods|Header|Credentials
@@ -196,6 +199,31 @@ namespace Orion.Api
 
             CultureInfo.DefaultThreadCurrentCulture = defaultCultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = defaultCultureInfo;
+        }
+
+        public static void ConfigureLogging(IConfiguration configuration)
+        {
+            var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+            Log.Logger = new LoggerConfiguration()
+                .Enrich.FromLogContext()
+                .Enrich.WithEnvironmentName()
+                .WriteTo.Debug()
+                .WriteTo.Console()
+                .WriteTo.Elasticsearch(ConfigureElasticSink(configuration, environment!))
+                .Enrich.WithProperty("Environment", environment!)
+                .Enrich.WithProperty("AppName", configuration["Serilog:AppName"])
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+
+        private static ElasticsearchSinkOptions ConfigureElasticSink(IConfiguration configuration, string environment)
+        {
+            return new ElasticsearchSinkOptions(new Uri(configuration["ElasticConfiguration:Uri"]))
+            {
+                AutoRegisterTemplate = true,
+                IndexFormat = $"{Assembly.GetExecutingAssembly().GetName().Name?.ToLower().Replace(".", "-")}-{environment?.ToLower().Replace(".", "-")}-{DateTime.UtcNow:yyyy-MM}"
+            };
         }
     }
 }

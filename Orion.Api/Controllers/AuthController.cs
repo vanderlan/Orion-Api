@@ -1,19 +1,16 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
 using Orion.Api.AutoMapper.Output;
 using Orion.Api.Jwt;
 using Orion.Api.Models;
 using Orion.Domain.Extensions;
 using Orion.Domain.Interfaces;
 using Orion.Entities.Domain;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Orion.Api.Controllers
 {
@@ -33,9 +30,9 @@ namespace Orion.Api.Controllers
         [Route("Login")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserLoginModel model)
+        public async Task<IActionResult> Login([FromBody] UserLoginModel userLoginModel)
         {
-            var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(model.Email, model.Password));
+            var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(userLoginModel.Email, userLoginModel.Password));
 
             return await AuthorizeUser(userOutput);
         }
