@@ -1,5 +1,3 @@
-using System;
-
 namespace Orion.Api.AutoMapper.Output
 {
     public class CustomerOutput

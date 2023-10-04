@@ -52,6 +52,11 @@ namespace Orion.Domain.Implementation
         {
             var entitySaved = await FindByIdAsync(entity.PublicId);
 
+            if (entitySaved == null)
+            {
+                throw new NotFoundException(entity.PublicId);
+            }
+
             entitySaved.Name = entity.Name;
             entitySaved.PublicId = entity.PublicId;
 

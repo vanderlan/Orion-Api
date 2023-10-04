@@ -1,12 +1,6 @@
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 using Orion.Domain.Exceptions;
+using System.Net;
 
 namespace Orion.Api.Middleware
 {
@@ -37,7 +31,6 @@ namespace Orion.Api.Middleware
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Something went wrong: {ex}");
                 await HandleExceptionAsync(context, ex);
             }
         }
@@ -62,7 +55,7 @@ namespace Orion.Api.Middleware
                 errorResponse.Title = businessException.Title;
             }
 
-            await ProccessResponseAsync(context, statusCode, errorResponse);
+            await ProccessResponseAsync(context, statusCode, errorResponse, exception);
         }
 
         private static HttpStatusCode GetStatusCodeByException(Exception exception)
@@ -74,13 +67,14 @@ namespace Orion.Api.Middleware
                 : HttpStatusCode.InternalServerError;
         }
 
-        private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode status, ExceptionResponse errorResponse)
+        private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode statusCode, ExceptionResponse errorResponse, Exception exception)
         {
             var errrorReturn = JsonConvert.SerializeObject(errorResponse);
 
-            _logger.LogError(errrorReturn);
+            if(statusCode == HttpStatusCode.InternalServerError)
+                _logger.LogError(exception, "Internal Server Error: {message}", errorResponse.Errors);
 
-            context.Response.StatusCode = (int)status;
+            context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
 
             await context.Response.WriteAsync(errrorReturn);

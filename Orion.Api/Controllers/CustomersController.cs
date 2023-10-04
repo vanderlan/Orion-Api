@@ -1,7 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Threading.Tasks;
 using Orion.Api.Attributes;
 using Orion.Api.AutoMapper.Input;
 using Orion.Api.AutoMapper.Output;

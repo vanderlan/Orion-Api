@@ -1,4 +1,4 @@
-# **Orion**
+# **Orion Api**
 
 [![Build and test](https://github.com/vanderlan/Orion-Api/actions/workflows/dotnet.yml/badge.svg)](https://github.com/vanderlan/Orion-Api/actions/workflows/dotnet.yml) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/Orion-Api/badge.svg)](https://coveralls.io/github/vanderlan/Orion-Api) <a href="https://codeclimate.com/github/vanderlan/Orion-Api/maintainability"><img src="https://api.codeclimate.com/v1/badges/692bddf02255681fe599/maintainability" /></a> [![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://GitHub.com/vanderlan/Orion-Api/) [![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/Orion-Api)](https://github.com/vanderlan/Orion-Api)
 
@@ -26,7 +26,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 	+ Personalized decorators;
 	+ Refresh Token.
 
-+ NLog
++ Serilog
 
 **Configurations and Patterns**
 

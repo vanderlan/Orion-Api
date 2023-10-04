@@ -1,5 +1,3 @@
-using System;
-
 namespace Orion.Api.Models
 {
     public class UserApiTokenModel

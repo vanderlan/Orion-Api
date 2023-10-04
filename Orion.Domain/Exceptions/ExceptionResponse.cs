@@ -4,13 +4,18 @@ namespace Orion.Domain.Exceptions
     {
         public ExceptionResponse(string message, NotificationType notificationType)
         {
-            Message = message;
+            Errors = new string[] { message };
             NotificationType = notificationType.ToString().ToUpperInvariant();
         }
 
-        public string Message { get; set; }
+        public ExceptionResponse(string [] errors, NotificationType notificationType)
+        {
+            Errors = errors ;
+            NotificationType = notificationType.ToString().ToUpperInvariant();
+        }
         public string Title { get; set; }
         public string NotificationType { get; set; }
+        public string [] Errors { get; set; }
     }
 
     public enum NotificationType
