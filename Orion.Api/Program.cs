@@ -1,9 +1,10 @@
+using Orion.Api;
 using Orion.Api.Configuration;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-Bootstraper.ConfigureLogging(builder.Configuration);
+builder.Configuration.ConfigureLogging();
 
 builder.Host.UseSerilog();
 
