@@ -60,13 +60,14 @@ namespace Orion.Data.UnitOfWork
                 }
             }
         }
-        public void Dispose()
-        {
-            DbContext.Dispose();
-            GC.SuppressFinalize(this);
-        }
 
         private bool _disposed;
+
+        ~UnitOfWork()
+        {
+            Dispose(false);
+        }
+        public void Dispose() => Dispose(true);
 
         protected virtual void Dispose(bool disposing)
         {
@@ -75,6 +76,7 @@ namespace Orion.Data.UnitOfWork
                 if (disposing)
                 {
                     DbContext.Dispose();
+                    GC.SuppressFinalize(this);
                 }
             }
             _disposed = true;
