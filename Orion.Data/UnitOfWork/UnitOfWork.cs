@@ -44,12 +44,6 @@ namespace Orion.Data.UnitOfWork
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
         }
 
-        public void Dispose()
-        {
-            DbContext.Dispose();
-            GC.SuppressFinalize(this);
-        }
-
         public void DiscardChanges()
         {
             foreach (var entry in DbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))
@@ -65,6 +59,25 @@ namespace Orion.Data.UnitOfWork
                         break;
                 }
             }
+        }
+        public void Dispose()
+        {
+            DbContext.Dispose();
+            GC.SuppressFinalize(this);
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    DbContext.Dispose();
+                }
+            }
+            _disposed = true;
         }
     }
 }
