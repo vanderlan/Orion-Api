@@ -58,11 +58,14 @@ namespace Orion.Api.Middleware
 
         private static HttpStatusCode GetStatusCodeByException(Exception exception)
         {
-            return exception is NotFoundException ? HttpStatusCode.NotFound :
-                exception is ConflictException ? HttpStatusCode.Conflict :
-                exception is UnauthorizedUserException ? HttpStatusCode.Unauthorized :
-                exception is BusinessException ? HttpStatusCode.BadRequest
-                : HttpStatusCode.InternalServerError;
+            return exception switch
+            {
+                NotFoundException => HttpStatusCode.NotFound,
+                ConflictException => HttpStatusCode.Conflict,
+                UnauthorizedUserException => HttpStatusCode.Unauthorized,
+                BusinessException => HttpStatusCode.BadRequest,
+                _ => HttpStatusCode.InternalServerError
+            };
         }
 
         private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode statusCode, ExceptionResponse errorResponse, Exception exception)

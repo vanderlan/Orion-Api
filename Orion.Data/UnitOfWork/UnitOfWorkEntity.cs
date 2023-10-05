@@ -41,7 +41,7 @@ namespace Orion.Data.UnitOfWork
 
         private static DbContextOptions GetOptions(string connection)
         {
-            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
+            return new DbContextOptionsBuilder().UseSqlServer(connection).Options;
         }
 
         public void Dispose()

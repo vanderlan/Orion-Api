@@ -32,7 +32,7 @@ namespace Orion.Data.Context
         {
             var connectionString = configuration.GetSection("DatabaseOptions:ConnectionString").Value;
 
-            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
+            return new DbContextOptionsBuilder().UseSqlServer(connectionString).Options;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
