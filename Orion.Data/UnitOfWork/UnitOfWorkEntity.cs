@@ -47,6 +47,7 @@ namespace Orion.Data.UnitOfWork
         public void Dispose()
         {
             DbContext.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public void DiscardChanges()

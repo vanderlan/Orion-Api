@@ -12,7 +12,7 @@ namespace Orion.Api.Configuration
     {
         public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var jwtConfiguration = configuration.GetSection("JwtConfiguration").Get<JwtSettings>();
+            var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
             services.AddAuthentication(option =>
             {
@@ -26,9 +26,9 @@ namespace Orion.Api.Configuration
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
                     ValidateAudience = true,
-                    ValidAudience = jwtConfiguration.Audience,
-                    ValidIssuer = jwtConfiguration.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SymmetricSecurityKey)),
+                    ValidAudience = jwtOptions.Audience,
+                    ValidIssuer = jwtOptions.Issuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey)),
                     ClockSkew = TimeSpan.Zero
                 };
             });
@@ -36,7 +36,7 @@ namespace Orion.Api.Configuration
 
         public static JwtSecurityToken CreateToken(UserOutput userOutput, IConfiguration configuration)
         {
-            var jwtConfiguration = configuration.GetSection("JwtConfiguration").Get<JwtSettings>();
+            var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
             var claim = new[] {
                     new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
@@ -45,12 +45,12 @@ namespace Orion.Api.Configuration
                     new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
                 };
 
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.SymmetricSecurityKey));
+            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
 
             var token = new JwtSecurityToken(
-              issuer: jwtConfiguration.Issuer,
-              audience: jwtConfiguration.Audience,
-              expires: DateTime.UtcNow.AddMinutes(jwtConfiguration.TokenExpirationMinutes),
+              issuer: jwtOptions.Issuer,
+              audience: jwtOptions.Audience,
+              expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
               signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
               claims: claim
             );

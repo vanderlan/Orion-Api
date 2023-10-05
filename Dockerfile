@@ -1,5 +1,6 @@
 FROM mcr.microsoft.com/dotnet/sdk:7.0-alpine AS build
 
+ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:80  
 
 WORKDIR /app

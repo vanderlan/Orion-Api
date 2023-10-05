@@ -1,13 +1,16 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Orion.Api.AutoMapper.Output;
-using Orion.Api.Configuration;
 using Orion.Api.Models;
 using Orion.Domain.Extensions;
 using Orion.Domain.Interfaces;
 using Orion.Entities.Domain;
-using System.IdentityModel.Tokens.Jwt;
+using Orion.Api.Jwt;
 
 namespace Orion.Api.Controllers
 {
@@ -27,11 +30,11 @@ namespace Orion.Api.Controllers
         [Route("Login")]
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserLoginModel userLoginModel)
+        public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
-            var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(userLoginModel.Email, userLoginModel.Password));
+            var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(model.Email, model.Password));
 
-            return await AuthorizeUserAsync(userOutput);
+            return await AuthorizeUser(userOutput);
         }
 
         [Route("RefreshToken")]
@@ -41,16 +44,16 @@ namespace Orion.Api.Controllers
         {
             var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshTokenAsync(refreshTokenModel.RefreshToken));
 
-            return await AuthorizeUserAsync(userOutput);
+            return await AuthorizeUser(userOutput);
         }
 
-        private async Task<IActionResult> AuthorizeUserAsync(UserOutput userOutput)
+        private async Task<IActionResult> AuthorizeUser(UserOutput userOutput)
         {
             if (userOutput != null)
             {
-                var token = AuthenticationConfiguration.CreateToken(userOutput, _configuration);
+                var token = CreateToken(userOutput);
 
-                var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512()});
+                var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512() });
 
                 return Ok(
                   new UserApiTokenModel
@@ -62,6 +65,31 @@ namespace Orion.Api.Controllers
             }
 
             return Unauthorized();
+        }
+
+        private JwtSecurityToken CreateToken(UserOutput userOutput)
+        {
+            var jwtOptions = _configuration.GetSection("JwtOptions").Get<JwtOptions>();
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
+                new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
+                new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
+            };
+
+            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
+
+            var token = new JwtSecurityToken(
+              issuer: jwtOptions.Issuer,
+              audience: jwtOptions.Audience,
+              expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
+              signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha512),
+              claims: claims
+            );
+
+            return token;
         }
     }
 }

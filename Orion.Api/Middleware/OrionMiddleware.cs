@@ -7,17 +7,15 @@ namespace Orion.Api.Middleware
     public class OrionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly ILogger _logger;
+        private readonly ILogger<OrionMiddleware> _logger;
         private readonly IHostEnvironment _env;
 
-        public OrionMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, IHostEnvironment env)
+        public OrionMiddleware(RequestDelegate next, ILogger<OrionMiddleware> logger, IHostEnvironment env)
         {
             _env = env;
-            _loggerFactory = loggerFactory;
             _next = next;
-
-            _logger = _loggerFactory.CreateLogger<OrionMiddleware>();
+            _logger = logger;
+            //_logger = loggerFactory.CreateLogger<OrionMiddleware>();
         }
 
         public async Task Invoke(HttpContext context)
