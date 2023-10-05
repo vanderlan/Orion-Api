@@ -5,7 +5,7 @@ namespace Orion.Domain.Exceptions
     [Serializable]
     public class UnauthorizedUserException : BusinessException
     {
-        public UnauthorizedUserException(string msg, string title) : base(msg, title)
+        public UnauthorizedUserException(string message, string title) : base(message, title)
         {
 
         }

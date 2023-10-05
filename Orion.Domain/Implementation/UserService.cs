@@ -15,10 +15,10 @@ namespace Orion.Domain.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly IUnitOfWorkEntity _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IStringLocalizer<OrionResources> _messages;
 
-        public UserService(IUnitOfWorkEntity unitOfWork, IStringLocalizer<OrionResources> resourceMessages)
+        public UserService(IUnitOfWork unitOfWork, IStringLocalizer<OrionResources> resourceMessages)
         {
             _unitOfWork = unitOfWork;
             _messages = resourceMessages;

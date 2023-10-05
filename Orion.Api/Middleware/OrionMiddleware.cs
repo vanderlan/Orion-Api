@@ -15,7 +15,6 @@ namespace Orion.Api.Middleware
             _env = env;
             _next = next;
             _logger = logger;
-            //_logger = loggerFactory.CreateLogger<OrionMiddleware>();
         }
 
         public async Task Invoke(HttpContext context)

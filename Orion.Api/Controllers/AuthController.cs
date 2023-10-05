@@ -1,21 +1,19 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using Orion.Api.AutoMapper.Output;
+using Orion.Api.Configuration;
 using Orion.Api.Models;
 using Orion.Domain.Extensions;
 using Orion.Domain.Interfaces;
 using Orion.Entities.Domain;
-using Orion.Api.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Orion.Api.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
-    [ApiController]
+    [AllowAnonymous]
     public class AuthController : ApiController
     {
         private readonly IUserService _userService;
@@ -28,7 +26,6 @@ namespace Orion.Api.Controllers
         }
 
         [Route("Login")]
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
@@ -38,7 +35,6 @@ namespace Orion.Api.Controllers
         }
 
         [Route("RefreshToken")]
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
         {
@@ -51,7 +47,7 @@ namespace Orion.Api.Controllers
         {
             if (userOutput != null)
             {
-                var token = CreateToken(userOutput);
+                var token = AuthenticationConfiguration.CreateToken(userOutput, _configuration);
 
                 var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512() });
 
@@ -65,31 +61,6 @@ namespace Orion.Api.Controllers
             }
 
             return Unauthorized();
-        }
-
-        private JwtSecurityToken CreateToken(UserOutput userOutput)
-        {
-            var jwtOptions = _configuration.GetSection("JwtOptions").Get<JwtOptions>();
-
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
-                new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
-                new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
-            };
-
-            var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
-
-            var token = new JwtSecurityToken(
-              issuer: jwtOptions.Issuer,
-              audience: jwtOptions.Audience,
-              expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
-              signingCredentials: new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha512),
-              claims: claims
-            );
-
-            return token;
         }
     }
 }

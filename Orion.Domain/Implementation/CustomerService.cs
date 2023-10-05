@@ -10,9 +10,9 @@ namespace Orion.Domain.Implementation
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IUnitOfWorkEntity _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerService(IUnitOfWorkEntity unitOfWork)
+        public CustomerService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -51,11 +51,6 @@ namespace Orion.Domain.Implementation
         public async Task UpdateAsync(Customer entity)
         {
             var entitySaved = await FindByIdAsync(entity.PublicId);
-
-            if (entitySaved == null)
-            {
-                throw new NotFoundException(entity.PublicId);
-            }
 
             entitySaved.Name = entity.Name;
             entitySaved.PublicId = entity.PublicId;

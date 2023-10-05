@@ -10,16 +10,16 @@ using Orion.Domain.Repositories.UnitOfWork;
 
 namespace Orion.Data.UnitOfWork
 {
-    public class UnitOfWorkEntity : IUnitOfWorkEntity, IDisposable
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private DataContext DbContext { get; }
 
-        public UnitOfWorkEntity(IConfiguration configuration)
+        public UnitOfWork(IConfiguration configuration)
         {
             DbContext = new DataContext(GetOptions(configuration.GetSection("DatabaseOptions:ConnectionString").Value));
         }
 
-        public UnitOfWorkEntity(DbContextOptions<DataContext> dbContextOptions)
+        public UnitOfWork(DbContextOptions<DataContext> dbContextOptions)
         {
             DbContext = new DataContext(dbContextOptions);
         }
@@ -41,7 +41,7 @@ namespace Orion.Data.UnitOfWork
 
         private static DbContextOptions GetOptions(string connection)
         {
-            return new DbContextOptionsBuilder().UseSqlServer(connection).Options;
+            return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
         }
 
         public void Dispose()

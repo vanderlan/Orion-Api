@@ -5,26 +5,21 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Orion.Api.Attributes;
 using Orion.Api.AutoMapper;
 using Orion.Api.Configuration;
-using Orion.Api.Middleware;
 using Orion.Api.Validators;
 using Orion.Ioc.Dependencies;
 
 namespace Orion.Api
 {
-    public static class Bootstraper
+    public static class Bootstrapper
     {
         public static void ConfigureApp(this IApplicationBuilder app)
         {
-            app.UseMiddleware<OrionMiddleware>();
-
-            //SWAGGER
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
             });
 
-            //CORS, Origin|Methods|Header|Credentials
             app.UseCors(options => options.WithOrigins("*")
                 .AllowAnyMethod()
                 .AllowAnyOrigin()

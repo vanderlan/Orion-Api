@@ -51,7 +51,7 @@ namespace Orion.Api.Configuration
               issuer: jwtOptions.Issuer,
               audience: jwtOptions.Audience,
               expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
-              signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha256),
+              signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha512),
               claims: claim
             );
 
