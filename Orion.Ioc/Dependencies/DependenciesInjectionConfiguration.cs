@@ -10,8 +10,10 @@ namespace Orion.Ioc.Dependencies
     {
         public static void AddDomainServices(this IServiceCollection services)
         {
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            //Unit of Work
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+            //Domain Services
             services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IUserService, UserService>();
         }

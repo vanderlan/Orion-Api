@@ -19,14 +19,18 @@ namespace Orion.Domain.Implementation
 
         public async Task<Customer> AddAsync(Customer entity)
         {
-            var added = await _unitOfWork.CustomerRepository.AddAsync(entity);
-            await _unitOfWork.CommitAsync();
+            using var unitOfWork = _unitOfWork;
+
+            var added = await unitOfWork.CustomerRepository.AddAsync(entity);
+            await unitOfWork.CommitAsync();
 
             return added;
         }
 
         public async Task DeleteAsync(string publicId)
         {
+            using var unitOfWork = _unitOfWork;
+
             var item = await FindByIdAsync(publicId);
 
             if (item == null)
@@ -34,13 +38,13 @@ namespace Orion.Domain.Implementation
                 throw new NotFoundException(publicId);
             }
 
-            await _unitOfWork.CustomerRepository.DeleteAsync(publicId);
-            await _unitOfWork.CommitAsync();
+            await unitOfWork.CustomerRepository.DeleteAsync(publicId);
+            await unitOfWork.CommitAsync();
         }
 
         public async Task<Customer> FindByIdAsync(string publicId)
         {
-            return await _unitOfWork.CustomerRepository.FindByIdAsync(publicId);
+            return await _unitOfWork.CustomerRepository.GetByIdAsync(publicId);
         }
 
         public async Task<PagedList<Customer>> ListPaginateAsync(CustomerFilter filter)
@@ -50,13 +54,15 @@ namespace Orion.Domain.Implementation
 
         public async Task UpdateAsync(Customer entity)
         {
+            using var unitOfWork = _unitOfWork;
+
             var entitySaved = await FindByIdAsync(entity.PublicId);
 
             entitySaved.Name = entity.Name;
             entitySaved.PublicId = entity.PublicId;
 
-            _unitOfWork.CustomerRepository.Update(entitySaved);
-            await _unitOfWork.CommitAsync();
+            unitOfWork.CustomerRepository.Update(entitySaved);
+            await unitOfWork.CommitAsync();
         }
     }
 }

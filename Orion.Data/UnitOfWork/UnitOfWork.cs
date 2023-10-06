@@ -31,7 +31,6 @@ namespace Orion.Data.UnitOfWork
         public IUserRepository UserRepository => _userRepository ??= new UserRepository(DbContext);
 
         private IRefreshTokenRepository _refreshTokenRepository;
-
         public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new RefreshTokenRepository(DbContext);
 
         public async Task CommitAsync()
@@ -63,13 +62,6 @@ namespace Orion.Data.UnitOfWork
 
         private bool _disposed;
 
-        ~UnitOfWork()
-        {
-            Dispose(false);
-        }
-
-        public void Dispose() => Dispose(true);
-
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposed && disposing)
@@ -77,6 +69,12 @@ namespace Orion.Data.UnitOfWork
                 DbContext.Dispose();
                 _disposed = true;
             }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -9,8 +9,8 @@ namespace Orion.Data.Repository.Generic
     {
         Task<T> AddAsync(T entity);
         Task DeleteAsync(string publicId);
-        Task<IEnumerable<T>> GetByAsync(Expression<Func<T, bool>> predicate);
-        Task<T> FindByIdAsync(string publicId);
+        Task<IEnumerable<T>> SearchByAsync(Expression<Func<T, bool>> predicate);
+        Task<T> GetByIdAsync(string publicId);
         void Update(T entity);
     }
 }

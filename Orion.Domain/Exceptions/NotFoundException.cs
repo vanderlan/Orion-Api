@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Orion.Domain.Exceptions
 {
@@ -10,7 +11,20 @@ namespace Orion.Domain.Exceptions
         public NotFoundException(string id) : base($"Resource Not Found with id: {id}")
         {
             Id = id;
-            Title = "Not Found";
+        }
+
+        public NotFoundException() : base()
+        {
+
+        }
+
+        public NotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected NotFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }
