@@ -19,18 +19,14 @@ namespace Orion.Domain.Implementation
 
         public async Task<Customer> AddAsync(Customer entity)
         {
-            using var unitOfWork = _unitOfWork;
-
-            var added = await unitOfWork.CustomerRepository.AddAsync(entity);
-            await unitOfWork.CommitAsync();
+            var added = await _unitOfWork.CustomerRepository.AddAsync(entity);
+            await _unitOfWork.CommitAsync();
 
             return added;
         }
 
         public async Task DeleteAsync(string publicId)
         {
-            using var unitOfWork = _unitOfWork;
-
             var item = await FindByIdAsync(publicId);
 
             if (item == null)
@@ -38,8 +34,8 @@ namespace Orion.Domain.Implementation
                 throw new NotFoundException(publicId);
             }
 
-            await unitOfWork.CustomerRepository.DeleteAsync(publicId);
-            await unitOfWork.CommitAsync();
+            await _unitOfWork.CustomerRepository.DeleteAsync(publicId);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<Customer> FindByIdAsync(string publicId)
@@ -61,8 +57,8 @@ namespace Orion.Domain.Implementation
             entitySaved.Name = entity.Name;
             entitySaved.PublicId = entity.PublicId;
 
-            unitOfWork.CustomerRepository.Update(entitySaved);
-            await unitOfWork.CommitAsync();
+            _unitOfWork.CustomerRepository.Update(entitySaved);
+            await _unitOfWork.CommitAsync();
         }
     }
 }

@@ -28,8 +28,10 @@ namespace Orion.Data.Repository.Generic
         public async Task DeleteAsync(string publicId)
         {
             var existing = await GetByIdAsync(publicId);
+
             if (existing != null)
             {
+                DataContext.ChangeTracker.Clear();
                 DataContext.Set<T>().Remove(existing);
             }
         }
@@ -46,6 +48,7 @@ namespace Orion.Data.Repository.Generic
 
         public void Update(T entity)
         {
+            DataContext.ChangeTracker.Clear();
             DataContext.Entry(entity).State = EntityState.Modified;
             DataContext.Set<T>().Update(entity);
         }

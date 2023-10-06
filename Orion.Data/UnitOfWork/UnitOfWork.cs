@@ -66,7 +66,6 @@ namespace Orion.Data.UnitOfWork
         {
             if (!_disposed && disposing)
             {
-                DbContext.Dispose();
                 _disposed = true;
             }
         }

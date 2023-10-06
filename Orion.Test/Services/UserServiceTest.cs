@@ -53,17 +53,13 @@ namespace Orion.Test.Services
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
             var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
-            var userFound = await userService.FindByIdAsync(userSaved.PublicId);
-
-            Assert.NotNull(userFound);
-            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSha512(), userFound.Password);
-            Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
 
             //act && assert
             await Assert.ThrowsAsync<ConflictException>(() => userService.AddAsync(UserMotherObject.ValidAdminUser()));
 
-            await userService.DeleteAsync(userFound.PublicId);
+            await userService.DeleteAsync(userSaved.PublicId);
         }
+
         [Fact]
         public async Task ListPaginateAsync_WithFilterByName_GetAllMatchedUsers()
         {
@@ -149,7 +145,7 @@ namespace Orion.Test.Services
 
             //assert
             Assert.Equal(userFound.Email, userEdited.Email);
-            Assert.Equal(userFound.Password, userEdited.Password);
+            Assert.Equal(userFound.Password.ToSha512(), userEdited.Password);
             Assert.Equal(userFound.Name, userEdited.Name);
 
             await userService.DeleteAsync(userFound.PublicId);

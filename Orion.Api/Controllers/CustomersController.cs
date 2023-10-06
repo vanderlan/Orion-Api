@@ -14,7 +14,7 @@ namespace Orion.Api.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
-    [AuthorizeFor(Roles.Customer)]
+    [AuthorizeFor(Roles.Admin, Roles.Customer)]
     public class CustomersController : ApiController
     {
         private readonly ICustomerService _customerService;

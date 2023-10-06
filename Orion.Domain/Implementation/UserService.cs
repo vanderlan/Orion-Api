@@ -26,14 +26,12 @@ namespace Orion.Domain.Implementation
 
         public async Task<User> AddAsync(User user)
         {
-            using var unitOfWork = _unitOfWork;
-            
             await ValidateUser(user);
 
             user.Password = user.Password.ToSha512();
 
-            var added = await unitOfWork.UserRepository.AddAsync(user);
-            await unitOfWork.CommitAsync();
+            var added = await _unitOfWork.UserRepository.AddAsync(user);
+            await _unitOfWork.CommitAsync();
 
             return added;
         }
@@ -51,10 +49,8 @@ namespace Orion.Domain.Implementation
 
         public async Task DeleteAsync(string publicId)
         {
-            using var unitOfWork = _unitOfWork;
-
-            await unitOfWork.UserRepository.DeleteAsync(publicId);
-            await unitOfWork.CommitAsync();
+            await _unitOfWork.UserRepository.DeleteAsync(publicId);
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<User> FindByIdAsync(string publicId)
@@ -71,8 +67,6 @@ namespace Orion.Domain.Implementation
 
         public async Task UpdateAsync(User user)
         {
-            using var unitOfWork = _unitOfWork;
-
             var entitySaved = await FindByIdAsync(user.PublicId);
 
             await ValidateUser(user);
@@ -80,22 +74,20 @@ namespace Orion.Domain.Implementation
             entitySaved.Email = user.Email;
             entitySaved.Name = user.Name;
 
-            unitOfWork.UserRepository.Update(entitySaved);
+            _unitOfWork.UserRepository.Update(entitySaved);
 
-            await unitOfWork.CommitAsync();
+            await _unitOfWork.CommitAsync();
         }
 
         public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
         {
-            using var unitOfWork = _unitOfWork;
-
-            var existantRefresToken = await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email);
+            var existantRefresToken = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email);
 
             if (existantRefresToken.Any())
                 return existantRefresToken.First();
 
-            var added = await unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
-            await unitOfWork.CommitAsync();
+            var added = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+            await _unitOfWork.CommitAsync();
 
             return added;
         }
@@ -110,18 +102,16 @@ namespace Orion.Domain.Implementation
                 );
             }
 
-            using var unitOfWork = _unitOfWork;
-
-            var token = await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken));
+            var token = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken));
 
             if (token != null && token.Any())
             {
-                var user = await unitOfWork.UserRepository.SearchByAsync(x => x.Email == token.First().Email);
+                var user = await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == token.First().Email);
 
                 if (user.Any())
                 {
-                    await unitOfWork.RefreshTokenRepository.DeleteAsync(token.First().PublicId);
-                    await unitOfWork.CommitAsync();
+                    await _unitOfWork.RefreshTokenRepository.DeleteAsync(token.First().PublicId);
+                    await _unitOfWork.CommitAsync();
 
                     return user?.First() ?? throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
                 }
