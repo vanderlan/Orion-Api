@@ -71,9 +71,10 @@ namespace Orion.Api.Middleware
         {
             var errrorReturn = JsonConvert.SerializeObject(errorResponse);
 
-            if(statusCode == HttpStatusCode.InternalServerError)
-                _logger.LogError(exception, "Internal Server Error: {message}", errorResponse.Errors);
-
+            if (statusCode == HttpStatusCode.InternalServerError)
+                foreach (var error in errorResponse.Errors)
+                    _logger.LogError(exception, "Internal Server Error: {message}", error);
+           
             context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
 

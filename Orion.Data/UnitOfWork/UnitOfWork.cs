@@ -10,7 +10,7 @@ using Orion.Domain.Repositories.UnitOfWork;
 
 namespace Orion.Data.UnitOfWork
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private DataContext DbContext { get; }
 
