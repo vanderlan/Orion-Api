@@ -7,17 +7,14 @@ namespace Orion.Api.Middleware
     public class OrionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILoggerFactory _loggerFactory;
-        private readonly ILogger _logger;
+        private readonly ILogger<OrionMiddleware> _logger;
         private readonly IHostEnvironment _env;
 
-        public OrionMiddleware(RequestDelegate next, ILoggerFactory loggerFactory, IHostEnvironment env)
+        public OrionMiddleware(RequestDelegate next, ILogger<OrionMiddleware> logger, IHostEnvironment env)
         {
             _env = env;
-            _loggerFactory = loggerFactory;
             _next = next;
-
-            _logger = _loggerFactory.CreateLogger<OrionMiddleware>();
+            _logger = logger;
         }
 
         public async Task Invoke(HttpContext context)
@@ -60,20 +57,24 @@ namespace Orion.Api.Middleware
 
         private static HttpStatusCode GetStatusCodeByException(Exception exception)
         {
-            return exception is NotFoundException ? HttpStatusCode.NotFound :
-                exception is ConflictException ? HttpStatusCode.Conflict :
-                exception is UnauthorizedUserException ? HttpStatusCode.Unauthorized :
-                exception is BusinessException ? HttpStatusCode.BadRequest
-                : HttpStatusCode.InternalServerError;
+            return exception switch
+            {
+                NotFoundException => HttpStatusCode.NotFound,
+                ConflictException => HttpStatusCode.Conflict,
+                UnauthorizedUserException => HttpStatusCode.Unauthorized,
+                BusinessException => HttpStatusCode.BadRequest,
+                _ => HttpStatusCode.InternalServerError
+            };
         }
 
         private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode statusCode, ExceptionResponse errorResponse, Exception exception)
         {
             var errrorReturn = JsonConvert.SerializeObject(errorResponse);
 
-            if(statusCode == HttpStatusCode.InternalServerError)
-                _logger.LogError(exception, "Internal Server Error: {message}", errorResponse.Errors);
-
+            if (statusCode == HttpStatusCode.InternalServerError)
+                foreach (var error in errorResponse.Errors)
+                    _logger.LogError(exception, "Internal Server Error: {message}", error);
+           
             context.Response.StatusCode = (int)statusCode;
             context.Response.ContentType = "application/json";
 

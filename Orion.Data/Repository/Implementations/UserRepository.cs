@@ -18,7 +18,7 @@ namespace Orion.Data.Repository.Implementations
 
         public async Task<User> LoginAsync(string email, string password)
         {
-            var user = await DataContext.Users.Where(x => x.Email.Equals(email) && x.Password.Equals(password)).FirstOrDefaultAsync();
+            var user = await DataContext.Users.AsNoTracking().Where(x => x.Email.Equals(email) && x.Password.Equals(password)).FirstOrDefaultAsync();
 
             return user ?? null;
         }
@@ -38,14 +38,16 @@ namespace Orion.Data.Repository.Implementations
                 listQuerable = listQuerable.Where(x => x.Name.Contains(filter.Entity.Name));
             }
 
-            var customerList = await listQuerable.OrderBy(x => x.Name).Skip(pagination).Take(filter.Quantity).ToListAsync();
+            var customerList = await listQuerable.OrderBy(x => x.Name).Skip(pagination).Take(filter.Quantity)
+                .AsNoTracking()
+                .ToListAsync();
 
             return new PagedList<User>(customerList, listQuerable.Count());
         }
 
         public async Task<User> FindByEmailAsync(string email)
         {
-            return await DataContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
+            return await DataContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email.Equals(email));
         }
     }
 }

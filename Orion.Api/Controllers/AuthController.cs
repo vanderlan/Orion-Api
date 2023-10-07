@@ -11,8 +11,9 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace Orion.Api.Controllers
 {
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
-    [ApiController]
+    [AllowAnonymous]
     public class AuthController : ApiController
     {
         private readonly IUserService _userService;
@@ -25,32 +26,30 @@ namespace Orion.Api.Controllers
         }
 
         [Route("Login")]
-        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] UserLoginModel userLoginModel)
+        public async Task<IActionResult> Login([FromBody] UserLoginModel model)
         {
-            var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(userLoginModel.Email, userLoginModel.Password));
+            var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(model.Email, model.Password));
 
-            return await AuthorizeUserAsync(userOutput);
+            return await AuthorizeUser(userOutput);
         }
 
         [Route("RefreshToken")]
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
         {
             var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshTokenAsync(refreshTokenModel.RefreshToken));
 
-            return await AuthorizeUserAsync(userOutput);
+            return await AuthorizeUser(userOutput);
         }
 
-        private async Task<IActionResult> AuthorizeUserAsync(UserOutput userOutput)
+        private async Task<IActionResult> AuthorizeUser(UserOutput userOutput)
         {
             if (userOutput != null)
             {
                 var token = AuthenticationConfiguration.CreateToken(userOutput, _configuration);
 
-                var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512()});
+                var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512() });
 
                 return Ok(
                   new UserApiTokenModel

@@ -10,9 +10,9 @@ namespace Orion.Domain.Implementation
 {
     public class CustomerService : ICustomerService
     {
-        private readonly IUnitOfWorkEntity _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CustomerService(IUnitOfWorkEntity unitOfWork)
+        public CustomerService(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
@@ -40,7 +40,7 @@ namespace Orion.Domain.Implementation
 
         public async Task<Customer> FindByIdAsync(string publicId)
         {
-            return await _unitOfWork.CustomerRepository.FindByIdAsync(publicId);
+            return await _unitOfWork.CustomerRepository.GetByIdAsync(publicId);
         }
 
         public async Task<PagedList<Customer>> ListPaginateAsync(CustomerFilter filter)
@@ -50,12 +50,9 @@ namespace Orion.Domain.Implementation
 
         public async Task UpdateAsync(Customer entity)
         {
-            var entitySaved = await FindByIdAsync(entity.PublicId);
+            using var unitOfWork = _unitOfWork;
 
-            if (entitySaved == null)
-            {
-                throw new NotFoundException(entity.PublicId);
-            }
+            var entitySaved = await FindByIdAsync(entity.PublicId);
 
             entitySaved.Name = entity.Name;
             entitySaved.PublicId = entity.PublicId;

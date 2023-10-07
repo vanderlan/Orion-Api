@@ -112,10 +112,10 @@ namespace Orion.Test.Controllers
             userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
 
             var inMemorySettings = new Dictionary<string, string> {
-                {"JwtConfiguration:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
-                {"JwtConfiguration:Issuer", "http://www.myapplication.com"},
-                {"JwtConfiguration:Audience", "http://www.myapplication.com"},
-                {"JwtConfiguration:TokenExpirationMinutes", "15"}
+                {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
+                {"JwtOptions:Issuer", "http://www.myapplication.com"},
+                {"JwtOptions:Audience", "http://www.myapplication.com"},
+                {"JwtOptions:TokenExpirationMinutes", "15"}
             };
 
             IConfiguration configuration = new ConfigurationBuilder()

@@ -15,10 +15,10 @@ namespace Orion.Domain.Implementation
 {
     public class UserService : IUserService
     {
-        private readonly IUnitOfWorkEntity _unitOfWork;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IStringLocalizer<OrionResources> _messages;
 
-        public UserService(IUnitOfWorkEntity unitOfWork, IStringLocalizer<OrionResources> resourceMessages)
+        public UserService(IUnitOfWork unitOfWork, IStringLocalizer<OrionResources> resourceMessages)
         {
             _unitOfWork = unitOfWork;
             _messages = resourceMessages;
@@ -55,7 +55,7 @@ namespace Orion.Domain.Implementation
 
         public async Task<User> FindByIdAsync(string publicId)
         {
-            return await _unitOfWork.UserRepository.FindByIdAsync(publicId);
+            return await _unitOfWork.UserRepository.GetByIdAsync(publicId);
         }
 
         public async Task<User> LoginAsync(string email, string password)
@@ -81,7 +81,7 @@ namespace Orion.Domain.Implementation
 
         public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
         {
-            var existantRefresToken = await _unitOfWork.RefreshTokenRepository.GetByAsync(x => x.Email == refreshToken.Email);
+            var existantRefresToken = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email);
 
             if (existantRefresToken.Any())
                 return existantRefresToken.First();
@@ -102,11 +102,11 @@ namespace Orion.Domain.Implementation
                 );
             }
 
-            var token = await _unitOfWork.RefreshTokenRepository.GetByAsync(x => x.Refreshtoken.Equals(refreshToken));
+            var token = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken));
 
             if (token != null && token.Any())
             {
-                var user = await _unitOfWork.UserRepository.GetByAsync(x => x.Email == token.First().Email);
+                var user = await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == token.First().Email);
 
                 if (user.Any())
                 {

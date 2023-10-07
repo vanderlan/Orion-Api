@@ -14,7 +14,6 @@ namespace Orion.Api.Controllers
 {
     [ApiVersion("1.0")]
     [Route("api/[controller]")]
-    [ApiController]
     [AuthorizeFor(Roles.Admin)]
     public class UsersController : ApiController
     {

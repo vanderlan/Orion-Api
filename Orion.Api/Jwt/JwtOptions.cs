@@ -1,6 +1,6 @@
 namespace Orion.Api.Jwt
 {
-    public class JwtSettings
+    public class JwtOptions
     {
         public string SymmetricSecurityKey { get; set; } 
         public string Issuer { get; set; }

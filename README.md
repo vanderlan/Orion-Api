@@ -20,7 +20,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 	+ Unmapped members Configuration.
 + Swagger
 + Fluent Validation
-+ Microsoft Identity Authentication
++ Authentication and Authorization
 	+ JWT Token;
 	+ Claims and profiles configuration;
 	+ Personalized decorators;

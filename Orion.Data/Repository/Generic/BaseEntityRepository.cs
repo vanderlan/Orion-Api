@@ -27,25 +27,28 @@ namespace Orion.Data.Repository.Generic
 
         public async Task DeleteAsync(string publicId)
         {
-            var existing = await FindByIdAsync(publicId);
+            var existing = await GetByIdAsync(publicId);
+
             if (existing != null)
             {
+                DataContext.ChangeTracker.Clear();
                 DataContext.Set<T>().Remove(existing);
             }
         }
 
-        public virtual async Task<T> FindByIdAsync(string publicId)
+        public virtual async Task<T> GetByIdAsync(string publicId)
         {
-            return await DataContext.Set<T>().FirstOrDefaultAsync(x => x.PublicId == publicId);
+            return await DataContext.Set<T>().AsNoTracking().SingleOrDefaultAsync(x => x.PublicId == publicId);
         }
 
-        public async Task<IEnumerable<T>> GetByAsync(Expression<Func<T, bool>> predicate)
+        public async Task<IEnumerable<T>> SearchByAsync(Expression<Func<T, bool>> predicate)
         {
-            return await DataContext.Set<T>().Where(predicate).ToListAsync();
+            return await DataContext.Set<T>().AsNoTracking().Where(predicate).ToListAsync();
         }
 
         public void Update(T entity)
         {
+            DataContext.ChangeTracker.Clear();
             DataContext.Entry(entity).State = EntityState.Modified;
             DataContext.Set<T>().Update(entity);
         }

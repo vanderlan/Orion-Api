@@ -1,16 +1,30 @@
 using System;
+using System.Runtime.Serialization;
 
 namespace Orion.Domain.Exceptions
 {
     [Serializable]
     public class NotFoundException : BusinessException
     {
-        public string PublicId { get; private set; }
+        public string Id { get; private set; }
 
-        public NotFoundException(string publicId) : base($"Resource Not Found with the identifier {publicId}")
+        public NotFoundException(string id) : base($"Resource Not Found with id: {id}")
         {
-            PublicId = publicId;
-            Title = "Not Found";
+            Id = id;
+        }
+
+        public NotFoundException() : base()
+        {
+
+        }
+
+        public NotFoundException(string message, Exception innerException) : base(message, innerException)
+        {
+        }
+
+        protected NotFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
     }
 }

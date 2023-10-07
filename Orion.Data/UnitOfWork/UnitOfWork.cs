@@ -10,16 +10,16 @@ using Orion.Domain.Repositories.UnitOfWork;
 
 namespace Orion.Data.UnitOfWork
 {
-    public class UnitOfWorkEntity : IUnitOfWorkEntity, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private DataContext DbContext { get; }
 
-        public UnitOfWorkEntity(IConfiguration configuration)
+        public UnitOfWork(IConfiguration configuration)
         {
             DbContext = new DataContext(GetOptions(configuration.GetSection("DatabaseOptions:ConnectionString").Value));
         }
 
-        public UnitOfWorkEntity(DbContextOptions<DataContext> dbContextOptions)
+        public UnitOfWork(DbContextOptions<DataContext> dbContextOptions)
         {
             DbContext = new DataContext(dbContextOptions);
         }
@@ -31,7 +31,6 @@ namespace Orion.Data.UnitOfWork
         public IUserRepository UserRepository => _userRepository ??= new UserRepository(DbContext);
 
         private IRefreshTokenRepository _refreshTokenRepository;
-
         public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new RefreshTokenRepository(DbContext);
 
         public async Task CommitAsync()
@@ -42,11 +41,6 @@ namespace Orion.Data.UnitOfWork
         private static DbContextOptions GetOptions(string connection)
         {
             return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
-        }
-
-        public void Dispose()
-        {
-            DbContext.Dispose();
         }
 
         public void DiscardChanges()
@@ -64,6 +58,22 @@ namespace Orion.Data.UnitOfWork
                         break;
                 }
             }
+        }
+
+        private bool _disposed;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed && disposing)
+            {
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }
