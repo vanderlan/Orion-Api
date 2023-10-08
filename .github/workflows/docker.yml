@@ -43,4 +43,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: vanderlangs/orion-api:${{ steps.vars.outputs.tag }},vanderlangs/orion-api:latest
+          tags: "latest,${{ steps.vars.outputs.tag }}"
