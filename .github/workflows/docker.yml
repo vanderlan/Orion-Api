@@ -43,6 +43,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: ${{ github.event_name != 'pull_request' }}
-          tags: |
-              ${{ secrets.DOCKERHUB_USERNAME }}/orion-api:${{ steps.vars.outputs.tag }}
-              ${{ secrets.DOCKERHUB_USERNAME }}/orion-api:latest
+          tags: vanderlangs/orion-api:${{ steps.vars.outputs.tag }},vanderlangs/orion-api:latest

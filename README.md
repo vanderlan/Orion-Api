@@ -1,6 +1,9 @@
 # **Orion Api**
 
-[![Build and test](https://github.com/vanderlan/Orion-Api/actions/workflows/dotnet.yml/badge.svg)](https://github.com/vanderlan/Orion-Api/actions/workflows/dotnet.yml) [![Coverage Status](https://coveralls.io/repos/github/vanderlan/Orion-Api/badge.svg)](https://coveralls.io/github/vanderlan/Orion-Api) <a href="https://codeclimate.com/github/vanderlan/Orion-Api/maintainability"><img src="https://api.codeclimate.com/v1/badges/692bddf02255681fe599/maintainability" /></a> [![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://GitHub.com/vanderlan/Orion-Api/) [![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/Orion-Api)](https://github.com/vanderlan/Orion-Api)
+[![Build](https://github.com/vanderlan/Orion-Api/actions/workflows/sonar.yml/badge.svg)](https://github.com/vanderlan/Orion-Api/actions/workflows/sonar.yml) 
+[![Coverage Status](https://coveralls.io/repos/github/vanderlan/Orion-Api/badge.svg)](https://coveralls.io/github/vanderlan/Orion-Api) <a href="https://codeclimate.com/github/vanderlan/Orion-Api/maintainability"><img src="https://api.codeclimate.com/v1/badges/692bddf02255681fe599/maintainability" /></a> 
+[![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://GitHub.com/vanderlan/Orion-Api/) 
+[![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/Orion-Api)](https://github.com/vanderlan/Orion-Api)
 
 **About this Project**
 
@@ -13,11 +16,9 @@ The main objective is to start projects with a clean and simple architecture, wi
 + Entity Framework Core
 	+ Fluent API;
 	+ CreatedAt and UpdatedAt by default;
-	+ Pagination;
-	+ Optimized for best performance.
+	+ Pagination.
 
 + AutoMapper
-	+ Unmapped members Configuration.
 + Swagger
 + Fluent Validation
 + Authentication and Authorization
