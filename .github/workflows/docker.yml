@@ -43,4 +43,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: vanderlangs/orion-api:v1.5.3-beta-4
+          tags: vanderlangs/orion-api:v1.5.3-beta-5, vanderlangs/orion-api:latest
