@@ -44,4 +44,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: vanderlangs/orion-api:latest,vanderlangs/orion-api:${{ steps.vars.outputs.tag }}
+          tags: vanderlangs/orion-api:${{ steps.vars.outputs.tag }}
