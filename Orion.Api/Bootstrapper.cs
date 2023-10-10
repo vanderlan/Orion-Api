@@ -27,7 +27,7 @@ namespace Orion.Api
 
             app.ConfigureGlobalization();
 
-            app.UseHealthChecks("/health-check");
+            app.ConfigureHealthCheck();
 
             app.UseRouting();
 
@@ -59,14 +59,13 @@ namespace Orion.Api
                 .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
                 .AddDataAnnotationsLocalization();
 
-
             services.Configure<ApiBehaviorOptions>(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
 
             services.AddLocalization(options => options.ResourcesPath = @"Resources");
-            services.AddHealthChecks();
+            services.AddApplicationHealthChecks(configuration);
 
             services.ConfigureSwagger();
             services.ConfigureApiVersioning();

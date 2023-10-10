@@ -12,7 +12,7 @@ namespace Orion.Test.Configuration
     public abstract class ApiTestInitializer : IDisposable
     {
         protected string AuthToken;
-                protected readonly HttpClient Client;
+        protected readonly HttpClient Client;
         protected readonly HttpClient AuthenticatedClient;
         protected IServiceProvider ServiceProvider { get; private set; }
 
@@ -26,10 +26,7 @@ namespace Orion.Test.Configuration
                        .Build();
 
                    builder
-                       .UseConfiguration(config)
-                       .ConfigureServices(services =>
-                       {
-                       });
+                       .UseConfiguration(config);
                });
             ServiceProvider = appFactory.Services;
             Client = appFactory.CreateClient();

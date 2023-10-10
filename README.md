@@ -7,7 +7,7 @@
 
 **About this Project**
 
-*A project reference for creating REST APIs with C# and .NET (v7.0).*
+*A simple project template for creating a .NET API (v7.0)*
 
 The main objective is to start projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
 
