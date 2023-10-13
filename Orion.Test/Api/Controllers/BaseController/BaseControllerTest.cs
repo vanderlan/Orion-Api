@@ -2,7 +2,7 @@ using AutoMapper;
 using Moq;
 using Orion.Api.AutoMapper.Config;
 
-namespace Orion.Test.Controllers.BaseController
+namespace Orion.Test.Api.Controllers.BaseController
 {
     public class BaseControllerTest
     {

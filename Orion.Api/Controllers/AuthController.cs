@@ -5,7 +5,7 @@ using Orion.Api.AutoMapper.Output;
 using Orion.Api.Configuration;
 using Orion.Api.Models;
 using Orion.Domain.Extensions;
-using Orion.Domain.Interfaces;
+using Orion.Domain.Services.Interfaces;
 using Orion.Entities.Domain;
 using System.IdentityModel.Tokens.Jwt;
 

@@ -5,21 +5,24 @@ using System.Threading.Tasks;
 using Orion.Api.Controllers;
 using Orion.Api.Models;
 using Orion.Entities.Domain;
-using Orion.Domain.Interfaces;
-using Orion.Test.Controllers.BaseController;
+using Orion.Domain.Services.Interfaces;
 using Orion.Test.MotherObjects;
 using Xunit;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using Orion.Test.Api.Controllers.BaseController;
 
-namespace Orion.Test.Controllers
+namespace Orion.Test.Api.Controllers
 {
     public class AuthControllerTest : BaseControllerTest
     {
         private AuthController _authController;
+        private readonly User _validUser = UserFaker.Get();
+        private readonly RefreshToken _validRefreshToken;
 
         public AuthControllerTest()
         {
+            _validRefreshToken = RefreshTokenFaker.Get(_validUser.Email);
             SetupServiceMock();
         }
 
@@ -28,15 +31,15 @@ namespace Orion.Test.Controllers
         {
             //arrange & act
             var result = await _authController.Login(
-                new UserLoginModel 
-                { 
-                    Email = UserMotherObject.ValidAdminUser().Email, 
-                    Password =  UserMotherObject.ValidAdminUser().Password
+                new UserLoginModel
+                {
+                    Email = _validUser.Email,
+                    Password = _validUser.Password
                 }
             );
 
-            var contentResult = (OkObjectResult) result;
-            var userApiToken = (UserApiTokenModel) contentResult.Value;
+            var contentResult = (OkObjectResult)result;
+            var userApiToken = (UserApiTokenModel)contentResult.Value;
 
             //assert
             Assert.IsType<OkObjectResult>(contentResult);
@@ -71,9 +74,7 @@ namespace Orion.Test.Controllers
         {
             //arrange & act
 
-            var result = await _authController.RefreshToken(
-                RefreshTokenMotherObject.ValidRefreshTokenModel()
-            );
+            var result = await _authController.RefreshToken(new RefreshTokenModel { RefreshToken = _validRefreshToken.Refreshtoken });
 
             var contentResult = (OkObjectResult)result;
             var userApiToken = (UserApiTokenModel)contentResult.Value;
@@ -91,7 +92,7 @@ namespace Orion.Test.Controllers
         {
             //arrange & act
             var result = await _authController.RefreshToken(
-                new RefreshTokenModel { RefreshToken = null}
+                new RefreshTokenModel { RefreshToken = null }
             );
 
             var contentResult = (UnauthorizedResult)result;
@@ -105,11 +106,11 @@ namespace Orion.Test.Controllers
         {
             var userServiceMock = new Mock<IUserService>();
 
-            userServiceMock.Setup(x => x.LoginAsync(UserMotherObject.ValidAdminUser().Email, UserMotherObject.ValidAdminUser().Password))
-                .ReturnsAsync(UserMotherObject.ValidAdminUser());
+            userServiceMock.Setup(x => x.LoginAsync(_validUser.Email, _validUser.Password))
+                .ReturnsAsync(_validUser);
 
-            userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenMotherObject.ValidRefreshToken());
-            userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(RefreshTokenMotherObject.ValidRefreshToken().Refreshtoken)).ReturnsAsync(UserMotherObject.ValidAdminUser());
+            userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenFaker.Get());
+            userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(_validRefreshToken.Refreshtoken)).ReturnsAsync(_validUser);
 
             var inMemorySettings = new Dictionary<string, string> {
                 {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},

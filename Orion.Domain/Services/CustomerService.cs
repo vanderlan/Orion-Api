@@ -1,12 +1,12 @@
 using System.Threading.Tasks;
 using Orion.Domain.Exceptions;
-using Orion.Domain.Interfaces;
+using Orion.Domain.Services.Interfaces;
 using Orion.Domain.Repositories.UnitOfWork;
 using Orion.Entities.Domain;
 using Orion.Entities.Filter;
 using Orion.Entities.ValueObjects.Pagination;
 
-namespace Orion.Domain.Implementation
+namespace Orion.Domain.Services
 {
     public class CustomerService : ICustomerService
     {

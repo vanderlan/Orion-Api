@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Orion.Domain.Base
+namespace Orion.Domain.Services.Interfaces.Base
 {
     public interface IBaseService<T> where T : class
     {

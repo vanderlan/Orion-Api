@@ -7,14 +7,14 @@ using Orion.Entities.Filter;
 using Orion.Resources;
 using Orion.Domain.Exceptions;
 using Orion.Domain.Extensions;
-using Orion.Domain.Interfaces;
+using Orion.Domain.Services.Interfaces;
 using Orion.Test.Configuration;
 using Orion.Test.MotherObjects;
-using Orion.Test.Services.BaseService;
 using Xunit;
 using static Orion.Resources.Messages.MessagesKeys;
+using Orion.Test.Domain.Services.BaseService;
 
-namespace Orion.Test.Services
+namespace Orion.Test.Domain.Services
 {
     public class UserServiceTest : BaseServiceTest
     {
@@ -31,15 +31,17 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
+            var user = UserFaker.Get();
+
             //act
-            var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
-            
+            var userSaved = await userService.AddAsync(user);
+
             var userFound = await userService.FindByIdAsync(userSaved.PublicId);
-            
+
             //assert
             Assert.NotNull(userFound);
-            Assert.Equal(UserMotherObject.ValidAdminUser().Password.ToSha512(), userFound.Password);
-            Assert.Equal(userFound.Name, UserMotherObject.ValidAdminUser().Name);
+            Assert.Equal(user.Password, userFound.Password);
+            Assert.Equal(userFound.Name, user.Name);
             Assert.True(userFound.UserId > 0);
 
             await userService.DeleteAsync(userFound.PublicId);
@@ -52,12 +54,14 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
-            var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var user = UserFaker.Get();
+            var user2 = UserFaker.Get();
+            user2.Email = user.Email;
+
+            var userSaved = await userService.AddAsync(user);
 
             //act && assert
-            await Assert.ThrowsAsync<ConflictException>(() => userService.AddAsync(UserMotherObject.ValidAdminUser()));
-
-            await userService.DeleteAsync(userSaved.PublicId);
+            await Assert.ThrowsAsync<ConflictException>(() => userService.AddAsync(user2));
         }
 
         [Fact]
@@ -69,22 +73,25 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
-            var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var user = UserFaker.Get();
+
+            var userSaved = await userService.AddAsync(user);
             var userFound = await userService.FindByIdAsync(userSaved.PublicId);
 
             //act
             var userPaginated = await userService.ListPaginateAsync(
-                new UserFilter {
-                    Query = UserMotherObject.ValidAdminUser().Name,
-                    Entity = new User 
-                    { 
-                        Name = UserMotherObject.ValidAdminUser().Name 
-                    } 
+                new UserFilter
+                {
+                    Query = user.Name,
+                    Entity = new User
+                    {
+                        Name = user.Name
+                    }
                 });
 
             //assert
             Assert.Equal(userCount, userPaginated.Count);
-            Assert.Contains(userPaginated.Items, x => x.Name == UserMotherObject.ValidAdminUser().Name);
+            Assert.Contains(userPaginated.Items, x => x.Name == user.Name);
 
             await userService.DeleteAsync(userFound.PublicId);
         }
@@ -96,8 +103,11 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
+            var user = UserFaker.Get();
+            user.Password = null;
+
             //act & assert
-            await Assert.ThrowsAsync<BusinessException>(() => userService.AddAsync(UserMotherObject.InvalidAdminUserWihoutPassword()));
+            await Assert.ThrowsAsync<BusinessException>(() => userService.AddAsync(user));
         }
 
         [Fact]
@@ -107,7 +117,7 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
-            var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var userSaved = await userService.AddAsync(UserFaker.Get());
             var userFound = await userService.FindByIdAsync(userSaved.PublicId);
 
             Assert.NotNull(userFound);
@@ -128,27 +138,26 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
-            var userSaved = await userService.AddAsync(UserMotherObject.ValidAdminUser());
-            var userFound = await userService.FindByIdAsync(userSaved.PublicId);
+            var user = UserFaker.Get();
+            user.Password = "123456789";
 
-            Assert.NotNull(userFound);
+            var userSaved = await userService.AddAsync(user);
 
-            userFound.Name = "Jane";
-            userFound.Email = "newemail@gmail.com";
-            userFound.Password = "123";
+            userSaved.Name = "Jane";
+            userSaved.Email = "newemail@gmail.com";
+            userSaved.Password = "123";
 
-            await userService.UpdateAsync(userFound);
-            await userService.FindByIdAsync(userSaved.PublicId);
+            await userService.UpdateAsync(userSaved);
 
             //act
             var userEdited = await userService.FindByIdAsync(userSaved.PublicId);
 
             //assert
-            Assert.Equal(userFound.Email, userEdited.Email);
-            Assert.Equal(userFound.Password.ToSha512(), userEdited.Password);
-            Assert.Equal(userFound.Name, userEdited.Name);
+            Assert.Equal(userSaved.Email, userEdited.Email);
+            Assert.Equal(userSaved.Password.ToSha512(), userEdited.Password);
+            Assert.Equal(userSaved.Name, userEdited.Name);
 
-            await userService.DeleteAsync(userFound.PublicId);
+            await userService.DeleteAsync(userSaved.PublicId);
         }
 
         #endregion
@@ -160,14 +169,18 @@ namespace Orion.Test.Services
             //arrange
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
+            var userPassword = "123";
 
-            var userAdded = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var user = UserFaker.Get();
+            user.Password = userPassword;
+
+            var userAdded = await userService.AddAsync(user);
             var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
             Assert.NotNull(userFound);
 
             //act
-            var userLoged = await userService.LoginAsync(userFound.Email, UserMotherObject.ValidAdminUser().Password);
+            var userLoged = await userService.LoginAsync(userFound.Email, userPassword);
 
             //assert
             Assert.NotNull(userLoged);
@@ -185,7 +198,7 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
-            var userAdded = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var userAdded = await userService.AddAsync(UserFaker.Get());
             var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
             //act & assert
@@ -202,14 +215,14 @@ namespace Orion.Test.Services
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetService<IUserService>();
 
-            var userAdded = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var userAdded = await userService.AddAsync(UserFaker.Get());
             var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
             Assert.NotNull(userFound);
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
 
             //act
             var userByRefreshToken = await userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken);
@@ -233,14 +246,14 @@ namespace Orion.Test.Services
             var userService = scope.ServiceProvider.GetService<IUserService>();
             var messages = scope.ServiceProvider.GetService<IStringLocalizer<OrionResources>>();
 
-            var userAdded = await userService.AddAsync(UserMotherObject.ValidAdminUser());
+            var userAdded = await userService.AddAsync(UserFaker.Get());
             var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
             Assert.NotNull(userFound);
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            await userService.AddRefreshTokenAsync(new RefreshToken { Email = UserMotherObject.ValidAdminUser().Email, Refreshtoken = refreshToken });
+            await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
 
             //act
             var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(refreshTokenId));

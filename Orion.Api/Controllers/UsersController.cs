@@ -7,7 +7,7 @@ using Orion.Api.AutoMapper.Output;
 using Orion.Entities.Domain;
 using Orion.Entities.Filter;
 using Orion.Entities.ValueObjects.Pagination;
-using Orion.Domain.Interfaces;
+using Orion.Domain.Services.Interfaces;
 using static Orion.Domain.Authentication.AuthorizationConfiguration;
 
 namespace Orion.Api.Controllers

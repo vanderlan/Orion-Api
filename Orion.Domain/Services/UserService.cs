@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Orion.Domain.Exceptions;
 using Orion.Domain.Extensions;
-using Orion.Domain.Interfaces;
+using Orion.Domain.Services.Interfaces;
 using Orion.Domain.Repositories.UnitOfWork;
 using Orion.Entities.Domain;
 using Orion.Entities.Filter;
@@ -11,7 +11,7 @@ using Orion.Entities.ValueObjects.Pagination;
 using Orion.Resources;
 using static Orion.Resources.Messages.MessagesKeys;
 
-namespace Orion.Domain.Implementation
+namespace Orion.Domain.Services
 {
     public class UserService : IUserService
     {
@@ -73,6 +73,7 @@ namespace Orion.Domain.Implementation
 
             entitySaved.Email = user.Email;
             entitySaved.Name = user.Name;
+            entitySaved.Password = user.Password.ToSha512();
 
             _unitOfWork.UserRepository.Update(entitySaved);
 

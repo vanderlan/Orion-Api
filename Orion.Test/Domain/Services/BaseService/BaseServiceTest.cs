@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Orion.Test.Configuration;
 using Xunit;
 
-namespace Orion.Test.Services.BaseService
+namespace Orion.Test.Domain.Services.BaseService
 {
     public class BaseServiceTest : IClassFixture<DependencyInjectionSetupFixture>
     {
