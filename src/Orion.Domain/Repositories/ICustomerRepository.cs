@@ -1,8 +1,8 @@
-using System.Threading.Tasks;
+using Orion.Domain.Entities;
+using Orion.Domain.Entities.Filter;
+using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Domain.Repositories.Base;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using System.Threading.Tasks;
 
 namespace Orion.Domain.Repositories
 {

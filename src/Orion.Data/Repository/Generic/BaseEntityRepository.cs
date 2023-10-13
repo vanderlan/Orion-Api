@@ -5,9 +5,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Orion.Data.Context;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using Orion.Domain.Entities.Filter;
+using Orion.Domain.Entities.ValueObjects.Pagination;
+using Orion.Domain.Entities;
 
 namespace Orion.Data.Repository.Generic
 {

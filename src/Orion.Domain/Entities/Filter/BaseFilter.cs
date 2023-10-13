@@ -1,4 +1,4 @@
-namespace Orion.Entities.Filter
+namespace Orion.Domain.Entities.Filter
 {
     public class BaseFilter<T>
     {

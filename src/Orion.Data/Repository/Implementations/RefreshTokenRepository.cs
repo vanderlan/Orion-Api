@@ -1,7 +1,7 @@
 using Orion.Data.Context;
 using Orion.Data.Repository.Generic;
+using Orion.Domain.Entities;
 using Orion.Domain.Repositories;
-using Orion.Entities.Domain;
 
 namespace Orion.Data.Repository.Implementations
 {

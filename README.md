@@ -1,7 +1,7 @@
 # **Orion Api**
 
 [![Build](https://github.com/vanderlan/Orion-Api/actions/workflows/sonar.yml/badge.svg)](https://github.com/vanderlan/Orion-Api/actions/workflows/sonar.yml) 
-[![Coverage Status](https://coveralls.io/repos/github/vanderlan/Orion-Api/badge.svg)](https://coveralls.io/github/vanderlan/Orion-Api) <a href="https://codeclimate.com/github/vanderlan/Orion-Api/maintainability"><img src="https://api.codeclimate.com/v1/badges/692bddf02255681fe599/maintainability" /></a> 
+[![Coverage Status](https://coveralls.io/repos/github/vanderlan/Orion-Api/badge.svg)](https://coveralls.io/github/vanderlan/Orion-Api) <a href="https://codeclimate.com/github/vanderlan/Orion-Api/maintainability"><img src="https://api.codeclimate.com/v1/badges/76a30970ddd45c75129b/maintainability" /></a>
 [![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://GitHub.com/vanderlan/Orion-Api/) 
 [![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/Orion-Api)](https://github.com/vanderlan/Orion-Api)
 
@@ -60,3 +60,6 @@ The main objective is to start projects with a clean and simple architecture, wi
 **Run database migrations**
 	
 	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
+
+
+Author: https://github.com/vanderlan

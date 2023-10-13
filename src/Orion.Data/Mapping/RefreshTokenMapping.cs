@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Orion.Entities.Domain;
+using Orion.Domain.Entities;
 
 namespace Orion.Data.Mapping
 {

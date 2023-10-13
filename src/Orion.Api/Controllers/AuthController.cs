@@ -6,7 +6,7 @@ using Orion.Api.Configuration;
 using Orion.Api.Models;
 using Orion.Domain.Extensions;
 using Orion.Domain.Services.Interfaces;
-using Orion.Entities.Domain;
+using Orion.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace Orion.Api.Controllers

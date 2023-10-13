@@ -4,13 +4,13 @@ using System;
 using System.Threading.Tasks;
 using Orion.Api.Controllers;
 using Orion.Api.Models;
-using Orion.Entities.Domain;
 using Orion.Domain.Services.Interfaces;
 using Orion.Test.MotherObjects;
 using Xunit;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using Orion.Test.Api.Controllers.BaseController;
+using Orion.Domain.Entities;
 
 namespace Orion.Test.Api.Controllers
 {

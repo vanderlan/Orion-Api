@@ -1,5 +1,5 @@
 
-using Orion.Entities.Enuns;
+using Orion.Domain.Entities.Enuns;
 using Orion.Domain.Authentication;
 
 namespace Orion.Api.AutoMapper.Output

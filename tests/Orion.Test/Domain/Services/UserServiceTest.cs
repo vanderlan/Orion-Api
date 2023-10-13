@@ -2,8 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using System;
 using System.Threading.Tasks;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
+using Orion.Domain.Entities.Filter;
 using Orion.Resources;
 using Orion.Domain.Exceptions;
 using Orion.Domain.Extensions;
@@ -13,6 +12,7 @@ using Orion.Test.MotherObjects;
 using Xunit;
 using static Orion.Resources.Messages.MessagesKeys;
 using Orion.Test.Domain.Services.BaseService;
+using Orion.Domain.Entities;
 
 namespace Orion.Test.Domain.Services
 {

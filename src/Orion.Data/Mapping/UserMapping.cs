@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using Orion.Entities.Domain;
-using Orion.Entities.Enuns;
+using Orion.Domain.Entities.Enuns;
+using Orion.Domain.Entities;
 
 namespace Orion.Data.Mapping
 {

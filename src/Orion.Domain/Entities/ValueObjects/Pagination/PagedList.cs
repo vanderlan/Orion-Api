@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Orion.Entities.ValueObjects.Pagination
+namespace Orion.Domain.Entities.ValueObjects.Pagination
 {
     public class PagedList<T>
     {

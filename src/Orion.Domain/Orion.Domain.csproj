@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orion.Entities\Orion.Entities.csproj" />
     <ProjectReference Include="..\Orion.Resources\Orion.Resources.csproj" />
   </ItemGroup>
 

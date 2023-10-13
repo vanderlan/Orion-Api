@@ -1,5 +1,5 @@
+using Orion.Domain.Entities;
 using Orion.Domain.Repositories.Base;
-using Orion.Entities.Domain;
 
 namespace Orion.Domain.Repositories
 {

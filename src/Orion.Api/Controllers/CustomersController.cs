@@ -4,11 +4,11 @@ using System.Net;
 using Orion.Api.Attributes;
 using Orion.Api.AutoMapper.Input;
 using Orion.Api.AutoMapper.Output;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
 using Orion.Domain.Services.Interfaces;
 using static Orion.Domain.Authentication.AuthorizationConfiguration;
+using Orion.Domain.Entities;
+using Orion.Domain.Entities.Filter;
+using Orion.Domain.Entities.ValueObjects.Pagination;
 
 namespace Orion.Api.Controllers
 {

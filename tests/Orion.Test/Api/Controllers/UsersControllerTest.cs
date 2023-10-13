@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Orion.Api.AutoMapper.Output;
 using Orion.Api.Controllers;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using Orion.Domain.Entities.Filter;
+using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Domain.Services.Interfaces;
 using Orion.Test.MotherObjects;
 using Xunit;
 using Orion.Test.Api.Controllers.BaseController;
+using Orion.Domain.Entities;
 
 namespace Orion.Test.Api.Controllers
 {

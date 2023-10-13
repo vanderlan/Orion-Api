@@ -1,4 +1,4 @@
-namespace Orion.Entities.Domain
+namespace Orion.Domain.Entities
 {
     public class Customer : BaseEntity
     {

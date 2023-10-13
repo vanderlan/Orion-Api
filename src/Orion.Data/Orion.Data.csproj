@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Orion.Domain\Orion.Domain.csproj" />
-    <ProjectReference Include="..\Orion.Entities\Orion.Entities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

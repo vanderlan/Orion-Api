@@ -1,6 +1,6 @@
 using System.ComponentModel;
 
-namespace Orion.Entities.Enuns
+namespace Orion.Domain.Entities.Enuns
 {
     public enum UserProfile
     {

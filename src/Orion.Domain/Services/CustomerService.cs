@@ -2,9 +2,9 @@ using System.Threading.Tasks;
 using Orion.Domain.Exceptions;
 using Orion.Domain.Services.Interfaces;
 using Orion.Domain.Repositories.UnitOfWork;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using Orion.Domain.Entities;
+using Orion.Domain.Entities.ValueObjects.Pagination;
+using Orion.Domain.Entities.Filter;
 
 namespace Orion.Domain.Services
 {

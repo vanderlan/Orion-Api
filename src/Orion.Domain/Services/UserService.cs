@@ -5,11 +5,11 @@ using Orion.Domain.Exceptions;
 using Orion.Domain.Extensions;
 using Orion.Domain.Services.Interfaces;
 using Orion.Domain.Repositories.UnitOfWork;
-using Orion.Entities.Domain;
-using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using Orion.Domain.Entities.Filter;
+using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Resources;
 using static Orion.Resources.Messages.MessagesKeys;
+using Orion.Domain.Entities;
 
 namespace Orion.Domain.Services
 {

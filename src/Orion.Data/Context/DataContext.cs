@@ -3,8 +3,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Orion.Data.Mapping;
-using Orion.Entities.Domain;
 using Microsoft.Extensions.Configuration;
+using Orion.Domain.Entities;
 
 namespace Orion.Data.Context
 {

@@ -1,7 +1,7 @@
 using Bogus;
 using Orion.Api.AutoMapper.Input;
-using Orion.Entities.Domain;
-using Orion.Entities.Enuns;
+using Orion.Domain.Entities;
+using Orion.Domain.Entities.Enuns;
 using System;
 
 namespace Orion.Test.MotherObjects
@@ -18,7 +18,6 @@ namespace Orion.Test.MotherObjects
                  .RuleFor(o => o.PublicId, f => Guid.NewGuid().ToString())
                  .Generate();
         }
-
 
         public static UserInput GetInput()
         {

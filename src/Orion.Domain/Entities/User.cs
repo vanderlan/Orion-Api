@@ -1,6 +1,6 @@
-using Orion.Entities.Enuns;
+using Orion.Domain.Entities.Enuns;
 
-namespace Orion.Entities.Domain
+namespace Orion.Domain.Entities
 {
     public class User : BaseEntity
     {

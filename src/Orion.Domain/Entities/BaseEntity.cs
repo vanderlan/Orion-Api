@@ -1,6 +1,6 @@
 using System;
 
-namespace Orion.Entities.Domain
+namespace Orion.Domain.Entities
 {
     public abstract class BaseEntity
     {

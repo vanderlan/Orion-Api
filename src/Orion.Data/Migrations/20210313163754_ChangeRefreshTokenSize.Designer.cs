@@ -21,7 +21,7 @@ namespace Orion.Data.Migrations
                 .HasAnnotation("ProductVersion", "5.0.3")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("Orion.Entities.Domain.Customer", b =>
+            modelBuilder.Entity("Orion.Domain.Entities.Domain.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace Orion.Data.Migrations
                     b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("Orion.Entities.Domain.RefreshToken", b =>
+            modelBuilder.Entity("Orion.Domain.Entities.RefreshToken", b =>
                 {
                     b.Property<string>("Refreshtoken")
                         .HasMaxLength(300)
@@ -82,7 +82,7 @@ namespace Orion.Data.Migrations
                     b.ToTable("RefreshToken");
                 });
 
-            modelBuilder.Entity("Orion.Entities.Domain.User", b =>
+            modelBuilder.Entity("Orion.Domain.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
