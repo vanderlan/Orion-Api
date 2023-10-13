@@ -43,9 +43,9 @@ namespace Orion.Domain.Services
             return await _unitOfWork.CustomerRepository.GetByIdAsync(publicId);
         }
 
-        public async Task<PagedList<Customer>> ListPaginateAsync(CustomerFilter filter)
+        public async Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter)
         {
-            return await _unitOfWork.CustomerRepository.ListPaginate(filter);
+            return await _unitOfWork.CustomerRepository.ListPaginateAsync(filter);
         }
 
         public async Task UpdateAsync(Customer entity)

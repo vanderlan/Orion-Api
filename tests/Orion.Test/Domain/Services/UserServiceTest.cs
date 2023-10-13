@@ -80,10 +80,10 @@ namespace Orion.Test.Domain.Services
 
             //act
             var userPaginated = await userService.ListPaginateAsync(
-                new UserFilter
+                new BaseFilter<User>
                 {
                     Query = user.Name,
-                    Entity = new User
+                    Entity = new ()
                     {
                         Name = user.Name
                     }

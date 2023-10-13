@@ -1,12 +1,9 @@
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using Orion.Data.Context;
 using Orion.Data.Repository.Generic;
 using Orion.Domain.Repositories;
 using Orion.Entities.Domain;
 using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using System.Linq;
 
 namespace Orion.Data.Repository.Implementations
 {
@@ -17,20 +14,12 @@ namespace Orion.Data.Repository.Implementations
 
         }
 
-        public async Task<PagedList<Customer>> ListPaginate(CustomerFilter filter)
+        protected override IQueryable<Customer> ApplyFilters(BaseFilter<Customer> filter, IQueryable<Customer> query)
         {
-            var pagination = (filter.Page * filter.Quantity) - filter.Quantity;
-
-            IQueryable<Customer> listQuerable = DataContext.Customers;
-
             if (!string.IsNullOrWhiteSpace(filter.Query))
-            {
-                listQuerable = listQuerable.Where(x => x.Name.Contains(filter.Query));
-            }
+                query = query.Where(x => x.Name.Contains(filter.Query));
 
-            var customerList = await listQuerable.OrderBy(x => x.Name).Skip(pagination).Take(filter.Quantity).ToListAsync();
-
-            return new PagedList<Customer>(customerList, listQuerable.Count());
+            return query;
         }
     }
 }

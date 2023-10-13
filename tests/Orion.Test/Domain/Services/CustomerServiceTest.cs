@@ -8,6 +8,7 @@ using Orion.Test.Configuration;
 using Orion.Test.MotherObjects;
 using Xunit;
 using Orion.Test.Domain.Services.BaseService;
+using Orion.Entities.Domain;
 
 namespace Orion.Test.Domain.Services
 {
@@ -104,7 +105,7 @@ namespace Orion.Test.Domain.Services
             var customerSaved = await customerService.AddAsync(customer);
             var customerSaved2 = await customerService.AddAsync(customer2);
 
-            var customerList = await customerService.ListPaginateAsync(new CustomerFilter { Quantity = 99 });
+            var customerList = await customerService.ListPaginateAsync(new BaseFilter<Customer> { Quantity = 99 });
 
             //aseert
             Assert.NotNull(customerList);
@@ -126,7 +127,7 @@ namespace Orion.Test.Domain.Services
             var customerSaved = await customerService.AddAsync(customer);
             var customerSaved2 = await customerService.AddAsync(customer2);
 
-            var customerList = await customerService.ListPaginateAsync(new CustomerFilter { Query = customer.Name });
+            var customerList = await customerService.ListPaginateAsync(new BaseFilter<Customer> { Query = customer.Name });
 
             //assert
             Assert.NotNull(customerList);
@@ -149,7 +150,7 @@ namespace Orion.Test.Domain.Services
                 await customerService.AddAsync(CustomerFaker.Get());
 
             //act
-            var customerList = await customerService.ListPaginateAsync(new CustomerFilter { Quantity = expectedQuantity });
+            var customerList = await customerService.ListPaginateAsync(new BaseFilter<Customer> { Quantity = expectedQuantity });
 
             //assert
             Assert.NotNull(customerList);

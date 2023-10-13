@@ -92,7 +92,7 @@ namespace Orion.Test.Api.Controllers
             var expectedCount = 4;
 
             //act
-            var result = await _customersController.Get(new CustomerFilter());
+            var result = await _customersController.Get(new BaseFilter<Customer>());
 
             var contentResult = (OkObjectResult)result;
             var customersPagedList = (PagedList<CustomerOutput>)contentResult.Value;
@@ -119,7 +119,7 @@ namespace Orion.Test.Api.Controllers
             customerServiceMock.Setup(x => x.AddAsync(It.Is<Customer>(x => x.Name == _validCustomerInput.Name))).ReturnsAsync(_validCustomer);
             customerServiceMock.Setup(x => x.UpdateAsync(It.IsAny<Customer>())).Verifiable();
             customerServiceMock.Setup(x => x.DeleteAsync(CustomerFaker.Get().PublicId)).Verifiable();
-            customerServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<CustomerFilter>())).
+            customerServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<BaseFilter<Customer>>())).
                 ReturnsAsync(customerListPaginated);
 
             _customersController = new CustomersController(customerServiceMock.Object, Mapper);

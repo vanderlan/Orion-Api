@@ -1,12 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
 using Orion.Data.Context;
 using Orion.Data.Repository.Generic;
 using Orion.Domain.Repositories;
 using Orion.Entities.Domain;
 using Orion.Entities.Filter;
-using Orion.Entities.ValueObjects.Pagination;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Orion.Data.Repository.Implementations
 {
@@ -18,31 +17,19 @@ namespace Orion.Data.Repository.Implementations
 
         public async Task<User> LoginAsync(string email, string password)
         {
-            var user = await DataContext.Users.AsNoTracking().Where(x => x.Email.Equals(email) && x.Password.Equals(password)).FirstOrDefaultAsync();
+            var user = await DataContext.Users.AsNoTracking()
+                .Where(x => x.Email.Equals(email) && x.Password.Equals(password))
+                .FirstOrDefaultAsync();
 
             return user ?? null;
         }
 
-        public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
+        protected override IQueryable<User> ApplyFilters(BaseFilter<User> filter, IQueryable<User> query)
         {
-            var pagination = (filter.Page * filter.Quantity) - filter.Quantity;
-
-            IQueryable<User> listQuerable = DataContext.Users;
-
             if (!string.IsNullOrWhiteSpace(filter.Query))
-            {
-                listQuerable = listQuerable.Where(x => x.Name.Contains(filter.Query));
-            }
-            if (!string.IsNullOrWhiteSpace(filter?.Entity?.Name))
-            {
-                listQuerable = listQuerable.Where(x => x.Name.Contains(filter.Entity.Name));
-            }
+                query = query.Where(x => x.Name.Contains(filter.Query));
 
-            var customerList = await listQuerable.OrderBy(x => x.Name).Skip(pagination).Take(filter.Quantity)
-                .AsNoTracking()
-                .ToListAsync();
-
-            return new PagedList<User>(customerList, listQuerable.Count());
+            return query;
         }
 
         public async Task<User> FindByEmailAsync(string email)

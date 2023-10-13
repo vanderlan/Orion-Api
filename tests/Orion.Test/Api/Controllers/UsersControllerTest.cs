@@ -86,7 +86,7 @@ namespace Orion.Test.Api.Controllers
         public async Task GetUsers_WithValidFilter_ReturnsAListOfUsers()
         {
             //arrange & act
-            var result = await _usersController.Get(new UserFilter());
+            var result = await _usersController.Get(new BaseFilter<User>());
 
             var contentResult = (OkObjectResult)result;
             var userPagedList = (PagedList<UserOutput>)contentResult.Value;
@@ -113,7 +113,7 @@ namespace Orion.Test.Api.Controllers
             userServiceMock.Setup(x => x.AddAsync(It.IsAny<User>())).ReturnsAsync(UserFaker.Get());
             userServiceMock.Setup(x => x.UpdateAsync(It.IsAny<User>())).Verifiable();
             userServiceMock.Setup(x => x.DeleteAsync(_validUser.PublicId)).Verifiable();
-            userServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<UserFilter>())).
+            userServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<BaseFilter<User>>())).
                 ReturnsAsync(userListPaginated);
 
             _usersController = new UsersController(userServiceMock.Object, Mapper);

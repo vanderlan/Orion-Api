@@ -8,6 +8,6 @@ namespace Orion.Domain.Repositories
 {
     public interface ICustomerRepository : IBaseEntityRepository<Customer>
     {
-        Task<PagedList<Customer>> ListPaginate(CustomerFilter filter);
+        Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter);
     }
 }

@@ -1,6 +1,6 @@
 namespace Orion.Entities.Filter
 {
-    public abstract class BaseFilter<T>
+    public class BaseFilter<T>
     {
         public T Entity { get; set; }
         public int Page { get; set; } = 1;

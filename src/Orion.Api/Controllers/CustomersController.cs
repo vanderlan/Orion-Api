@@ -26,7 +26,7 @@ namespace Orion.Api.Controllers
 
         [HttpGet]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Get([FromQuery] CustomerFilter filter)
+        public async Task<IActionResult> Get([FromQuery] BaseFilter<Customer> filter)
         {
             var customer = await _customerService.ListPaginateAsync(filter);
 

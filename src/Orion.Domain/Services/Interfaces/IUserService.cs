@@ -11,6 +11,6 @@ namespace Orion.Domain.Services.Interfaces
         Task<User> LoginAsync(string email, string password);
         Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken);
         Task<User> GetUserByRefreshTokenAsync(string refreshToken);
-        Task<PagedList<User>> ListPaginateAsync(UserFilter filter);
+        Task<PagedList<User>> ListPaginateAsync(BaseFilter<User> filter);
     }
 }

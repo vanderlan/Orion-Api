@@ -121,7 +121,7 @@ namespace Orion.Domain.Services
             throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
         }
 
-        public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
+        public async Task<PagedList<User>> ListPaginateAsync(BaseFilter<User> filter)
         {
             return await _unitOfWork.UserRepository.ListPaginateAsync(filter);
         }
