@@ -46,5 +46,5 @@ jobs:
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"vanderlan_Orion-Api" /o:"vanderlan-gomes" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="opencover.xml"
           dotnet build Orion.sln
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  /p:CoverletOutput=coverage /p:Exclude=[xunit.*]* Orion.sln
-          cp Orion.Test\coverage.opencover.xml opencover.xml
+          cp tests\Orion.Test\coverage.opencover.xml opencover.xml
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
