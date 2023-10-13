@@ -32,12 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orion.Api\Orion.Api.csproj" />
-    <ProjectReference Include="..\Orion.Data\Orion.Data.csproj" />
-    <ProjectReference Include="..\Orion.Domain\Orion.Domain.csproj" />
-    <ProjectReference Include="..\Orion.Entities\Orion.Entities.csproj" />
-    <ProjectReference Include="..\Orion.Ioc\Orion.Ioc.csproj" />
-    <ProjectReference Include="..\Orion.Resources\Orion.Resources.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Api\Orion.Api.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Data\Orion.Data.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Domain\Orion.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Entities\Orion.Entities.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Ioc\Orion.Ioc.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Resources\Orion.Resources.csproj" />
   </ItemGroup>
 
 </Project>

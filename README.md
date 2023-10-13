@@ -28,13 +28,14 @@ The main objective is to start projects with a clean and simple architecture, wi
 	+ Refresh Token.
 
 + Serilog
++ Bogus
 
 **Configurations and Patterns**
 
 	1. Business Exceptions;
 	2. Exception handler;
 	3. Repository Pattern;
-	4. Mother Objects;
+	4. Faker Objects;
 	5. Unit Of Work;
 	6. Base Repository;
 	7. Environments configuration;
