@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Api", "Orion.Api\Orion.Api.csproj", "{8C8470D6-0951-4B42-8935-779D8672F5B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Api", "src\Orion.Api\Orion.Api.csproj", "{8C8470D6-0951-4B42-8935-779D8672F5B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1 - CORE", "1 - CORE", "{67A0BEBC-35B1-436C-9F05-AC8F60AF1688}"
 EndProject
@@ -10,13 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2 - API", "2 - API", "{11C4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - TEST", "4 - TEST", "{B333633B-8361-476B-A0A3-6B983D28904E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Test", "Orion.Test\Orion.Test.csproj", "{AA8C7554-18FC-40D7-A318-123D2AAAB023}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Test", "tests\Orion.Test\Orion.Test.csproj", "{AA8C7554-18FC-40D7-A318-123D2AAAB023}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Entities", "Orion.Entities\Orion.Entities.csproj", "{9500DFAF-83A8-4FFE-9564-DEC6601CD91E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Entities", "src\Orion.Entities\Orion.Entities.csproj", "{9500DFAF-83A8-4FFE-9564-DEC6601CD91E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Data", "Orion.Data\Orion.Data.csproj", "{7C877ABA-17F2-470A-99EB-5E172C6EA44B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Data", "src\Orion.Data\Orion.Data.csproj", "{7C877ABA-17F2-470A-99EB-5E172C6EA44B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Resources", "Orion.Resources\Orion.Resources.csproj", "{105D1EB4-5091-493E-B75E-2131169CC9AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Resources", "src\Orion.Resources\Orion.Resources.csproj", "{105D1EB4-5091-493E-B75E-2131169CC9AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2D8CC498-597C-4415-95BF-48E623039F90}"
 	ProjectSection(SolutionItems) = preProject
@@ -34,9 +34,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - INFRA", "3 - INFRA", "{434E301F-C36C-4203-B334-D3948130B660}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Ioc", "Orion.Ioc\Orion.Ioc.csproj", "{BF0248B6-C870-4419-862D-1DCAD4561946}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Ioc", "src\Orion.Ioc\Orion.Ioc.csproj", "{BF0248B6-C870-4419-862D-1DCAD4561946}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Domain", "Orion.Domain\Orion.Domain.csproj", "{9F14F904-BBC6-4616-BB80-76E485EAEC14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Domain", "src\Orion.Domain\Orion.Domain.csproj", "{9F14F904-BBC6-4616-BB80-76E485EAEC14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

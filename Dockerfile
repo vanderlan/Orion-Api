@@ -3,8 +3,8 @@ WORKDIR /app
 
 COPY . ./
 
-RUN dotnet restore "Orion.Api/Orion.Api.csproj"
-RUN dotnet publish "Orion.Api/Orion.Api.csproj" -c Release -o out
+RUN dotnet restore "src/Orion.Api/Orion.Api.csproj"
+RUN dotnet publish "src/Orion.Api/Orion.Api.csproj" -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:7.0
 
