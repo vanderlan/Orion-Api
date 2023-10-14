@@ -11,7 +11,7 @@ using Orion.Domain.Entities;
 
 namespace Orion.Data.Repository.Generic
 {
-    public abstract class BaseEntityRepository<T> : IBaseEntityRepository<T> where T : BaseEntity
+    internal abstract class BaseEntityRepository<T> : IBaseEntityRepository<T> where T : BaseEntity
     {
         protected DataContext DataContext { get; }
 
