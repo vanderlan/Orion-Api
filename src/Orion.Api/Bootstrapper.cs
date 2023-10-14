@@ -8,71 +8,70 @@ using Orion.Api.Configuration;
 using Orion.Api.Validators;
 using Orion.Ioc.Dependencies;
 
-namespace Orion.Api
+namespace Orion.Api;
+
+public static class Bootstrapper
 {
-    public static class Bootstrapper
+    public static void ConfigureApp(this IApplicationBuilder app)
     {
-        public static void ConfigureApp(this IApplicationBuilder app)
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
         {
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
-            });
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
+        });
 
-            app.UseCors(options => options.WithOrigins("*")
-                .AllowAnyMethod()
-                .AllowAnyOrigin()
-                .AllowAnyHeader());
+        app.UseCors(options => options.WithOrigins("*")
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+            .AllowAnyHeader());
 
-            app.ConfigureGlobalization();
+        app.ConfigureGlobalization();
 
-            app.ConfigureHealthCheck();
+        app.ConfigureHealthCheck();
 
-            app.UseRouting();
+        app.UseRouting();
 
-            app.UseAuthentication();
-            app.UseAuthorization();
+        app.UseAuthentication();
+        app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapDefaultControllerRoute();
-            });
-        }
-
-        public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+        app.UseEndpoints(endpoints =>
         {
-            services.AddCors();
+            endpoints.MapDefaultControllerRoute();
+        });
+    }
 
-            services.ConfigureAuthentication(configuration);
+    public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddCors();
 
-            services.AddControllers();
+        services.ConfigureAuthentication(configuration);
 
-            services.AddFluentValidationAutoValidation();
+        services.AddControllers();
 
-            services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+        services.AddFluentValidationAutoValidation();
 
-            services.AddMvc(options =>
-                            {
-                                options.Filters.Add(typeof(CustomValidationAttribute));
-                            })
-                .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-                .AddDataAnnotationsLocalization();
+        services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
-            });
+        services.AddMvc(options =>
+                        {
+                            options.Filters.Add(typeof(CustomValidationAttribute));
+                        })
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+            .AddDataAnnotationsLocalization();
 
-            services.AddLocalization(options => options.ResourcesPath = @"Resources");
-            services.AddApplicationHealthChecks(configuration);
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.SuppressModelStateInvalidFilter = true;
+        });
 
-            services.ConfigureSwagger();
-            services.ConfigureApiVersioning();
+        services.AddLocalization(options => options.ResourcesPath = @"Resources");
+        services.AddApplicationHealthChecks(configuration);
 
-            services.AddDomainServices();
+        services.ConfigureSwagger();
+        services.ConfigureApiVersioning();
 
-            services.ConfigureAutoMapper();
-        }
+        services.AddDomainServices();
+
+        services.ConfigureAutoMapper();
     }
 }

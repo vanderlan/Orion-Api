@@ -4,10 +4,9 @@ using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Domain.Repositories.Base;
 using System.Threading.Tasks;
 
-namespace Orion.Domain.Repositories
+namespace Orion.Domain.Repositories;
+
+public interface ICustomerRepository : IBaseEntityRepository<Customer>
 {
-    public interface ICustomerRepository : IBaseEntityRepository<Customer>
-    {
-        Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter);
-    }
+    Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter);
 }

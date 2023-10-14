@@ -1,6 +1,5 @@
-namespace Orion.Resources
+namespace Orion.Resources;
+
+public interface ISharedResource
 {
-    public interface ISharedResource
-    {
-    }
 }

@@ -6,59 +6,58 @@ using Orion.Domain.Entities;
 using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Domain.Entities.Filter;
 
-namespace Orion.Domain.Services
+namespace Orion.Domain.Services;
+
+public class CustomerService : ICustomerService
 {
-    public class CustomerService : ICustomerService
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CustomerService(IUnitOfWork unitOfWork)
     {
-        private readonly IUnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+    }
 
-        public CustomerService(IUnitOfWork unitOfWork)
+    public async Task<Customer> AddAsync(Customer entity)
+    {
+        var added = await _unitOfWork.CustomerRepository.AddAsync(entity);
+        await _unitOfWork.CommitAsync();
+
+        return added;
+    }
+
+    public async Task DeleteAsync(string publicId)
+    {
+        var item = await FindByIdAsync(publicId);
+
+        if (item == null)
         {
-            _unitOfWork = unitOfWork;
+            throw new NotFoundException(publicId);
         }
 
-        public async Task<Customer> AddAsync(Customer entity)
-        {
-            var added = await _unitOfWork.CustomerRepository.AddAsync(entity);
-            await _unitOfWork.CommitAsync();
+        await _unitOfWork.CustomerRepository.DeleteAsync(publicId);
+        await _unitOfWork.CommitAsync();
+    }
 
-            return added;
-        }
+    public async Task<Customer> FindByIdAsync(string publicId)
+    {
+        return await _unitOfWork.CustomerRepository.GetByIdAsync(publicId);
+    }
 
-        public async Task DeleteAsync(string publicId)
-        {
-            var item = await FindByIdAsync(publicId);
+    public async Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter)
+    {
+        return await _unitOfWork.CustomerRepository.ListPaginateAsync(filter);
+    }
 
-            if (item == null)
-            {
-                throw new NotFoundException(publicId);
-            }
+    public async Task UpdateAsync(Customer entity)
+    {
+        using var unitOfWork = _unitOfWork;
 
-            await _unitOfWork.CustomerRepository.DeleteAsync(publicId);
-            await _unitOfWork.CommitAsync();
-        }
+        var entitySaved = await FindByIdAsync(entity.PublicId);
 
-        public async Task<Customer> FindByIdAsync(string publicId)
-        {
-            return await _unitOfWork.CustomerRepository.GetByIdAsync(publicId);
-        }
+        entitySaved.Name = entity.Name;
+        entitySaved.PublicId = entity.PublicId;
 
-        public async Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter)
-        {
-            return await _unitOfWork.CustomerRepository.ListPaginateAsync(filter);
-        }
-
-        public async Task UpdateAsync(Customer entity)
-        {
-            using var unitOfWork = _unitOfWork;
-
-            var entitySaved = await FindByIdAsync(entity.PublicId);
-
-            entitySaved.Name = entity.Name;
-            entitySaved.PublicId = entity.PublicId;
-
-            _unitOfWork.CustomerRepository.Update(entitySaved);
-            await _unitOfWork.CommitAsync();
-        }
+        _unitOfWork.CustomerRepository.Update(entitySaved);
+        await _unitOfWork.CommitAsync();
     }
 }

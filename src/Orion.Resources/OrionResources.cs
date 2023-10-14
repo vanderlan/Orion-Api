@@ -1,22 +1,21 @@
 using Microsoft.Extensions.Localization;
 
-namespace Orion.Resources
+namespace Orion.Resources;
+
+public class OrionResources : ISharedResource
 {
-    public class OrionResources : ISharedResource
+    private readonly IStringLocalizer _localizer;
+
+    public OrionResources(IStringLocalizer<OrionResources> localizer)
     {
-        private readonly IStringLocalizer _localizer;
+        _localizer = localizer;
+    }
 
-        public OrionResources(IStringLocalizer<OrionResources> localizer)
+    public string this[string index]
+    {
+        get
         {
-            _localizer = localizer;
-        }
-
-        public string this[string index]
-        {
-            get
-            {
-                return _localizer[index];
-            }
+            return _localizer[index];
         }
     }
 }

@@ -1,8 +1,7 @@
-namespace Orion.Domain.Entities
+namespace Orion.Domain.Entities;
+
+public class RefreshToken : BaseEntity
 {
-    public class RefreshToken : BaseEntity
-    {
-        public string Refreshtoken { get; set; }
-        public string Email { get; set; }
-    }
+    public string Refreshtoken { get; set; }
+    public string Email { get; set; }
 }

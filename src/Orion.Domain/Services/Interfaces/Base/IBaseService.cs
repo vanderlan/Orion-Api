@@ -1,13 +1,12 @@
 using System.Threading.Tasks;
 
-namespace Orion.Domain.Services.Interfaces.Base
+namespace Orion.Domain.Services.Interfaces.Base;
+
+public interface IBaseService<T> where T : class
 {
-    public interface IBaseService<T> where T : class
-    {
-        Task<T> AddAsync(T entity);
-        Task DeleteAsync(string publicId);
-        Task<T> FindByIdAsync(string publicId);
-        Task UpdateAsync(T entity);
-    }
+    Task<T> AddAsync(T entity);
+    Task DeleteAsync(string publicId);
+    Task<T> FindByIdAsync(string publicId);
+    Task UpdateAsync(T entity);
 }
 

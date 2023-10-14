@@ -3,12 +3,11 @@ using Orion.Data.Repository.Generic;
 using Orion.Domain.Entities;
 using Orion.Domain.Repositories;
 
-namespace Orion.Data.Repository.Implementations
+namespace Orion.Data.Repository.Implementations;
+
+internal class RefreshTokenRepository : BaseEntityRepository<RefreshToken>, IRefreshTokenRepository
 {
-    internal class RefreshTokenRepository : BaseEntityRepository<RefreshToken>, IRefreshTokenRepository
+    public RefreshTokenRepository(DataContext context) : base(context)
     {
-        public RefreshTokenRepository(DataContext context) : base(context)
-        {
-        }
     }
 }

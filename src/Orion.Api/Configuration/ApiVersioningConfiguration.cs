@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Orion.Api.Configuration
+namespace Orion.Api.Configuration;
+
+public static class ApiVersioningConfiguration
 {
-    public static class ApiVersioningConfiguration
+    public static void ConfigureApiVersioning(this IServiceCollection services)
     {
-        public static void ConfigureApiVersioning(this IServiceCollection services)
+        services.AddApiVersioning(o =>
         {
-            services.AddApiVersioning(o =>
-            {
-                o.ReportApiVersions = true;
-                o.AssumeDefaultVersionWhenUnspecified = true;
-                o.DefaultApiVersion = new ApiVersion(1, 0);
-                o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-            });
-        }
+            o.ReportApiVersions = true;
+            o.AssumeDefaultVersionWhenUnspecified = true;
+            o.DefaultApiVersion = new ApiVersion(1, 0);
+            o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
+        });
     }
 }

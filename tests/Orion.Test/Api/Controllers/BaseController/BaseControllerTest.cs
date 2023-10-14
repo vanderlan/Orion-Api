@@ -2,23 +2,22 @@ using AutoMapper;
 using Moq;
 using Orion.Api.AutoMapper.Config;
 
-namespace Orion.Test.Api.Controllers.BaseController
+namespace Orion.Test.Api.Controllers.BaseController;
+
+public class BaseControllerTest
 {
-    public class BaseControllerTest
+    protected readonly IMapper Mapper;
+
+    public BaseControllerTest()
     {
-        protected readonly IMapper Mapper;
+        var mockMapper = new Mock<IMapper>();
 
-        public BaseControllerTest()
+        var mappingConfig = new MapperConfiguration(mc =>
         {
-            var mockMapper = new Mock<IMapper>();
+            mc.AddProfile(new InputToDomainProfile());
+            mc.AddProfile(new DomainToOutputProfile());
+        });
 
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new InputToDomainProfile());
-                mc.AddProfile(new DomainToOutputProfile());
-            });
-
-            Mapper = mappingConfig.CreateMapper();
-        }
+        Mapper = mappingConfig.CreateMapper();
     }
 }

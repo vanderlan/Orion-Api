@@ -1,8 +1,7 @@
-namespace Orion.Api.AutoMapper.Input
+namespace Orion.Api.AutoMapper.Input;
+
+public class CustomerInput
 {
-    public class CustomerInput
-    {
-        public string PublicId { get; set; }
-        public string Name { get; set; }
-    }
+    public string PublicId { get; set; }
+    public string Name { get; set; }
 }

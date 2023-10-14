@@ -1,11 +1,10 @@
-namespace Orion.Domain.Authentication
+namespace Orion.Domain.Authentication;
+
+public static class AuthorizationConfiguration
 {
-    public static class AuthorizationConfiguration
+    public static class Roles
     {
-        public static class Roles
-        {
-            public const string Admin = "admin";
-            public const string Customer = "customer";
-        }
+        public const string Admin = "admin";
+        public const string Customer = "customer";
     }
 }

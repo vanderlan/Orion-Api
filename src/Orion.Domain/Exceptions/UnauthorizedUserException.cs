@@ -1,31 +1,30 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace Orion.Domain.Exceptions
+namespace Orion.Domain.Exceptions;
+
+[Serializable]
+public class UnauthorizedUserException : BusinessException
 {
-    [Serializable]
-    public class UnauthorizedUserException : BusinessException
+    public UnauthorizedUserException(string message, string title) : base(message, title)
     {
-        public UnauthorizedUserException(string message, string title) : base(message, title)
-        {
 
-        }
+    }
 
-        public UnauthorizedUserException() : base()
-        {
-        }
+    public UnauthorizedUserException() : base()
+    {
+    }
 
-        public UnauthorizedUserException(string message) : base(message)
-        {
-        }
+    public UnauthorizedUserException(string message) : base(message)
+    {
+    }
 
-        public UnauthorizedUserException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+    public UnauthorizedUserException(string message, Exception innerException) : base(message, innerException)
+    {
+    }
 
-        protected UnauthorizedUserException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
+    protected UnauthorizedUserException(SerializationInfo info, StreamingContext context)
+        : base(info, context)
+    {
     }
 }

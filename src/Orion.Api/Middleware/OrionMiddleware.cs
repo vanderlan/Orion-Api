@@ -2,83 +2,82 @@ using Newtonsoft.Json;
 using Orion.Domain.Exceptions;
 using System.Net;
 
-namespace Orion.Api.Middleware
+namespace Orion.Api.Middleware;
+
+public class OrionMiddleware
 {
-    public class OrionMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<OrionMiddleware> _logger;
+    private readonly IHostEnvironment _env;
+
+    public OrionMiddleware(RequestDelegate next, ILogger<OrionMiddleware> logger, IHostEnvironment env)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<OrionMiddleware> _logger;
-        private readonly IHostEnvironment _env;
+        _env = env;
+        _next = next;
+        _logger = logger;
+    }
 
-        public OrionMiddleware(RequestDelegate next, ILogger<OrionMiddleware> logger, IHostEnvironment env)
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _env = env;
-            _next = next;
-            _logger = logger;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            try
+            if (_next != null)
             {
-                if (_next != null)
-                {
-                    await _next(context);
-                }
-            }
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
+                await _next(context);
             }
         }
-
-        private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+        catch (Exception ex)
         {
-            var statusCode = GetStatusCodeByException(exception);
+            await HandleExceptionAsync(context, ex);
+        }
+    }
 
-            var errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
+    private async Task HandleExceptionAsync(HttpContext context, Exception exception)
+    {
+        var statusCode = GetStatusCodeByException(exception);
 
-            if (exception is not BusinessException && _env.IsDevelopment())
-            {
-                errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-            }
-            if (exception is UnauthorizedUserException)
-            {
-                errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-            }
+        var errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
 
-            if (exception is BusinessException businessException)
-            {
-                errorResponse.Title = businessException.Title;
-            }
-
-            await ProccessResponseAsync(context, statusCode, errorResponse, exception);
+        if (exception is not BusinessException && _env.IsDevelopment())
+        {
+            errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
+        }
+        if (exception is UnauthorizedUserException)
+        {
+            errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
         }
 
-        private static HttpStatusCode GetStatusCodeByException(Exception exception)
+        if (exception is BusinessException businessException)
         {
-            return exception switch
-            {
-                NotFoundException => HttpStatusCode.NotFound,
-                ConflictException => HttpStatusCode.Conflict,
-                UnauthorizedUserException => HttpStatusCode.Unauthorized,
-                BusinessException => HttpStatusCode.BadRequest,
-                _ => HttpStatusCode.InternalServerError
-            };
+            errorResponse.Title = businessException.Title;
         }
 
-        private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode statusCode, ExceptionResponse errorResponse, Exception exception)
+        await ProccessResponseAsync(context, statusCode, errorResponse, exception);
+    }
+
+    private static HttpStatusCode GetStatusCodeByException(Exception exception)
+    {
+        return exception switch
         {
-            var errrorReturn = JsonConvert.SerializeObject(errorResponse);
+            NotFoundException => HttpStatusCode.NotFound,
+            ConflictException => HttpStatusCode.Conflict,
+            UnauthorizedUserException => HttpStatusCode.Unauthorized,
+            BusinessException => HttpStatusCode.BadRequest,
+            _ => HttpStatusCode.InternalServerError
+        };
+    }
 
-            if (statusCode == HttpStatusCode.InternalServerError)
-                foreach (var error in errorResponse.Errors)
-                    _logger.LogError(exception, "Internal Server Error: {message}", error);
-           
-            context.Response.StatusCode = (int)statusCode;
-            context.Response.ContentType = "application/json";
+    private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode statusCode, ExceptionResponse errorResponse, Exception exception)
+    {
+        var errrorReturn = JsonConvert.SerializeObject(errorResponse);
 
-            await context.Response.WriteAsync(errrorReturn);
-        }
+        if (statusCode == HttpStatusCode.InternalServerError)
+            foreach (var error in errorResponse.Errors)
+                _logger.LogError(exception, "Internal Server Error: {message}", error);
+       
+        context.Response.StatusCode = (int)statusCode;
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsync(errrorReturn);
     }
 }

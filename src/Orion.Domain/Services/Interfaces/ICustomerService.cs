@@ -4,10 +4,9 @@ using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Domain.Services.Interfaces.Base;
 using Orion.Domain.Entities;
 
-namespace Orion.Domain.Services.Interfaces
+namespace Orion.Domain.Services.Interfaces;
+
+public interface ICustomerService : IBaseService<Customer>
 {
-    public interface ICustomerService : IBaseService<Customer>
-    {
-        Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter);
-    }
+    Task<PagedList<Customer>> ListPaginateAsync(BaseFilter<Customer> filter);
 }

@@ -1,32 +1,31 @@
 ﻿using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-namespace Orion.Api.Configuration
+namespace Orion.Api.Configuration;
+
+public static class HealthCheckConfiguration
 {
-    public static class HealthCheckConfiguration
+    public static void ConfigureHealthCheck(this IApplicationBuilder app) 
     {
-        public static void ConfigureHealthCheck(this IApplicationBuilder app) 
+        app.UseHealthChecks("/health", new HealthCheckOptions
         {
-            app.UseHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+    }
+
+    public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks().AddSqlServer(configuration["DatabaseOptions:ConnectionString"],
+            tags: new[] 
+            { 
+                "database"
             });
-        }
 
-        public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.AddHealthChecks().AddSqlServer(configuration["DatabaseOptions:ConnectionString"],
-                tags: new[] 
-                { 
-                    "database"
-                });
-
-            services.AddHealthChecks().AddElasticsearch(configuration["ElasticConfiguration:Uri"],
-                tags: new[] 
-                { 
-                    "elasticsearch", 
-                    "kibana" 
-                });
-        }
+        services.AddHealthChecks().AddElasticsearch(configuration["ElasticConfiguration:Uri"],
+            tags: new[] 
+            { 
+                "elasticsearch", 
+                "kibana" 
+            });
     }
 }

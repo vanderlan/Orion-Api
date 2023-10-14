@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Orion.Api.Models
+namespace Orion.Api.Models;
+
+public class RefreshTokenModel
 {
-    public class RefreshTokenModel
-    {
-        [Required]
-        public string RefreshToken { get; set; }
-    }
+    [Required]
+    public string RefreshToken { get; set; }
 }

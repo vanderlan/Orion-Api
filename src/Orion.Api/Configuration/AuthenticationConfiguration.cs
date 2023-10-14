@@ -6,56 +6,55 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Orion.Api.Configuration
+namespace Orion.Api.Configuration;
+
+public static class AuthenticationConfiguration
 {
-    public static class AuthenticationConfiguration
+    public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+        var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+
+        services.AddAuthentication(option =>
         {
-            var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
-
-            services.AddAuthentication(option =>
-            {
-                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.RequireHttpsMetadata = true;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateAudience = true,
-                    ValidAudience = jwtOptions.Audience,
-                    ValidIssuer = jwtOptions.Issuer,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey)),
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
-        }
-
-        public static JwtSecurityToken CreateToken(UserOutput userOutput, IConfiguration configuration)
+            option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(options =>
         {
-            var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = true;
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateAudience = true,
+                ValidAudience = jwtOptions.Audience,
+                ValidIssuer = jwtOptions.Issuer,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey)),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
+    }
 
-            var claim = new[] {
-                    new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
-                    new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
-                    new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
-                    new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
-                };
+    public static JwtSecurityToken CreateToken(UserOutput userOutput, IConfiguration configuration)
+    {
+        var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
-            var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
+        var claim = new[] {
+                new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
+                new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
+                new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
+            };
 
-            var token = new JwtSecurityToken(
-              issuer: jwtOptions.Issuer,
-              audience: jwtOptions.Audience,
-              expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
-              signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha512),
-              claims: claim
-            );
+        var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
 
-            return token;
-        }
+        var token = new JwtSecurityToken(
+          issuer: jwtOptions.Issuer,
+          audience: jwtOptions.Audience,
+          expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
+          signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha512),
+          claims: claim
+        );
+
+        return token;
     }
 }
