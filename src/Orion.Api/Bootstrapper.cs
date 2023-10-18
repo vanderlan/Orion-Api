@@ -16,9 +16,9 @@ public static class Bootstrapper
     {
         app.UseSwagger();
         
-        app.UseSwaggerUI(c =>
+        app.UseSwaggerUI(options =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
+            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
         });
 
         app.UseCors(options => options.WithOrigins("*")

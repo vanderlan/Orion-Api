@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using Orion.Api.Models;
 
-namespace Orion.Api.Controllers;
+namespace Orion.Api.Controllers.Base;
 
 [ApiController]
 public abstract class ApiController : ControllerBase

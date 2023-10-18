@@ -8,10 +8,11 @@ using Orion.Api.AutoMapper.Output;
 using Orion.Domain.Entities.Filter;
 using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Domain.Services.Interfaces;
-using static Orion.Domain.Authentication.AuthorizationConfiguration;
 using Orion.Domain.Entities;
+using Orion.Api.Controllers.Base;
+using static Orion.Domain.Authentication.AuthorizationConfiguration;
 
-namespace Orion.Api.Controllers;
+namespace Orion.Api.Controllers.V1;
 
 [ApiVersion(1.0)]
 [Route("api/[controller]")]
@@ -44,7 +45,7 @@ public class UsersController : ApiController
         var user = await _userService.FindByIdAsync(id);
         var userOutput = Mapper.Map<UserOutput>(user);
 
-        if (userOutput is null) 
+        if (userOutput is null)
             return NotFound();
 
         return Ok(userOutput);

@@ -6,12 +6,12 @@ public static class ApiVersioningConfiguration
 {
     public static void ConfigureApiVersioning(this IServiceCollection services)
     {
-        services.AddApiVersioning(o =>
+        services.AddApiVersioning(options =>
         {
-            o.ReportApiVersions = true;
-            o.AssumeDefaultVersionWhenUnspecified = true;
-            o.DefaultApiVersion = new ApiVersion(1, 0);
-            o.ApiVersionReader = new HeaderApiVersionReader("api-version");
+            options.ReportApiVersions = true;
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.DefaultApiVersion = new ApiVersion(1,0);
+            options.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
         }).AddMvc();
     }
 }

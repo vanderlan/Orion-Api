@@ -9,8 +9,9 @@ using Orion.Domain.Services.Interfaces;
 using Orion.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using Asp.Versioning;
+using Orion.Api.Controllers.Base;
 
-namespace Orion.Api.Controllers;
+namespace Orion.Api.Controllers.V1;
 
 [ApiVersion(1.0)]
 [Route("api/[controller]")]
