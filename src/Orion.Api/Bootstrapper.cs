@@ -15,6 +15,7 @@ public static class Bootstrapper
     public static void ConfigureApp(this IApplicationBuilder app)
     {
         app.UseSwagger();
+        
         app.UseSwaggerUI(c =>
         {
             c.SwaggerEndpoint("/swagger/v1/swagger.json", "Orion API");
@@ -52,6 +53,8 @@ public static class Bootstrapper
 
         services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
 
+        services.ConfigureApiVersioning();
+
         services.AddMvc(options =>
                         {
                             options.Filters.Add(typeof(CustomValidationAttribute));
@@ -68,7 +71,6 @@ public static class Bootstrapper
         services.AddApplicationHealthChecks(configuration);
 
         services.ConfigureSwagger();
-        services.ConfigureApiVersioning();
 
         services.AddDomainServices();
 

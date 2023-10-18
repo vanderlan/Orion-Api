@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.Versioning;
-using Microsoft.AspNetCore.Mvc;
+﻿using Asp.Versioning;
 
 namespace Orion.Api.Configuration;
 
@@ -12,7 +11,7 @@ public static class ApiVersioningConfiguration
             o.ReportApiVersions = true;
             o.AssumeDefaultVersionWhenUnspecified = true;
             o.DefaultApiVersion = new ApiVersion(1, 0);
-            o.ApiVersionReader = new HeaderApiVersionReader("x-api-version");
-        });
+            o.ApiVersionReader = new HeaderApiVersionReader("api-version");
+        }).AddMvc();
     }
 }

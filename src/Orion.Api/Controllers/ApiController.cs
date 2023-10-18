@@ -18,14 +18,14 @@ public abstract class ApiController : ControllerBase
 
     private AuthUserModel GetAuthenticatedUser()
     {
-        var email = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.Email);
-        var givenName = ((ClaimsIdentity)User.Identity).FindFirst(ClaimTypes.GivenName);
+        var email = ((ClaimsIdentity)User.Identity)?.FindFirst(ClaimTypes.Email);
+        var givenName = ((ClaimsIdentity)User.Identity)?.FindFirst(ClaimTypes.GivenName);
 
         return new AuthUserModel
         {
-            PublicId = User.Identity.Name,
-            Email = email.Value,
-            FisrtName = givenName.Value,
+            PublicId = User?.Identity?.Name,
+            Email = email?.Value,
+            FisrtName = givenName?.Value,
         };
     }
 

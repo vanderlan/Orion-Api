@@ -8,10 +8,11 @@ using Orion.Domain.Extensions;
 using Orion.Domain.Services.Interfaces;
 using Orion.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using Asp.Versioning;
 
 namespace Orion.Api.Controllers;
 
-[ApiVersion("1.0")]
+[ApiVersion(1.0)]
 [Route("api/[controller]")]
 [AllowAnonymous]
 public class AuthController : ApiController
