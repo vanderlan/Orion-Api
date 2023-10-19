@@ -61,11 +61,11 @@ public class DataContext : DbContext
         {
             if (entity.State == EntityState.Added)
             {
-                ((BaseEntity)entity.Entity).CreatedAt = DateTime.Now;
+                ((BaseEntity)entity.Entity).CreatedAt = DateTime.UtcNow;
                 ((BaseEntity)entity.Entity).PublicId = Guid.NewGuid().ToString();
             }
 
-            ((BaseEntity)entity.Entity).LastUpdated = DateTime.Now;
+            ((BaseEntity)entity.Entity).LastUpdated = DateTime.UtcNow;
         }
     }
 }

@@ -33,7 +33,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 **Configurations and Patterns**
 
 	1. Business Exceptions;
-	2. Exception handler;
+	2. Exception Middleware;
 	3. Repository Pattern;
 	4. Faker Objects;
 	5. Unit Of Work;
@@ -57,14 +57,20 @@ The main objective is to start projects with a clean and simple architecture, wi
 
 	1. API Test.
 
-**Run database migrations**
-	
-	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
-
 **Install template and create your project**
 
+	# install the template on your .NET Sdk
 	dotnet new install .
-	dotnet new orion-api -o MyNewProject --firstEntity "Pearson"
+
+	# create a project template based, where "MyNewProject" is the project name and "EntityName" is the first Entity of your project
+	dotnet new orion-api -o MyNewProject --firstEntity "EntityName"
+
+**Migrations**
+
+	# in src/ folder
+
+	dotnet ef migrations add MigrationName -p Orion.Data -s Orion.Api
+	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
 
 
 Author: https://github.com/vanderlan
