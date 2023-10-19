@@ -1,0 +1,58 @@
+{
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Vanderlan Gomes",
+    "name": "Orion API Project Template",
+    "description": "A simple project template for creating a .NET API (v7.0)",
+    "classifications": [ "WebApi" ],
+    "identity": "Orion.Api.Project.Template",
+    "shortName": "orion-api",
+    "tags": {
+      "language": "C#",
+      "type": "project"
+    },
+    "sourceName": "Orion",
+    "symbols":{
+        "firstEntity":{
+            "type":"parameter",
+            "description":"Entity sample to be replaced",
+            "replaces":"Customer",
+            "isRequired":true
+        },
+
+        "firstEntityUpper":{
+          "type": "generated",
+          "generator": "casing",
+          "parameters": {
+            "source":"firstEntity",
+            "toLower": false
+          },
+          "replaces":"Customer (U) - nao funciona"
+        },
+    
+        "firstEntityLower":{
+          "type": "generated",
+          "generator": "casing",
+          "parameters": {
+            "source":"firstEntity",
+            "toLower": true
+          },
+          "replaces": "Customer (l) - nao funciona"
+        },
+
+        "joinedRename": {
+          "type": "generated",
+          "generator": "join",
+          "fileRename": "Customer",
+          "parameters": {
+            "symbols": [
+              {
+                "type": "ref",
+                "value": "firstEntity"
+              }
+            ],
+            "separator": "/",
+            "removeEmptyValues": true
+          }
+        }
+    }
+  }

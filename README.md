@@ -61,5 +61,10 @@ The main objective is to start projects with a clean and simple architecture, wi
 	
 	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
 
+**Install template and create your project**
+
+	dotnet new install .
+	dotnet new orion-api -o MyNewProject --firstEntity "Pearson"
+
 
 Author: https://github.com/vanderlan
