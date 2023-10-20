@@ -6,9 +6,6 @@ public static class SwaggerConfiguration
 {
     public static void ConfigureSwagger(this IServiceCollection services)
     {
-        //To Disable Swagger in production environment
-        //if (!_env.IsProduction())
-
         services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo
