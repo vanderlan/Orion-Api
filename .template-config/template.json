@@ -1,0 +1,77 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Vanderlan Gomes",
+  "name": "Orion API Project Template",
+  "description": "A simple project template for creating a .NET API (v7.0)",
+  "classifications": [ "WebApi" ],
+  "identity": "Orion.Api.Project.Template",
+  "shortName": "orion-api",
+  "tags": {
+    "language": "C#",
+    "type": "project"
+  },
+  "sourceName": "Orion",
+  "symbols": {
+
+    "firstEntity": {
+      "type": "parameter",
+      "datatype": "text",
+      "replaces": "Customer",
+      "isRequired": true
+    },
+
+    "pascalCasedFirstEntity": {
+      "type": "derived",
+      "valueSource": "firstEntity",
+      "replaces": "Customer",
+      "valueTransform": "pascalCase"
+    },
+
+    "camelCasedFirstEntity": {
+      "type": "derived",
+      "valueSource": "pascalCasedFirstEntity",
+      "replaces": "customer",
+      "valueTransform": "firtstLowerCase"
+    },
+
+    "joinedRename": {
+      "type": "generated",
+      "generator": "join",
+      "fileRename": "Customer",
+      "parameters": {
+        "symbols": [
+          {
+            "type": "ref",
+            "value": "firstEntity"
+          }
+        ],
+        "separator": "/",
+        "removeEmptyValues": true
+      }
+    }
+  },
+
+  "forms": {
+    "titleCase": {
+      "identifier": "titleCase"
+    },
+    "invalidChars": {
+      "identifier": "replace",
+      "pattern": "([\\-_\\.\\ ])",
+      "replacement": ""
+    },
+    "pascalCase": {
+      "identifier": "chain",
+      "steps": [
+        "titleCase",
+        "invalidChars"
+      ]
+    },
+    "kebabCase": {
+      "identifier": "kebabCase"
+    },
+    "firtstLowerCase": {
+      "identifier": "firstLowerCaseInvariant"
+    }
+  }
+}

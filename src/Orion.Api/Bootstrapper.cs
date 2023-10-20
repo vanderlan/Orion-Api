@@ -75,5 +75,7 @@ public static class Bootstrapper
         services.AddDomainServices();
 
         services.ConfigureAutoMapper();
+
+        services.AddHttpContextAccessor();
     }
 }

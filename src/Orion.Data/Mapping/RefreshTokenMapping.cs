@@ -12,6 +12,7 @@ public class RefreshTokenMapping : IEntityTypeConfiguration<RefreshToken>
         builder.Property(x => x.Refreshtoken).HasMaxLength(300).IsRequired();
         builder.Property(x => x.Email).HasMaxLength(200).IsRequired();
         builder.HasIndex(x => x.Email).IsUnique();
+        builder.HasIndex(x => x.PublicId).IsUnique();
         builder.HasKey(x => x.Refreshtoken);
     }
 }

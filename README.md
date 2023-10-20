@@ -33,7 +33,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 **Configurations and Patterns**
 
 	1. Business Exceptions;
-	2. Exception handler;
+	2. Exception Middleware;
 	3. Repository Pattern;
 	4. Faker Objects;
 	5. Unit Of Work;
@@ -53,13 +53,20 @@ The main objective is to start projects with a clean and simple architecture, wi
 	3. Continuous Delivery;
 	4. DockerHub Integration.
 
-**Todo**
 
-	1. API Test.
+# **Create your Project based on the Orion Api Template**
 
-**Run database migrations**
-	
+**Install template and create your project**
+
+	dotnet new install .
+
+	dotnet new orion-api -o MyNewProject --firstEntity "EntityName"
+
+**Migrations**
+
+	# in the src/ folder
+
+	dotnet ef migrations add MigrationName -p Orion.Data -s Orion.Api
 	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
-
 
 Author: https://github.com/vanderlan

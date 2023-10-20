@@ -15,7 +15,7 @@ internal abstract class BaseEntityRepository<T> : IBaseEntityRepository<T> where
 {
     protected DataContext DataContext { get; }
 
-    public BaseEntityRepository(DataContext dataContext)
+    protected BaseEntityRepository(DataContext dataContext)
     {
         DataContext = dataContext;
     }
