@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using Orion.Domain.Entities.Enuns;
 using Orion.Domain.Entities;
+using Orion.Domain.Extensions;
 
 namespace Orion.Data.Mapping;
 
@@ -14,6 +15,7 @@ public class UserMapping : IEntityTypeConfiguration<User>
         builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
         builder.Property(x => x.Email).HasMaxLength(200).IsRequired();
         builder.HasIndex(x => x.Email).IsUnique();
+        builder.HasIndex(x => x.PublicId).IsUnique();
         builder.Property(x => x.Password).HasMaxLength(300).IsRequired();
 
         //Default System User
@@ -23,11 +25,11 @@ public class UserMapping : IEntityTypeConfiguration<User>
                 UserId = 1,
                 PublicId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
-                Email = "adm@orion.com",
+                Email = "adm@orion-api.com",
                 Name = "Orion Admin User",
                 LastUpdated = DateTime.UtcNow,
                 Profile = UserProfile.Admin,
-                Password = "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2"
+                Password =  "123".ToSha512()
             }
         );
     }

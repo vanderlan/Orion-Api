@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Orion.Api.AutoMapper.Output;
-using Orion.Api.Jwt;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -27,7 +26,9 @@ public static class AuthenticationConfiguration
             {
                 ValidateAudience = true,
                 ValidAudience = jwtOptions.Audience,
+                ValidateIssuer = true,
                 ValidIssuer = jwtOptions.Issuer,
+                ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha512 },
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey)),
                 ClockSkew = TimeSpan.Zero
             };
@@ -38,12 +39,13 @@ public static class AuthenticationConfiguration
     {
         var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
-        var claim = new[] {
-                new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
-                new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
-                new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
-            };
+        var claims = new[]
+        {
+            new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
+            new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
+            new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
+            new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
+        };
 
         var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
 
@@ -52,9 +54,20 @@ public static class AuthenticationConfiguration
           audience: jwtOptions.Audience,
           expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
           signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha512),
-          claims: claim
+          claims: claims
         );
 
         return token;
     }
+}
+
+/// <summary>
+/// Section of appsettings that contains the JWT app configuration
+/// </summary>
+public class JwtOptions
+{
+    public string SymmetricSecurityKey { get; set; }
+    public string Issuer { get; set; }
+    public string Audience { get; set; }
+    public int TokenExpirationMinutes { get; set; }
 }

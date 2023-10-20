@@ -12,7 +12,7 @@ using Orion.Data.Context;
 namespace Orion.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231019144159_InitialMigration")]
+    [Migration("20231020131158_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -54,6 +54,9 @@ namespace Orion.Data.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
+                    b.HasIndex("PublicId")
+                        .IsUnique();
+
                     b.ToTable("Customer", (string)null);
                 });
 
@@ -82,6 +85,9 @@ namespace Orion.Data.Migrations
                     b.HasKey("Refreshtoken");
 
                     b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PublicId")
                         .IsUnique();
 
                     b.ToTable("RefreshToken", (string)null);
@@ -129,19 +135,22 @@ namespace Orion.Data.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.HasIndex("PublicId")
+                        .IsUnique();
+
                     b.ToTable("User", (string)null);
 
                     b.HasData(
                         new
                         {
                             UserId = 1,
-                            CreatedAt = new DateTime(2023, 10, 19, 14, 41, 59, 64, DateTimeKind.Utc).AddTicks(8694),
-                            Email = "adm@orion.com",
-                            LastUpdated = new DateTime(2023, 10, 19, 14, 41, 59, 64, DateTimeKind.Utc).AddTicks(8696),
+                            CreatedAt = new DateTime(2023, 10, 20, 13, 11, 58, 205, DateTimeKind.Utc).AddTicks(9435),
+                            Email = "adm@orion-api.com",
+                            LastUpdated = new DateTime(2023, 10, 20, 13, 11, 58, 205, DateTimeKind.Utc).AddTicks(9442),
                             Name = "Orion Admin User",
                             Password = "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2",
                             Profile = 1,
-                            PublicId = "7cf56da8-9248-4809-b889-12f73ae312fd"
+                            PublicId = "ed0cb90a-2521-45f5-a02d-76456007c6ef"
                         });
                 });
 #pragma warning restore 612, 618

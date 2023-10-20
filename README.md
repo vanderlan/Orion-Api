@@ -53,24 +53,20 @@ The main objective is to start projects with a clean and simple architecture, wi
 	3. Continuous Delivery;
 	4. DockerHub Integration.
 
-**Todo**
 
-	1. API Test.
+# **Create your Project based on the Orion Api Template**
 
 **Install template and create your project**
 
-	# install the template on your .NET Sdk
 	dotnet new install .
 
-	# create a project template based, where "MyNewProject" is the project name and "EntityName" is the first Entity of your project
 	dotnet new orion-api -o MyNewProject --firstEntity "EntityName"
 
 **Migrations**
 
-	# in src/ folder
+	# in the src/ folder
 
 	dotnet ef migrations add MigrationName -p Orion.Data -s Orion.Api
 	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
-
 
 Author: https://github.com/vanderlan

@@ -8,8 +8,8 @@ using Orion.Domain.Repositories.UnitOfWork;
 using Orion.Domain.Entities.Filter;
 using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Resources;
-using static Orion.Resources.Messages.MessagesKeys;
 using Orion.Domain.Entities;
+using static Orion.Resources.Messages.MessagesKeys;
 
 namespace Orion.Domain.Services;
 

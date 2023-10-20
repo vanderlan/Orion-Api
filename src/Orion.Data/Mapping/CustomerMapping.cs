@@ -11,5 +11,6 @@ public class CustomerMapping : IEntityTypeConfiguration<Customer>
         builder.Property(x => x.Name).HasMaxLength(100).IsRequired();
         builder.Property(x => x.PublicId).HasMaxLength(50).IsRequired();
         builder.HasIndex(x => x.Name).IsUnique();
+        builder.HasIndex(x => x.PublicId).IsUnique();
     }
 }

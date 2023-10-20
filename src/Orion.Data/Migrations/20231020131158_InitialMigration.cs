@@ -64,12 +64,18 @@ namespace Orion.Data.Migrations
             migrationBuilder.InsertData(
                 table: "User",
                 columns: new[] { "UserId", "CreatedAt", "Email", "LastUpdated", "Name", "Password", "Profile", "PublicId" },
-                values: new object[] { 1, new DateTime(2023, 10, 19, 14, 41, 59, 64, DateTimeKind.Utc).AddTicks(8694), "adm@orion.com", new DateTime(2023, 10, 19, 14, 41, 59, 64, DateTimeKind.Utc).AddTicks(8696), "Orion Admin User", "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2", 1, "7cf56da8-9248-4809-b889-12f73ae312fd" });
+                values: new object[] { 1, new DateTime(2023, 10, 20, 13, 11, 58, 205, DateTimeKind.Utc).AddTicks(9435), "adm@orion-api.com", new DateTime(2023, 10, 20, 13, 11, 58, 205, DateTimeKind.Utc).AddTicks(9442), "Orion Admin User", "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2", 1, "ed0cb90a-2521-45f5-a02d-76456007c6ef" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Customer_Name",
                 table: "Customer",
                 column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Customer_PublicId",
+                table: "Customer",
+                column: "PublicId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -79,9 +85,21 @@ namespace Orion.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_RefreshToken_PublicId",
+                table: "RefreshToken",
+                column: "PublicId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
                 table: "User",
                 column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_PublicId",
+                table: "User",
+                column: "PublicId",
                 unique: true);
         }
 
