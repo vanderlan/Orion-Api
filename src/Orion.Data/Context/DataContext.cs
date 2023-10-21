@@ -1,11 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Orion.Data.Mapping;
+using Orion.Domain.Entities;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Orion.Data.Mapping;
-using Microsoft.Extensions.Configuration;
-using Orion.Domain.Entities;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Orion.Data.Context;
 
@@ -15,12 +14,11 @@ public class DataContext : DbContext
 
     public DataContext(IConfiguration configuration) : base(GetDefaultOptions(configuration))
     {
-        var oi = 54; 
+
     }
 
     public DataContext(DbContextOptions options) : base(options)
     {
-        var oi = 99;
 
     }
 
@@ -33,8 +31,6 @@ public class DataContext : DbContext
     private static DbContextOptions GetDefaultOptions(IConfiguration configuration)
     {
         var connectionString = configuration.GetSection("DatabaseOptions:ConnectionString").Value;
-
-        //Database.MigrateDatabase(connectionString);
 
         return new DbContextOptionsBuilder().UseSqlServer(connectionString).Options;
     }

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Orion.Data.UnitOfWork;
 using Orion.Domain.Repositories.UnitOfWork;
 using Orion.Ioc.Dependencies;
@@ -15,8 +14,6 @@ public class DependencyInjectionSetupFixture
         var serviceCollection = new ServiceCollection();
 
         serviceCollection.AddDomainServices();
-
-        serviceCollection.RemoveAll<IUnitOfWork>();
 
         serviceCollection.AddTransient<IUnitOfWork>(s => new UnitOfWork(TestBootstrapper.GetInMemoryDbContextOptions()));
         serviceCollection.AddLogging();
