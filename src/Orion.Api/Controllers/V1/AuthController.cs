@@ -39,7 +39,7 @@ public class AuthController : ApiController
     [HttpPost]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
     {
-        var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshTokenAsync(refreshTokenModel.RefreshToken, refreshTokenModel.Token));
+        var userOutput = Mapper.Map<UserOutput>(await _userService.SignInWithRehreshTokenAsync(refreshTokenModel.RefreshToken, refreshTokenModel.Token));
 
         return await AuthorizeUser(userOutput);
     }

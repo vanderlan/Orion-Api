@@ -230,7 +230,7 @@ public class UserServiceTest : BaseServiceTest
         var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
 
         //act
-        var userByRefreshToken = await userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken, Token);
+        var userByRefreshToken = await userService.SignInWithRehreshTokenAsync(refreshTokenAdded.Refreshtoken, Token);
 
         //assert
         Assert.NotNull(userByRefreshToken);
@@ -259,7 +259,7 @@ public class UserServiceTest : BaseServiceTest
         await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = Guid.NewGuid().ToString() });
 
         //act
-        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(refreshToken, token));
+        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRehreshTokenAsync(refreshToken, token));
 
         //assert
         Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
