@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Orion.Data.Mapping;
+using Orion.Domain.Entities;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Orion.Data.Mapping;
-using Microsoft.Extensions.Configuration;
-using Orion.Domain.Entities;
 
 namespace Orion.Data.Context;
 

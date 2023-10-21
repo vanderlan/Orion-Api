@@ -19,4 +19,6 @@ app.UseMiddleware<OrionMiddleware>();
 
 app.ConfigureApp();
 
+app.RunMigrations();
+
 app.Run();

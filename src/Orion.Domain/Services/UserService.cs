@@ -84,10 +84,10 @@ public class UserService : IUserService
 
     public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
     {
-        var existantRefresToken = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email);
+        var existantRefreshToken = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email);
 
-        if (existantRefresToken.Any())
-            return existantRefresToken.First();
+        if (existantRefreshToken.Any())
+            return existantRefreshToken.First();
 
         var added = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
         await _unitOfWork.CommitAsync();
@@ -95,7 +95,7 @@ public class UserService : IUserService
         return added;
     }
 
-    public async Task<User> GetUserByRefreshTokenAsync(string refreshToken, string expiredToken)
+    public async Task<User> SignInWithRehreshTokenAsync(string refreshToken, string expiredToken)
     {
         if (string.IsNullOrEmpty(refreshToken))
         {
@@ -107,15 +107,15 @@ public class UserService : IUserService
 
         var email = GetClaimFromJtwToken(expiredToken, JwtRegisteredClaimNames.Email);
 
-        var refreshTokens = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken) && x.Email == email)).ToList();
+        var userRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken) && x.Email == email)).FirstOrDefault();
 
-        if (refreshTokens != null && refreshTokens.Any())
+        if (userRefreshToken is not null)
         {
-            var user = (await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == refreshTokens.First().Email)).FirstOrDefault();
+            var user = (await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == userRefreshToken.Email)).FirstOrDefault();
 
             if (user is not null)
             {
-                await _unitOfWork.RefreshTokenRepository.DeleteAsync(refreshTokens.First().PublicId);
+                await _unitOfWork.RefreshTokenRepository.DeleteAsync(userRefreshToken.PublicId);
                 await _unitOfWork.CommitAsync();
 
                 return user;

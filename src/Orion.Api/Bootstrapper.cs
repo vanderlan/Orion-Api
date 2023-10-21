@@ -72,6 +72,8 @@ public static class Bootstrapper
 
         services.ConfigureSwagger();
 
+        services.AddDatabaseContext();
+        services.AddUnitOfWork();
         services.AddDomainServices();
 
         services.ConfigureAutoMapper();

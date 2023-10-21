@@ -115,7 +115,7 @@ public class AuthControllerTest : BaseControllerTest
             .ReturnsAsync(_validUser);
 
         userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenFaker.Get());
-        userServiceMock.Setup(x => x.GetUserByRefreshTokenAsync(_validRefreshToken.Refreshtoken, It.IsAny<string>())).ReturnsAsync(_validUser);
+        userServiceMock.Setup(x => x.SignInWithRehreshTokenAsync(_validRefreshToken.Refreshtoken, It.IsAny<string>())).ReturnsAsync(_validUser);
 
         var inMemorySettings = new Dictionary<string, string> {
             {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
