@@ -1,18 +1,22 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using System;
-using System.Threading.Tasks;
+using Orion.Api.AutoMapper.Output;
+using Orion.Api.Configuration;
+using Orion.Domain.Entities;
 using Orion.Domain.Entities.Filter;
-using Orion.Resources;
 using Orion.Domain.Exceptions;
 using Orion.Domain.Extensions;
 using Orion.Domain.Services.Interfaces;
+using Orion.Resources;
 using Orion.Test.Configuration;
+using Orion.Test.Domain.Services.BaseService;
 using Orion.Test.MotherObjects;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Xunit;
 using static Orion.Resources.Messages.MessagesKeys;
-using Orion.Test.Domain.Services.BaseService;
-using Orion.Domain.Entities;
 
 namespace Orion.Test.Domain.Services;
 
@@ -217,15 +221,16 @@ public class UserServiceTest : BaseServiceTest
 
         var userAdded = await userService.AddAsync(UserFaker.Get());
         var userFound = await userService.FindByIdAsync(userAdded.PublicId);
-
         Assert.NotNull(userFound);
 
         var refreshToken = Guid.NewGuid().ToString();
 
+        var (Token, _) = AuthenticationConfiguration.CreateToken(new UserOutput { Email = userAdded.Email, Name = userAdded.Name, PublicId = userAdded.PublicId }, GetCofiguration());
+
         var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
 
         //act
-        var userByRefreshToken = await userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken);
+        var userByRefreshToken = await userService.GetUserByRefreshTokenAsync(refreshTokenAdded.Refreshtoken, Token);
 
         //assert
         Assert.NotNull(userByRefreshToken);
@@ -237,9 +242,9 @@ public class UserServiceTest : BaseServiceTest
     }
 
     [Theory]
-    [InlineData(null)]
-    [InlineData("Invalid refresh token")]
-    public async Task GetUserByRefreshTokenAsync_WithInvalidId_ThrowsUnauthorizedUserException(string refreshTokenId)
+    [InlineData(null, null)]
+    [InlineData("Invalid refresh token", "invalid old token")]
+    public async Task GetUserByRefreshTokenAsync_WithInvalidId_ThrowsUnauthorizedUserException(string refreshToken, string token)
     {
         //arrange
         using var scope = ServiceProvider.CreateScope();
@@ -251,12 +256,10 @@ public class UserServiceTest : BaseServiceTest
 
         Assert.NotNull(userFound);
 
-        var refreshToken = Guid.NewGuid().ToString();
-
-        await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
+        await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = Guid.NewGuid().ToString() });
 
         //act
-        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(refreshTokenId));
+        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.GetUserByRefreshTokenAsync(refreshToken, token));
 
         //assert
         Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
@@ -271,6 +274,21 @@ public class UserServiceTest : BaseServiceTest
         const string expectedHash = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
 
         Assert.Equal(expectedHash, passwordTest.ToSha512());
+    }
+
+    private static IConfiguration GetCofiguration()
+    {
+
+        var inMemorySettings = new Dictionary<string, string> {
+            {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
+            {"JwtOptions:Issuer", "http://www.myapplication.com"},
+            {"JwtOptions:Audience", "http://www.myapplication.com"},
+            {"JwtOptions:TokenExpirationMinutes", "15"}
+        };
+
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();
     }
 
     #endregion

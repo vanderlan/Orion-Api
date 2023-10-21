@@ -1,15 +1,14 @@
+using Asp.Versioning;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Orion.Api.AutoMapper.Output;
 using Orion.Api.Configuration;
+using Orion.Api.Controllers.Base;
 using Orion.Api.Models;
+using Orion.Domain.Entities;
 using Orion.Domain.Extensions;
 using Orion.Domain.Services.Interfaces;
-using Orion.Domain.Entities;
-using System.IdentityModel.Tokens.Jwt;
-using Asp.Versioning;
-using Orion.Api.Controllers.Base;
 
 namespace Orion.Api.Controllers.V1;
 
@@ -40,7 +39,7 @@ public class AuthController : ApiController
     [HttpPost]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
     {
-        var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshTokenAsync(refreshTokenModel.RefreshToken));
+        var userOutput = Mapper.Map<UserOutput>(await _userService.GetUserByRefreshTokenAsync(refreshTokenModel.RefreshToken, refreshTokenModel.Token));
 
         return await AuthorizeUser(userOutput);
     }
@@ -49,15 +48,15 @@ public class AuthController : ApiController
     {
         if (userOutput != null)
         {
-            var token = AuthenticationConfiguration.CreateToken(userOutput, _configuration);
+            var (Token, ValidTo) = AuthenticationConfiguration.CreateToken(userOutput, _configuration);
 
             var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512() });
 
             return Ok(
               new UserApiTokenModel
               {
-                  Token = new JwtSecurityTokenHandler().WriteToken(token),
-                  Expiration = token.ValidTo,
+                  Token = Token,
+                  Expiration = ValidTo,
                   RefreshToken = refreshToken.Refreshtoken
               });
         }

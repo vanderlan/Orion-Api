@@ -35,7 +35,7 @@ public static class AuthenticationConfiguration
         });
     }
 
-    public static JwtSecurityToken CreateToken(UserOutput userOutput, IConfiguration configuration)
+    public static (string Token, DateTime ValidTo)CreateToken(UserOutput userOutput, IConfiguration configuration)
     {
         var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
@@ -57,7 +57,7 @@ public static class AuthenticationConfiguration
           claims: claims
         );
 
-        return token;
+        return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
     }
 }
 

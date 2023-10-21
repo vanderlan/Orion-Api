@@ -13,7 +13,6 @@ public abstract class ApiController : ControllerBase
     protected ApiController(IMapper mapper)
     {
         Mapper = mapper;
-        Mapper.ConfigurationProvider.AssertConfigurationIsValid();
     }
 
     private AuthUserModel GetAuthenticatedUser()
@@ -22,11 +21,11 @@ public abstract class ApiController : ControllerBase
         var givenName = ((ClaimsIdentity)User.Identity)?.FindFirst(ClaimTypes.GivenName);
 
         return new AuthUserModel
-        {
-            PublicId = User?.Identity?.Name,
-            Email = email?.Value,
-            FisrtName = givenName?.Value,
-        };
+        (
+            PublicId: User?.Identity?.Name,
+            Email: email?.Value,
+            Name: givenName?.Value
+        );
     }
 
     protected CreatedResult Created(object entity)

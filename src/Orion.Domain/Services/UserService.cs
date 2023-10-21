@@ -10,6 +10,8 @@ using Orion.Domain.Entities.ValueObjects.Pagination;
 using Orion.Resources;
 using Orion.Domain.Entities;
 using static Orion.Resources.Messages.MessagesKeys;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Orion.Domain.Services;
 
@@ -93,7 +95,7 @@ public class UserService : IUserService
         return added;
     }
 
-    public async Task<User> GetUserByRefreshTokenAsync(string refreshToken)
+    public async Task<User> GetUserByRefreshTokenAsync(string refreshToken, string expiredToken)
     {
         if (string.IsNullOrEmpty(refreshToken))
         {
@@ -103,22 +105,40 @@ public class UserService : IUserService
             );
         }
 
-        var token = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken));
+        var email = GetClaimFromJtwToken(expiredToken, JwtRegisteredClaimNames.Email);
 
-        if (token != null && token.Any())
+        var refreshTokens = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken) && x.Email == email)).ToList();
+
+        if (refreshTokens != null && refreshTokens.Any())
         {
-            var user = await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == token.First().Email);
+            var user = (await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == refreshTokens.First().Email)).FirstOrDefault();
 
-            if (user.Any())
+            if (user is not null)
             {
-                await _unitOfWork.RefreshTokenRepository.DeleteAsync(token.First().PublicId);
+                await _unitOfWork.RefreshTokenRepository.DeleteAsync(refreshTokens.First().PublicId);
                 await _unitOfWork.CommitAsync();
 
-                return user?.First() ?? throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
+                return user;
             }
         }
 
         throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
+    }
+
+    private string GetClaimFromJtwToken(string jtwToken, string claimName)
+    {
+        try
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtSecurityToken = handler.ReadJwtToken(jtwToken);
+            var claimValue = jwtSecurityToken.Claims.First(claim => claim.Type == claimName).Value;
+
+            return claimValue;
+        }
+        catch (Exception)
+        {
+            throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
+        }
     }
 
     public async Task<PagedList<User>> ListPaginateAsync(BaseFilter<User> filter)
