@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Orion.Api.AutoMapper.Output;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Orion.Api.AutoMapper.Output;
 
 namespace Orion.Api.Configuration;
 

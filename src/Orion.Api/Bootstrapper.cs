@@ -3,10 +3,10 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Orion.Api.Attributes;
+using Orion.Api.Validators;
 using Orion.Api.AutoMapper;
 using Orion.Api.Configuration;
-using Orion.Api.Validators;
-using Orion.Ioc.Dependencies;
+using Orion.Croscutting.Ioc.Dependencies;
 
 namespace Orion.Api;
 

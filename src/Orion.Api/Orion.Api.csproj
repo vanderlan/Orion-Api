@@ -2,10 +2,10 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <AssemblyName>Orion.Api</AssemblyName>
     <UserSecretsId>7401dc57-e892-498d-a628-03091ec95c6a</UserSecretsId>
     <ImplicitUsings>enable</ImplicitUsings>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <PackageId>Orion.Api</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -37,9 +37,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orion.Domain\Orion.Domain.csproj" />
-    <ProjectReference Include="..\Orion.Ioc\Orion.Ioc.csproj" />
-    <ProjectReference Include="..\Orion.Resources\Orion.Resources.csproj" />
+    <ProjectReference Include="..\Orion.Core.Domain\Orion.Core.Domain.csproj" />
+    <ProjectReference Include="..\Orion.Croscutting.Ioc\Orion.Croscutting.Ioc.csproj" />
+    <ProjectReference Include="..\Orion.Croscutting.Resources\Orion.Croscutting.Resources.csproj" />
   </ItemGroup>
 
   <ItemGroup>

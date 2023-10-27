@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
-using Orion.Domain.Exceptions;
+using Orion.Core.Domain.Exceptions;
 using System.Text.Json;
 
 namespace Orion.Api.Attributes;

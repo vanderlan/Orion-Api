@@ -1,6 +1,6 @@
 using Bogus;
 using Orion.Api.AutoMapper.Input;
-using Orion.Domain.Entities;
+using Orion.Core.Domain.Entities;
 
 namespace Orion.Test.MotherObjects;
 

@@ -1,14 +1,14 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
 using System.Threading.Tasks;
-using Orion.Domain.Entities.Filter;
-using Orion.Domain.Exceptions;
-using Orion.Domain.Services.Interfaces;
+using Orion.Core.Domain.Entities.Filter;
+using Orion.Core.Domain.Exceptions;
+using Orion.Core.Domain.Services.Interfaces;
 using Orion.Test.Configuration;
 using Orion.Test.MotherObjects;
 using Xunit;
 using Orion.Test.Domain.Services.BaseService;
-using Orion.Domain.Entities;
+using Orion.Core.Domain.Entities;
 
 namespace Orion.Test.Domain.Services;
 

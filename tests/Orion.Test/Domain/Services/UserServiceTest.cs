@@ -3,12 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using Orion.Api.AutoMapper.Output;
 using Orion.Api.Configuration;
-using Orion.Domain.Entities;
-using Orion.Domain.Entities.Filter;
-using Orion.Domain.Exceptions;
-using Orion.Domain.Extensions;
-using Orion.Domain.Services.Interfaces;
-using Orion.Resources;
+using Orion.Core.Domain.Entities;
+using Orion.Core.Domain.Entities.Filter;
+using Orion.Core.Domain.Exceptions;
+using Orion.Core.Domain.Extensions;
+using Orion.Core.Domain.Services.Interfaces;
+using Orion.Croscutting.Resources;
 using Orion.Test.Configuration;
 using Orion.Test.Domain.Services.BaseService;
 using Orion.Test.MotherObjects;
@@ -16,7 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using static Orion.Resources.Messages.MessagesKeys;
+using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Test.Domain.Services;
 

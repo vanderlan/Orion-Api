@@ -1,5 +1,5 @@
 using Newtonsoft.Json;
-using Orion.Domain.Exceptions;
+using Orion.Core.Domain.Exceptions;
 using System.Net;
 
 namespace Orion.Api.Middleware;

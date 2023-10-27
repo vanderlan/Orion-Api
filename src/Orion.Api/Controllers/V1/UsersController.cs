@@ -5,12 +5,12 @@ using Asp.Versioning;
 using Orion.Api.Attributes;
 using Orion.Api.AutoMapper.Input;
 using Orion.Api.AutoMapper.Output;
-using Orion.Domain.Entities.Filter;
-using Orion.Domain.Entities.ValueObjects.Pagination;
-using Orion.Domain.Services.Interfaces;
-using Orion.Domain.Entities;
 using Orion.Api.Controllers.Base;
-using static Orion.Domain.Authentication.AuthorizationConfiguration;
+using Orion.Core.Domain.Entities.Filter;
+using Orion.Core.Domain.Entities.ValueObjects.Pagination;
+using Orion.Core.Domain.Services.Interfaces;
+using Orion.Core.Domain.Entities;
+using static Orion.Core.Domain.Authentication.AuthorizationConfiguration;
 
 namespace Orion.Api.Controllers.V1;
 

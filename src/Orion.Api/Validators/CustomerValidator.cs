@@ -1,8 +1,8 @@
 using FluentValidation;
 using Microsoft.Extensions.Localization;
 using Orion.Api.AutoMapper.Input;
-using Orion.Resources;
-using static Orion.Resources.Messages.MessagesKeys;
+using Orion.Croscutting.Resources;
+using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Api.Validators;
 

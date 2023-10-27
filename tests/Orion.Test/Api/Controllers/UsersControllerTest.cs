@@ -3,13 +3,13 @@ using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Orion.Api.AutoMapper.Output;
-using Orion.Domain.Entities.Filter;
-using Orion.Domain.Entities.ValueObjects.Pagination;
-using Orion.Domain.Services.Interfaces;
+using Orion.Core.Domain.Entities.Filter;
+using Orion.Core.Domain.Entities.ValueObjects.Pagination;
+using Orion.Core.Domain.Services.Interfaces;
 using Orion.Test.MotherObjects;
 using Xunit;
 using Orion.Test.Api.Controllers.BaseController;
-using Orion.Domain.Entities;
+using Orion.Core.Domain.Entities;
 using Orion.Api.Controllers.V1;
 
 namespace Orion.Test.Api.Controllers;

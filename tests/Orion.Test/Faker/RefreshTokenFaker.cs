@@ -1,5 +1,5 @@
 using Bogus;
-using Orion.Domain.Entities;
+using Orion.Core.Domain.Entities;
 using System;
 
 namespace Orion.Test.MotherObjects;

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Orion.Data.Context;
+using Orion.Infra.Data.Context;
 
 namespace Orion.Test.Configuration;
 
