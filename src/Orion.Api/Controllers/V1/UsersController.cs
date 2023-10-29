@@ -1,15 +1,20 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Asp.Versioning;
+using MediatR;
 using Orion.Api.Attributes;
-using Orion.Api.AutoMapper.Input;
-using Orion.Api.AutoMapper.Output;
 using Orion.Api.Controllers.Base;
-using Orion.Domain.Core.Services.Interfaces;
+using Orion.Application.Core.Commands.LoginWithCredentials;
+using Orion.Application.Core.Commands.UserCreate;
+using Orion.Application.Core.Commands.UserDelete;
+using Orion.Application.Core.Commands.UserUpdate;
+using Orion.Application.Core.Queries.UserGetById;
+using Orion.Application.Core.Queries.UserGetPaginated;
 using Orion.Domain.Core.Entities;
-using Orion.Domain.Core.Filters;
+using Orion.Domain.Core.Exceptions;
+using Orion.Domain.Core.Services.Interfaces;
 using Orion.Domain.Core.ValueObjects.Pagination;
+using Swashbuckle.AspNetCore.Annotations;
 using static Orion.Domain.Core.Authentication.AuthorizationConfiguration;
 
 namespace Orion.Api.Controllers.V1;
@@ -19,60 +24,53 @@ namespace Orion.Api.Controllers.V1;
 [AuthorizeFor(Roles.Admin)]
 public class UsersController : ApiController
 {
-    private readonly IUserService _userService;
-
-    public UsersController(IUserService userService, IMapper mapper) : base(mapper)
+    public UsersController(IMediator mediator) : base(mediator)
     {
-        _userService = userService;
+        
     }
 
     [HttpGet]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    public async Task<IActionResult> Get([FromQuery] BaseFilter<User> filter)
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a list of Users paginated" ,typeof(PagedList<User>))]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> Get([FromQuery] UserGetPaginatedRequest filter)
     {
-        var user = await _userService.ListPaginateAsync(filter);
-
-        var userOutputList = Mapper.Map<PagedList<UserOutput>>(user);
+        var userOutputList = await Mediator.Send(filter);
 
         return Ok(userOutputList);
     }
 
     [HttpGet("{id}")]
-    [ProducesResponseType((int)HttpStatusCode.OK)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a single User" ,typeof(UserGetByIdResponse))]
+    [SwaggerResponse((int)HttpStatusCode.NotFound)]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Get(string id)
     {
-        var user = await _userService.FindByIdAsync(id);
-        var userOutput = Mapper.Map<UserOutput>(user);
-
-        if (userOutput is null)
+        var user = await Mediator.Send(new UserGetByIdRequest(id));
+        
+        if (user is null)
             return NotFound();
 
-        return Ok(userOutput);
+        return Ok(user);
     }
 
     [HttpPost]
-    [ProducesResponseType((int)HttpStatusCode.Created)]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Post([FromBody] UserInput userInput)
+    [SwaggerResponse((int)HttpStatusCode.Created,"A valid User created", typeof(UserCreateResponse))]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description", typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> Post([FromBody] UserCreateRequest userCreateRequest)
     {
-        var user = Mapper.Map<User>(userInput);
-
-        var created = await _userService.AddAsync(user);
-
-        return Created(Mapper.Map<UserOutput>(created));
+        return Created(await Mediator.Send(userCreateRequest));
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.Accepted)]
-    public async Task<IActionResult> Put(string id, [FromBody] UserInput userInput)
+    public async Task<IActionResult> Put(string id, [FromBody] UserUpdateRequest userUpdateRequest)
     {
-        userInput.PublicId = id;
-        var user = Mapper.Map<User>(userInput);
+        userUpdateRequest.PublicId = id;
 
-        await _userService.UpdateAsync(user);
+        await Mediator.Send(userUpdateRequest);
 
         return Accepted();
     }
@@ -82,8 +80,8 @@ public class UsersController : ApiController
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> Delete(string id)
     {
-        await _userService.DeleteAsync(id);
-
+        await Mediator.Send(new UserDeleteRequest(id));
+        
         return NoContent();
     }
 }

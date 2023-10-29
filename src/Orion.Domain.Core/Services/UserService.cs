@@ -84,15 +84,15 @@ public class UserService : IUserService
 
     public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
     {
-        var existantRefreshToken = await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email);
+        var existantRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email)).FirstOrDefault();
 
-        if (existantRefreshToken.Any())
-            return existantRefreshToken.First();
+        if (existantRefreshToken is not null)
+            return existantRefreshToken;
 
-        var added = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+        var addedRefreshToken = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
         await _unitOfWork.CommitAsync();
 
-        return added;
+        return addedRefreshToken;
     }
 
     public async Task<User> SignInWithRehreshTokenAsync(string refreshToken, string expiredToken)
@@ -141,7 +141,7 @@ public class UserService : IUserService
         }
     }
 
-    public async Task<PagedList<User>> ListPaginateAsync(BaseFilter<User> filter)
+    public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
     {
         return await _unitOfWork.UserRepository.ListPaginateAsync(filter);
     }

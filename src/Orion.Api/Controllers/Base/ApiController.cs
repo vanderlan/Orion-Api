@@ -1,6 +1,6 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using MediatR;
 using Orion.Api.Models;
 
 namespace Orion.Api.Controllers.Base;
@@ -8,11 +8,11 @@ namespace Orion.Api.Controllers.Base;
 [ApiController]
 public abstract class ApiController : ControllerBase
 {
-    protected readonly IMapper Mapper;
+    protected readonly IMediator Mediator;
     protected AuthUserModel AuthUser => GetAuthenticatedUser();
-    protected ApiController(IMapper mapper)
+    protected ApiController(IMediator mediator)
     {
-        Mapper = mapper;
+        Mediator = mediator;
     }
 
     private AuthUserModel GetAuthenticatedUser()

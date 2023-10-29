@@ -1,14 +1,18 @@
+using System.Net;
 using Asp.Versioning;
-using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Orion.Api.AutoMapper.Output;
 using Orion.Api.Configuration;
 using Orion.Api.Controllers.Base;
 using Orion.Api.Models;
+using Orion.Application.Core.Commands.LoginWithCredentials;
+using Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Exceptions;
 using Orion.Domain.Core.Extensions;
 using Orion.Domain.Core.Services.Interfaces;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Orion.Api.Controllers.V1;
 
@@ -20,43 +24,52 @@ public class AuthController : ApiController
     private readonly IUserService _userService;
     private readonly IConfiguration _configuration;
 
-    public AuthController(IUserService userService, IMapper mapper, IConfiguration configuration) : base(mapper)
+    public AuthController(IUserService userService, IMediator mediator, IConfiguration configuration) : base(mediator)
     {
         _userService = userService;
         _configuration = configuration;
     }
 
-    [Route("Login")]
-    [HttpPost]
-    public async Task<IActionResult> Login([FromBody] UserLoginModel model)
+    [HttpPost("Login")]
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a Token, Refresh Token and expiration date" ,typeof(LoginWithCredentialsResponse))]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description" ,typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized,"When the credetials are invalid")]
+    public async Task<IActionResult> Login([FromBody] LoginWithCredentialsRequest loginWithCredentialsRequest)
     {
-        var userOutput = Mapper.Map<UserOutput>(await _userService.LoginAsync(model.Email, model.Password));
+        var loginResponse = await Mediator.Send(loginWithCredentialsRequest);
 
-        return await AuthorizeUser(userOutput);
+        return await AuthorizeUser(loginResponse);
     }
 
-    [Route("RefreshToken")]
-    [HttpPost]
-    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenModel refreshTokenModel)
+    [HttpPost("RefreshToken")]
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a Token, Refresh Token and expiration date" ,typeof(LoginWithRefreshTokenResponse))]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description" ,typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized,"When the credetials are invalid")]
+    public async Task<IActionResult> RefreshToken([FromBody] LoginWithRefreshTokenRequest loginWithRefreshTokenRequest)
     {
-        var userOutput = Mapper.Map<UserOutput>(await _userService.SignInWithRehreshTokenAsync(refreshTokenModel.RefreshToken, refreshTokenModel.Token));
+        var loginResponse = await Mediator.Send(loginWithRefreshTokenRequest);
 
-        return await AuthorizeUser(userOutput);
+        return await AuthorizeUser(loginResponse);
     }
 
-    private async Task<IActionResult> AuthorizeUser(UserOutput userOutput)
+    private async Task<IActionResult> AuthorizeUser(LoginWithCredentialsResponse loginWithCredentialsResponse)
     {
-        if (userOutput != null)
+        if (loginWithCredentialsResponse != null)
         {
-            var (Token, ValidTo) = AuthenticationConfiguration.CreateToken(userOutput, _configuration);
+            var (token, validTo) = AuthenticationConfiguration.CreateToken(loginWithCredentialsResponse, _configuration);
 
-            var refreshToken = await _userService.AddRefreshTokenAsync(new RefreshToken { Email = userOutput.Email, Refreshtoken = Guid.NewGuid().ToString().ToSha512() });
+            var refreshToken = await _userService.AddRefreshTokenAsync(
+                new RefreshToken
+                {
+                    Email = loginWithCredentialsResponse.Email, 
+                    Refreshtoken = Guid.NewGuid().ToString().ToSha512()
+                });
 
             return Ok(
               new UserApiTokenModel
               {
-                  Token = Token,
-                  Expiration = ValidTo,
+                  Token = token,
+                  Expiration = validTo,
                   RefreshToken = refreshToken.Refreshtoken
               });
         }

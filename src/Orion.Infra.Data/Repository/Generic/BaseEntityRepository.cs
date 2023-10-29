@@ -54,32 +54,4 @@ internal abstract class BaseEntityRepository<T> : IBaseEntityRepository<T> where
         DataContext.Entry(entity).State = EntityState.Modified;
         DataContext.Set<T>().Update(entity);
     }
-
-    public virtual async Task<PagedList<T>> ListPaginateAsync(BaseFilter<T> filter)
-    {
-        IQueryable<T> query = DataContext.Set<T>();
-
-        query = ApplyFilters(filter, query);
-
-        var pagination = (filter.Page * filter.Quantity) - filter.Quantity;
-
-        var entityList = await query.OrderBy(x => x.CreatedAt)
-            .AsNoTracking()
-            .Skip(pagination)
-            .Take(filter.Quantity)
-            .ToListAsync();
-
-        return new PagedList<T>(entityList, query.Count());
-    }
-
-    /// <summary>
-    /// Each repository must implement its filter, but if the class does not need a custom filter, only pagination and the OrderBy pattern will be applied
-    /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="query"></param>
-    /// <returns>IQuerable with filters applied</returns>
-    protected virtual IQueryable<T> ApplyFilters(BaseFilter<T> filter, IQueryable<T> query)
-    {
-        return query;
-    }
 }

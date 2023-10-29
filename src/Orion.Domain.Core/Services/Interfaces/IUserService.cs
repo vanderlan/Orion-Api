@@ -11,5 +11,5 @@ public interface IUserService : IBaseService<User>
     Task<User> LoginAsync(string email, string password);
     Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken);
     Task<User> SignInWithRehreshTokenAsync(string refreshToken, string expiredToken);
-    Task<PagedList<User>> ListPaginateAsync(BaseFilter<User> filter);
+    Task<PagedList<User>> ListPaginateAsync(UserFilter filter);
 }

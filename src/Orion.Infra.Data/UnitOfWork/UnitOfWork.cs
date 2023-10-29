@@ -24,9 +24,6 @@ public class UnitOfWork : IUnitOfWork
         DbContext = new DataContext(dbContextOptions);
     }
 
-    private ICustomerRepository _customerRepository;
-    public ICustomerRepository CustomerRepository => _customerRepository ??= new CustomerRepository(DbContext);
-
     private IUserRepository _userRepository;
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(DbContext);
 

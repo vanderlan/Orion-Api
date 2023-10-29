@@ -11,7 +11,6 @@ public static class DependenciesInjectionConfiguration
 {
     public static void AddDomainServices(this IServiceCollection services)
     {
-        services.AddScoped<ICustomerService, CustomerService>();
         services.AddScoped<IUserService, UserService>();
     }
 
