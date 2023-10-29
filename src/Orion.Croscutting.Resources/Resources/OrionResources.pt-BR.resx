@@ -120,12 +120,6 @@
   <data name="Authentication.Error" xml:space="preserve">
     <value>Erro de Autenticação</value>
   </data>
-  <data name="Customer.InvalidName" xml:space="preserve">
-    <value>É necessário informar o nome do cliente</value>
-  </data>
-  <data name="Customer.NullEntity" xml:space="preserve">
-    <value>O cliente não pode ser encontrado</value>
-  </data>
   <data name="ExceptionTitle.ValidationError" xml:space="preserve">
     <value>Erro de validação</value>
   </data>
@@ -140,5 +134,14 @@
   </data>
   <data name="User.InvalidRefreshToken" xml:space="preserve">
     <value>Token de atualização inválido</value>
+  </data>
+  <data name="User.NullEntity" xml:space="preserve">
+    <value>O usuário não pode ser encontrado</value>
+  </data>
+  <data name="User.EmptyName" xml:space="preserve">
+    <value>É necessário informar o Nome</value>
+  </data>
+  <data name="User.EmptyEmail" xml:space="preserve">
+    <value>É necessário informar o E-mail</value>
   </data>
 </root>

@@ -1,10 +1,9 @@
-using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Orion.Api.Attributes;
 using Orion.Api.Controllers.Base;
-using Orion.Application.Core.Commands.LoginWithCredentials;
 using Orion.Application.Core.Commands.UserCreate;
 using Orion.Application.Core.Commands.UserDelete;
 using Orion.Application.Core.Commands.UserUpdate;
@@ -12,7 +11,6 @@ using Orion.Application.Core.Queries.UserGetById;
 using Orion.Application.Core.Queries.UserGetPaginated;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Exceptions;
-using Orion.Domain.Core.Services.Interfaces;
 using Orion.Domain.Core.ValueObjects.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
 using static Orion.Domain.Core.Authentication.AuthorizationConfiguration;
@@ -63,9 +61,10 @@ public class UsersController : ApiController
     }
 
     [HttpPut("{id}")]
-    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
-    [ProducesResponseType((int)HttpStatusCode.Accepted)]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description", typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.Accepted)]
+    [SwaggerResponse((int)HttpStatusCode.NotFound)]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Put(string id, [FromBody] UserUpdateRequest userUpdateRequest)
     {
         userUpdateRequest.PublicId = id;
@@ -76,8 +75,9 @@ public class UsersController : ApiController
     }
 
     [HttpDelete("{id}")]
-    [ProducesResponseType((int)HttpStatusCode.NoContent)]
-    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    [SwaggerResponse((int)HttpStatusCode.NoContent)]
+    [SwaggerResponse((int)HttpStatusCode.NotFound)]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Delete(string id)
     {
         await Mediator.Send(new UserDeleteRequest(id));
