@@ -1,8 +1,8 @@
-using Bogus;
-using Orion.Core.Domain.Entities;
 using System;
+using Bogus;
+using Orion.Domain.Core.Entities;
 
-namespace Orion.Test.MotherObjects;
+namespace Orion.Test.Faker;
 
 public class RefreshTokenFaker
 {

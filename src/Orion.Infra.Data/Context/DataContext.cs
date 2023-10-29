@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Orion.Core.Domain.Entities;
+using Orion.Domain.Core.Entities;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

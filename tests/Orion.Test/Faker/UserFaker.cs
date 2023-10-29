@@ -1,10 +1,10 @@
+using System;
 using Bogus;
 using Orion.Api.AutoMapper.Input;
-using Orion.Core.Domain.Entities;
-using Orion.Core.Domain.Entities.Enuns;
-using System;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Entities.Enuns;
 
-namespace Orion.Test.MotherObjects;
+namespace Orion.Test.Faker;
 
 public class UserFaker
 {

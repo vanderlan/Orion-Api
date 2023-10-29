@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using Orion.Core.Domain.Entities;
-using Orion.Core.Domain.Repositories;
-using Orion.Core.Domain.Entities.Filter;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Repositories;
 using System.Linq;
 using System.Threading.Tasks;
+using Orion.Domain.Core.Filters;
 using Orion.Infra.Data.Context;
 using Orion.Infra.Data.Repository.Generic;
 

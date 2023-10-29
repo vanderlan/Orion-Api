@@ -2,15 +2,19 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using Asp.Versioning;
+using MediatR;
 using Orion.Api.Attributes;
-using Orion.Api.AutoMapper.Input;
 using Orion.Api.AutoMapper.Output;
 using Orion.Api.Controllers.Base;
-using Orion.Core.Domain.Services.Interfaces;
-using Orion.Core.Domain.Entities;
-using Orion.Core.Domain.Entities.Filter;
-using Orion.Core.Domain.Entities.ValueObjects.Pagination;
-using static Orion.Core.Domain.Authentication.AuthorizationConfiguration;
+using Orion.Application.Core.Commands.CustomerCreate;
+using Orion.Application.Core.Commands.CustomerDelete;
+using Orion.Application.Core.Commands.CustomerUpdate;
+using Orion.Application.Core.Queries.CustomerGetById;
+using Orion.Domain.Core.Services.Interfaces;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Filters;
+using Orion.Domain.Core.ValueObjects.Pagination;
+using static Orion.Domain.Core.Authentication.AuthorizationConfiguration;
 
 namespace Orion.Api.Controllers.V1;
 
@@ -20,10 +24,12 @@ namespace Orion.Api.Controllers.V1;
 public class CustomersController : ApiController
 {
     private readonly ICustomerService _customerService;
-
-    public CustomersController(ICustomerService customerService, IMapper mapper) : base(mapper)
+    private readonly IMediator _mediator;
+    
+    public CustomersController(ICustomerService customerService, IMapper mapper, IMediator mediator) : base(mapper)
     {
         _customerService = customerService;
+        _mediator = mediator;
     }
 
     [HttpGet]
@@ -42,35 +48,26 @@ public class CustomersController : ApiController
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> Get(string id)
     {
-        var customer = await _customerService.FindByIdAsync(id);
-        var customerOutput = Mapper.Map<CustomerOutput>(customer);
-
-        return Ok(customerOutput);
+        return Ok(await _mediator.Send(new CustomerGetByIdQuery(id)));
     }
 
     [HttpPost]
     [ProducesResponseType((int)HttpStatusCode.Created)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> Post([FromBody] CustomerInput customerInput)
+    public async Task<IActionResult> Post([FromBody] CustomerCreateCommand customerCreateCommand)
     {
-        var customer = Mapper.Map<Customer>(customerInput);
-
-        var created = await _customerService.AddAsync(customer);
-
-        return Created(Mapper.Map<CustomerOutput>(created));
+        return Created(await _mediator.Send(customerCreateCommand));
     }
 
     [HttpPut("{id}")]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     [ProducesResponseType((int)HttpStatusCode.Accepted)]
-    public async Task<IActionResult> Put(string id, [FromBody] CustomerInput customerInput)
+    public async Task<IActionResult> Put(string id, [FromBody] CustomerUpdateCommand customerUpdateCommand)
     {
-        customerInput.PublicId = id;
-        var customer = Mapper.Map<Customer>(customerInput);
-
-        await _customerService.UpdateAsync(customer);
-
+        customerUpdateCommand.PublicId = id;
+        await _mediator.Send(customerUpdateCommand);
+        
         return Accepted();
     }
 
@@ -79,7 +76,7 @@ public class CustomersController : ApiController
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> Delete(string id)
     {
-        await _customerService.DeleteAsync(id);
+        await _mediator.Send(new CustomerDeleteCommand(id));
 
         return NoContent();
     }

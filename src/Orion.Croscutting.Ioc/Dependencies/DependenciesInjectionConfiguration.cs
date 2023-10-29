@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Orion.Infra.Data.UnitOfWork;
-using Orion.Core.Domain.Services.Interfaces;
-using Orion.Core.Domain.Repositories.UnitOfWork;
-using Orion.Core.Domain.Services;
+using Orion.Domain.Core.Services.Interfaces;
+using Orion.Domain.Core.Repositories.UnitOfWork;
+using Orion.Domain.Core.Services;
 using Orion.Infra.Data.Context;
 
 namespace Orion.Croscutting.Ioc.Dependencies;

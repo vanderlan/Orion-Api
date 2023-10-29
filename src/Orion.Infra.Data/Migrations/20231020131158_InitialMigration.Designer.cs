@@ -26,7 +26,7 @@ namespace Orion.Infra.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Orion.Core.Domain.Entities.Customer", b =>
+            modelBuilder.Entity("Orion.Domain.Core.Entities.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
@@ -61,7 +61,7 @@ namespace Orion.Infra.Data.Migrations
                     b.ToTable("Customer", (string)null);
                 });
 
-            modelBuilder.Entity("Orion.Core.Domain.Entities.RefreshToken", b =>
+            modelBuilder.Entity("Orion.Domain.Core.Entities.RefreshToken", b =>
                 {
                     b.Property<string>("Refreshtoken")
                         .HasMaxLength(300)
@@ -94,7 +94,7 @@ namespace Orion.Infra.Data.Migrations
                     b.ToTable("RefreshToken", (string)null);
                 });
 
-            modelBuilder.Entity("Orion.Core.Domain.Entities.User", b =>
+            modelBuilder.Entity("Orion.Domain.Core.Entities.User", b =>
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()

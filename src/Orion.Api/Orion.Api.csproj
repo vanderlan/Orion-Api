@@ -37,7 +37,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orion.Core.Domain\Orion.Core.Domain.csproj" />
+    <ProjectReference Include="..\Orion.Application.Core\Orion.Application.Core.csproj" />
+    <ProjectReference Include="..\Orion.Domain.Core\Orion.Domain.Core.csproj" />
     <ProjectReference Include="..\Orion.Croscutting.Ioc\Orion.Croscutting.Ioc.csproj" />
     <ProjectReference Include="..\Orion.Croscutting.Resources\Orion.Croscutting.Resources.csproj" />
   </ItemGroup>

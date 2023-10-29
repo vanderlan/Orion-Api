@@ -34,7 +34,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Croscutting.Ioc", "src\Orion.Croscutting.Ioc\Orion.Croscutting.Ioc.csproj", "{BF0248B6-C870-4419-862D-1DCAD4561946}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Core.Domain", "src\Orion.Core.Domain\Orion.Core.Domain.csproj", "{9F14F904-BBC6-4616-BB80-76E485EAEC14}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Domain.Core", "src\Orion.Domain.Core\Orion.Domain.Core.csproj", "{9F14F904-BBC6-4616-BB80-76E485EAEC14}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template-config", "template-config", "{309303F2-F07E-4578-8079-C7D2CE2AE329}"
 	ProjectSection(SolutionItems) = preProject
@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template-config", "template
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Croscutting", "4 - Croscutting", "{34D11C13-159D-47B0-A5B8-3DF32677792F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orion.Application.Core", "src\Orion.Application.Core\Orion.Application.Core.csproj", "{1F3FDF5B-999B-4D96-81F7-25F854EB40D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -73,6 +75,10 @@ Global
 		{9F14F904-BBC6-4616-BB80-76E485EAEC14}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F14F904-BBC6-4616-BB80-76E485EAEC14}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F14F904-BBC6-4616-BB80-76E485EAEC14}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F3FDF5B-999B-4D96-81F7-25F854EB40D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F3FDF5B-999B-4D96-81F7-25F854EB40D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F3FDF5B-999B-4D96-81F7-25F854EB40D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F3FDF5B-999B-4D96-81F7-25F854EB40D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -86,6 +92,7 @@ Global
 		{309303F2-F07E-4578-8079-C7D2CE2AE329} = {2D8CC498-597C-4415-95BF-48E623039F90}
 		{BF0248B6-C870-4419-862D-1DCAD4561946} = {34D11C13-159D-47B0-A5B8-3DF32677792F}
 		{105D1EB4-5091-493E-B75E-2131169CC9AC} = {34D11C13-159D-47B0-A5B8-3DF32677792F}
+		{1F3FDF5B-999B-4D96-81F7-25F854EB40D6} = {67A0BEBC-35B1-436C-9F05-AC8F60AF1688}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E5867FB8-481E-460E-8D41-10F9F592DB25}

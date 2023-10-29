@@ -6,11 +6,11 @@ using Orion.Api.Attributes;
 using Orion.Api.AutoMapper.Input;
 using Orion.Api.AutoMapper.Output;
 using Orion.Api.Controllers.Base;
-using Orion.Core.Domain.Entities.Filter;
-using Orion.Core.Domain.Entities.ValueObjects.Pagination;
-using Orion.Core.Domain.Services.Interfaces;
-using Orion.Core.Domain.Entities;
-using static Orion.Core.Domain.Authentication.AuthorizationConfiguration;
+using Orion.Domain.Core.Services.Interfaces;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Filters;
+using Orion.Domain.Core.ValueObjects.Pagination;
+using static Orion.Domain.Core.Authentication.AuthorizationConfiguration;
 
 namespace Orion.Api.Controllers.V1;
 

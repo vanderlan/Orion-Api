@@ -6,6 +6,7 @@ using Orion.Api.Attributes;
 using Orion.Api.Validators;
 using Orion.Api.AutoMapper;
 using Orion.Api.Configuration;
+using Orion.Application.Core;
 using Orion.Croscutting.Ioc.Dependencies;
 
 namespace Orion.Api;
@@ -79,5 +80,7 @@ public static class Bootstrapper
         services.ConfigureAutoMapper();
 
         services.AddHttpContextAccessor();
+        
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssembly).Assembly));
     }
 }

@@ -3,16 +3,16 @@ using Moq;
 using System;
 using System.Threading.Tasks;
 using Orion.Api.Models;
-using Orion.Core.Domain.Services.Interfaces;
-using Orion.Test.MotherObjects;
+using Orion.Domain.Core.Services.Interfaces;
 using Xunit;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using Orion.Test.Api.Controllers.BaseController;
-using Orion.Core.Domain.Entities;
+using Orion.Domain.Core.Entities;
 using Orion.Api.Controllers.V1;
 using Orion.Api.Configuration;
 using Orion.Api.AutoMapper.Output;
+using Orion.Test.Faker;
 
 namespace Orion.Test.Api.Controllers;
 

@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
-using Orion.Core.Domain.Entities.Enuns;
-using Orion.Core.Domain.Entities;
-using Orion.Core.Domain.Extensions;
+using Orion.Domain.Core.Entities.Enuns;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Extensions;
 
 namespace Orion.Infra.Data.Mapping;
 

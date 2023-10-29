@@ -1,8 +1,8 @@
 using Bogus;
 using Orion.Api.AutoMapper.Input;
-using Orion.Core.Domain.Entities;
+using Orion.Domain.Core.Entities;
 
-namespace Orion.Test.MotherObjects;
+namespace Orion.Test.Faker;
 
 public class CustomerFaker
 {

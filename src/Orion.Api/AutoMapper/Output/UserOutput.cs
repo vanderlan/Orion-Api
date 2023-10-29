@@ -1,6 +1,6 @@
 
-using Orion.Core.Domain.Entities.Enuns;
-using Orion.Core.Domain.Authentication;
+using Orion.Domain.Core.Entities.Enuns;
+using Orion.Domain.Core.Authentication;
 
 namespace Orion.Api.AutoMapper.Output;
 

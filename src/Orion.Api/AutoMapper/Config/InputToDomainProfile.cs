@@ -1,6 +1,6 @@
 using AutoMapper;
 using Orion.Api.AutoMapper.Input;
-using Orion.Core.Domain.Entities;
+using Orion.Domain.Core.Entities;
 
 namespace Orion.Api.AutoMapper.Config;
 

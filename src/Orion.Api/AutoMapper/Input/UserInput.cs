@@ -1,4 +1,4 @@
-using Orion.Core.Domain.Entities.Enuns;
+using Orion.Domain.Core.Entities.Enuns;
 
 namespace Orion.Api.AutoMapper.Input;
 

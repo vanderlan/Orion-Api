@@ -1,7 +1,7 @@
 using AutoMapper;
 using Orion.Api.AutoMapper.Output;
-using Orion.Core.Domain.Entities;
-using Orion.Core.Domain.Entities.ValueObjects.Pagination;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.ValueObjects.Pagination;
 
 namespace Orion.Api.AutoMapper.Config;
 

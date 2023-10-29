@@ -3,8 +3,8 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Orion.Core.Domain.Repositories;
-using Orion.Core.Domain.Repositories.UnitOfWork;
+using Orion.Domain.Core.Repositories;
+using Orion.Domain.Core.Repositories.UnitOfWork;
 using Orion.Infra.Data.Context;
 using Orion.Infra.Data.Repository.Implementations;
 

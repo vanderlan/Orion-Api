@@ -6,9 +6,9 @@ using Orion.Api.AutoMapper.Output;
 using Orion.Api.Configuration;
 using Orion.Api.Controllers.Base;
 using Orion.Api.Models;
-using Orion.Core.Domain.Entities;
-using Orion.Core.Domain.Extensions;
-using Orion.Core.Domain.Services.Interfaces;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Extensions;
+using Orion.Domain.Core.Services.Interfaces;
 
 namespace Orion.Api.Controllers.V1;
 
