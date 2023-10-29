@@ -7,11 +7,13 @@ using Orion.Domain.Core.Services.Interfaces;
 using Xunit;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using MediatR;
 using Orion.Test.Api.Controllers.BaseController;
 using Orion.Domain.Core.Entities;
 using Orion.Api.Controllers.V1;
 using Orion.Api.Configuration;
-using Orion.Api.AutoMapper.Output;
+using Orion.Application.Core.Commands.LoginWithCredentials;
+using Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Orion.Test.Faker;
 
 namespace Orion.Test.Api.Controllers;
@@ -19,7 +21,7 @@ namespace Orion.Test.Api.Controllers;
 public class AuthControllerTest : BaseControllerTest
 {
     private AuthController _authController;
-    private IConfiguration configuration;
+    private IConfiguration _configuration;
     private readonly User _validUser = UserFaker.Get();
     private readonly RefreshToken _validRefreshToken;
 
@@ -34,7 +36,7 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var result = await _authController.Login(
-            new UserLoginModel
+            new LoginWithCredentialsRequest
             {
                 Email = _validUser.Email,
                 Password = _validUser.Password
@@ -58,7 +60,7 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var result = await _authController.Login(
-            new UserLoginModel
+            new LoginWithCredentialsRequest
             {
                 Email = "invalid-login",
                 Password = "invalid-pass"
@@ -76,9 +78,9 @@ public class AuthControllerTest : BaseControllerTest
     public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
     {
         //arrange & act
-        var (Token, _) = AuthenticationConfiguration.CreateToken(new UserOutput { Email = _validUser.Email, Name = _validUser.Name, PublicId = _validUser.PublicId }, configuration);
+        var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse { Email = _validUser.Email, Name = _validUser.Name, PublicId = _validUser.PublicId }, _configuration);
 
-        var result = await _authController.RefreshToken(new RefreshTokenModel { RefreshToken = _validRefreshToken.Refreshtoken, Token = Token});
+        var result = await _authController.RefreshToken(new LoginWithRefreshTokenRequest { RefreshToken = _validRefreshToken.Refreshtoken, Token = token});
 
         var contentResult = (OkObjectResult)result;
         var userApiToken = (UserApiTokenModel)contentResult.Value;
@@ -97,7 +99,7 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var result = await _authController.RefreshToken(
-            new RefreshTokenModel { RefreshToken = null }
+            new LoginWithRefreshTokenRequest { RefreshToken = null }
         );
 
         var contentResult = (UnauthorizedResult)result;
@@ -109,11 +111,12 @@ public class AuthControllerTest : BaseControllerTest
 
     private void SetupServiceMock()
     {
+        var mediatotMock = new Mock<IMediator>();
         var userServiceMock = new Mock<IUserService>();
 
         userServiceMock.Setup(x => x.LoginAsync(_validUser.Email, _validUser.Password))
             .ReturnsAsync(_validUser);
-
+        
         userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenFaker.Get());
         userServiceMock.Setup(x => x.SignInWithRehreshTokenAsync(_validRefreshToken.Refreshtoken, It.IsAny<string>())).ReturnsAsync(_validUser);
 
@@ -124,10 +127,10 @@ public class AuthControllerTest : BaseControllerTest
             {"JwtOptions:TokenExpirationMinutes", "15"}
         };
 
-        configuration = new ConfigurationBuilder()
+        _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        _authController = new AuthController(userServiceMock.Object, Mapper, configuration);
+        _authController = new AuthController(userServiceMock.Object,mediatotMock.Object, _configuration);
     }
 }

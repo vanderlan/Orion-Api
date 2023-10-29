@@ -21,13 +21,13 @@ namespace Orion.Api.Controllers.V1;
 [AllowAnonymous]
 public class AuthController : ApiController
 {
-    private readonly IUserService _userService;
     private readonly IConfiguration _configuration;
+    private readonly IUserService _userService;
 
     public AuthController(IUserService userService, IMediator mediator, IConfiguration configuration) : base(mediator)
     {
-        _userService = userService;
         _configuration = configuration;
+        _userService = userService;
     }
 
     [HttpPost("Login")]

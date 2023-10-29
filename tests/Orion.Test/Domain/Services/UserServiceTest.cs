@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Orion.Api.AutoMapper.Output;
 using Orion.Api.Configuration;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Exceptions;
@@ -13,6 +12,7 @@ using Orion.Test.Domain.Services.BaseService;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Orion.Application.Core.Commands.LoginWithCredentials;
 using Orion.Domain.Core.Filters;
 using Orion.Test.Faker;
 using Xunit;
@@ -62,7 +62,7 @@ public class UserServiceTest : BaseServiceTest
         var user2 = UserFaker.Get();
         user2.Email = user.Email;
 
-        var userSaved = await userService.AddAsync(user);
+        _ = await userService.AddAsync(user);
 
         //act && assert
         await Assert.ThrowsAsync<ConflictException>(() => userService.AddAsync(user2));
@@ -84,13 +84,9 @@ public class UserServiceTest : BaseServiceTest
 
         //act
         var userPaginated = await userService.ListPaginateAsync(
-            new BaseFilter<User>
+            new UserFilter()
             {
-                Query = user.Name,
-                Entity = new ()
-                {
-                    Name = user.Name
-                }
+                Query = user.Name
             });
 
         //assert
@@ -225,12 +221,12 @@ public class UserServiceTest : BaseServiceTest
 
         var refreshToken = Guid.NewGuid().ToString();
 
-        var (Token, _) = AuthenticationConfiguration.CreateToken(new UserOutput { Email = userAdded.Email, Name = userAdded.Name, PublicId = userAdded.PublicId }, GetCofiguration());
+        var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse { Email = userAdded.Email, Name = userAdded.Name, PublicId = userAdded.PublicId }, GetCofiguration());
 
         var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
 
         //act
-        var userByRefreshToken = await userService.SignInWithRehreshTokenAsync(refreshTokenAdded.Refreshtoken, Token);
+        var userByRefreshToken = await userService.SignInWithRehreshTokenAsync(refreshTokenAdded.Refreshtoken, token);
 
         //assert
         Assert.NotNull(userByRefreshToken);

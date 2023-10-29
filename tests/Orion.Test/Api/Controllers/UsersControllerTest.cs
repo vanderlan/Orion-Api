@@ -2,12 +2,14 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Orion.Api.AutoMapper.Output;
+using MediatR;
 using Orion.Domain.Core.Services.Interfaces;
 using Xunit;
 using Orion.Test.Api.Controllers.BaseController;
 using Orion.Domain.Core.Entities;
 using Orion.Api.Controllers.V1;
+using Orion.Application.Core.Queries.UserGetById;
+using Orion.Application.Core.Queries.UserGetPaginated;
 using Orion.Domain.Core.Filters;
 using Orion.Domain.Core.ValueObjects.Pagination;
 using Orion.Test.Faker;
@@ -31,13 +33,13 @@ public class UsersControllerTestTest : BaseControllerTest
         var result = await _usersController.Get(_validUser.PublicId);
 
         var contentResult = (OkObjectResult)result;
-        var user = (UserOutput)contentResult.Value;
+        var user = (UserGetByIdResponse)contentResult.Value;
 
         //assert
         Assert.IsType<OkObjectResult>(contentResult);
         Assert.Equal(200, contentResult.StatusCode);
 
-        Assert.IsType<UserOutput>(contentResult.Value);
+        Assert.IsType<UserGetByIdResponse>(contentResult.Value);
         Assert.Equal(_validUser.Email, user.Email);
         Assert.Equal(_validUser.Name, user.Name);
     }
@@ -46,7 +48,7 @@ public class UsersControllerTestTest : BaseControllerTest
     public async Task PostUser_WithValidData_CreateAUser()
     {
         //arrange & act
-        var result = await _usersController.Post(UserFaker.GetInput());
+        var result = await _usersController.Post(UserFaker.GetUserCreateRequest());
 
         var contentResult = (CreatedResult)result;
 
@@ -60,7 +62,7 @@ public class UsersControllerTestTest : BaseControllerTest
     public async Task PutUser_WithValidData_UpdateUser()
     {
         //arrange & act
-        var result = await _usersController.Put(_validUser.PublicId, UserFaker.GetInput());
+        var result = await _usersController.Put(_validUser.PublicId, UserFaker.GetUserUpdateRequest());
 
         var contentResult = (AcceptedResult)result;
 
@@ -86,10 +88,10 @@ public class UsersControllerTestTest : BaseControllerTest
     public async Task GetUsers_WithValidFilter_ReturnsAListOfUsers()
     {
         //arrange & act
-        var result = await _usersController.Get(new BaseFilter<User>());
+        var result = await _usersController.Get(new UserGetPaginatedRequest());
 
         var contentResult = (OkObjectResult)result;
-        var userPagedList = (PagedList<UserOutput>)contentResult.Value;
+        var userPagedList = (PagedList<User>)contentResult.Value;
 
         //assert
         Assert.Equal(4, userPagedList.Count);
@@ -98,7 +100,7 @@ public class UsersControllerTestTest : BaseControllerTest
 
     private void SetupServiceMock()
     {
-        var userServiceMock = new Mock<IUserService>();
+        var mediatorMock = new Mock<IMediator>();
         var userList = new List<User>(4)
         {
             _validUser,
@@ -109,13 +111,13 @@ public class UsersControllerTestTest : BaseControllerTest
 
         var userListPaginated = new PagedList<User>(userList, 4);
 
-        userServiceMock.Setup(x => x.FindByIdAsync(_validUser.PublicId)).ReturnsAsync(_validUser);
-        userServiceMock.Setup(x => x.AddAsync(It.IsAny<User>())).ReturnsAsync(UserFaker.Get());
-        userServiceMock.Setup(x => x.UpdateAsync(It.IsAny<User>())).Verifiable();
-        userServiceMock.Setup(x => x.DeleteAsync(_validUser.PublicId)).Verifiable();
-        userServiceMock.Setup(x => x.ListPaginateAsync(It.IsAny<BaseFilter<User>>())).
-            ReturnsAsync(userListPaginated);
+        // mediatorMock.Setup(x => x.FindByIdAsync(_validUser.PublicId)).ReturnsAsync(_validUser);
+        // mediatorMock.Setup(x => x.AddAsync(It.IsAny<User>())).ReturnsAsync(UserFaker.Get());
+        // mediatorMock.Setup(x => x.UpdateAsync(It.IsAny<User>())).Verifiable();
+        // mediatorMock.Setup(x => x.DeleteAsync(_validUser.PublicId)).Verifiable();
+        // mediatorMock.Setup(x => x.ListPaginateAsync(It.IsAny<UserFilter>())).
+        //     ReturnsAsync(userListPaginated);
 
-        _usersController = new UsersController(userServiceMock.Object, Mapper);
+        _usersController = new UsersController(mediatorMock.Object);
     }
 }

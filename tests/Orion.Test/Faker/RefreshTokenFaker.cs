@@ -4,7 +4,7 @@ using Orion.Domain.Core.Entities;
 
 namespace Orion.Test.Faker;
 
-public class RefreshTokenFaker
+public static class RefreshTokenFaker
 {
     public static RefreshToken Get(string forUserEmail = null)
     {
