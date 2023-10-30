@@ -7,6 +7,7 @@ using Orion.Api.Configuration;
 using Orion.Application.Core;
 using Orion.Application.Core.Commands.UserCreate;
 using Orion.Croscutting.Ioc.Dependencies;
+using Orion.Domain.Core.Authentication;
 
 namespace Orion.Api;
 
@@ -77,7 +78,8 @@ public static class Bootstrapper
         services.AddDomainServices();
 
         services.AddHttpContextAccessor();
-        
+        services.AddScoped<ICurrentUser, CurrentUser>();
+
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(ApplicationAssembly).Assembly));
     }
 }

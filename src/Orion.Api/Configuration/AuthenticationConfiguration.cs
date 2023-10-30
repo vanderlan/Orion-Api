@@ -41,9 +41,9 @@ public static class AuthenticationConfiguration
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Email, loginWithCredentialsResponse.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, loginWithCredentialsResponse.Name),
-            new Claim(JwtRegisteredClaimNames.UniqueName, loginWithCredentialsResponse.PublicId),
+            new Claim(ClaimTypes.Email, loginWithCredentialsResponse.Email),
+            new Claim(ClaimTypes.GivenName, loginWithCredentialsResponse.Name),
+            new Claim(ClaimTypes.Sid, loginWithCredentialsResponse.PublicId),
             new Claim(ClaimTypes.Role, loginWithCredentialsResponse.ProfileDescription),
         };
 
