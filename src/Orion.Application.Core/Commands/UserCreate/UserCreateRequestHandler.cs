@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Orion.Application.Core.Notifications.UserCreated;
 using Orion.Domain.Core.Services.Interfaces;
 
 namespace Orion.Application.Core.Commands.UserCreate;
@@ -6,16 +7,20 @@ namespace Orion.Application.Core.Commands.UserCreate;
 public class UserCreateRequestHandler : IRequestHandler<UserCreateRequest, UserCreateResponse>
 {
     private readonly IUserService _userService;
-    
-    public UserCreateRequestHandler(IUserService userService)
+    private readonly IMediator _mediator;
+
+    public UserCreateRequestHandler(IUserService userService, IMediator mediator)
     {
         _userService = userService;
+        _mediator = mediator;
     }
-    
+
     public async Task<UserCreateResponse> Handle(UserCreateRequest request, CancellationToken cancellationToken)
     {
-        var customerCreated = await _userService.AddAsync(request);
+        var userCreated = await _userService.AddAsync(request);
 
-        return (UserCreateResponse)customerCreated;
+        await _mediator.Publish(new UserCreatedNotification(userCreated), cancellationToken);
+
+        return (UserCreateResponse)userCreated;
     }
 }
