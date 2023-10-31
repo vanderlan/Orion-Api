@@ -1,18 +1,17 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using MediatR;
-using Orion.Domain.Core.Services.Interfaces;
-using Xunit;
-using Orion.Test.Api.Controllers.BaseController;
-using Orion.Domain.Core.Entities;
 using Orion.Api.Controllers.V1;
 using Orion.Application.Core.Queries.UserGetById;
 using Orion.Application.Core.Queries.UserGetPaginated;
-using Orion.Domain.Core.Filters;
+using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.ValueObjects.Pagination;
+using Orion.Test.Api.Controllers.BaseController;
 using Orion.Test.Faker;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Orion.Test.Api.Controllers;
 
@@ -23,7 +22,7 @@ public class UsersControllerTestTest : BaseControllerTest
 
     public UsersControllerTestTest()
     {
-        SetupServiceMock();
+        SetupMediatorMock();
     }
 
     [Fact]
@@ -56,7 +55,6 @@ public class UsersControllerTestTest : BaseControllerTest
         Assert.IsType<CreatedResult>(contentResult);
         Assert.Equal(201, contentResult.StatusCode);
     }
-
 
     [Fact]
     public async Task PutUser_WithValidData_UpdateUser()
@@ -91,17 +89,18 @@ public class UsersControllerTestTest : BaseControllerTest
         var result = await _usersController.Get(new UserGetPaginatedRequest());
 
         var contentResult = (OkObjectResult)result;
-        var userPagedList = (PagedList<User>)contentResult.Value;
+        var userPagedList = (PagedList<UserGetPaginatedResponse>)contentResult.Value;
 
         //assert
         Assert.Equal(4, userPagedList.Count);
         Assert.Equal(200, contentResult.StatusCode);
     }
 
-    private void SetupServiceMock()
+    private void SetupMediatorMock()
     {
         var mediatorMock = new Mock<IMediator>();
-        var userList = new List<User>(4)
+
+        var userList = new List<UserGetPaginatedResponse>(4)
         {
             _validUser,
             UserFaker.Get(),
@@ -109,14 +108,13 @@ public class UsersControllerTestTest : BaseControllerTest
             UserFaker.Get()
         };
 
-        var userListPaginated = new PagedList<User>(userList, 4);
+        var userListPaginated = new PagedList<UserGetPaginatedResponse>(userList, 4);
 
-        // mediatorMock.Setup(x => x.FindByIdAsync(_validUser.PublicId)).ReturnsAsync(_validUser);
-        // mediatorMock.Setup(x => x.AddAsync(It.IsAny<User>())).ReturnsAsync(UserFaker.Get());
-        // mediatorMock.Setup(x => x.UpdateAsync(It.IsAny<User>())).Verifiable();
-        // mediatorMock.Setup(x => x.DeleteAsync(_validUser.PublicId)).Verifiable();
-        // mediatorMock.Setup(x => x.ListPaginateAsync(It.IsAny<UserFilter>())).
-        //     ReturnsAsync(userListPaginated);
+        mediatorMock.Setup(x => x.Send(It.IsAny<UserGetPaginatedRequest>(),It.IsAny<CancellationToken>()))
+            .ReturnsAsync(userListPaginated);
+
+        mediatorMock.Setup(x => x.Send(It.IsAny<UserGetByIdRequest>(),It.IsAny<CancellationToken>()))
+          .ReturnsAsync((UserGetByIdResponse) _validUser);
 
         _usersController = new UsersController(mediatorMock.Object);
     }

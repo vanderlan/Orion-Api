@@ -69,7 +69,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 
 	# in the src/ folder
 
-	dotnet ef migrations add MigrationName -p  Orion.Infra.Data -s Orion.Api
+	dotnet ef migrations add MigrationName -p Orion.Infra.Data -s Orion.Api
 	dotnet ef database update -p Orion.Infra.Data -s Orion.Api --verbose
 
 Author: https://github.com/vanderlan

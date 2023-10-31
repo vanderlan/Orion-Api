@@ -1,20 +1,20 @@
-using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System;
-using System.Threading.Tasks;
-using Orion.Api.Models;
-using Orion.Domain.Core.Services.Interfaces;
-using Xunit;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 using MediatR;
-using Orion.Test.Api.Controllers.BaseController;
-using Orion.Domain.Core.Entities;
-using Orion.Api.Controllers.V1;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Moq;
 using Orion.Api.Configuration;
+using Orion.Api.Controllers.V1;
+using Orion.Api.Models;
 using Orion.Application.Core.Commands.LoginWithCredentials;
 using Orion.Application.Core.Commands.LoginWithRefreshToken;
+using Orion.Domain.Core.Entities;
+using Orion.Test.Api.Controllers.BaseController;
 using Orion.Test.Faker;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Orion.Test.Api.Controllers;
 
@@ -28,7 +28,7 @@ public class AuthControllerTest : BaseControllerTest
     public AuthControllerTest()
     {
         _validRefreshToken = RefreshTokenFaker.Get(_validUser.Email);
-        SetupServiceMock();
+        SetupMediatorMock();
     }
 
     [Fact]
@@ -109,28 +109,41 @@ public class AuthControllerTest : BaseControllerTest
         Assert.Equal(401, contentResult.StatusCode);
     }
 
-    private void SetupServiceMock()
+    private void SetupMediatorMock()
     {
-        var mediatotMock = new Mock<IMediator>();
-        var userServiceMock = new Mock<IUserService>();
+        var mediatorMock = new Mock<IMediator>();
 
-        userServiceMock.Setup(x => x.LoginAsync(_validUser.Email, _validUser.Password))
-            .ReturnsAsync(_validUser);
-        
-        userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenFaker.Get());
-        userServiceMock.Setup(x => x.SignInWithRehreshTokenAsync(_validRefreshToken.Refreshtoken, It.IsAny<string>())).ReturnsAsync(_validUser);
+        mediatorMock.Setup(x => x.Send(It.Is<LoginWithCredentialsRequest>(x => x.Password == _validUser.Password && x.Email == _validUser.Email), 
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new LoginWithCredentialsResponse
+            {
+                Email = _validUser.Email,
+                Name = _validUser.Name,
+                Profile = _validUser.Profile,
+                PublicId = _validUser.PublicId
+            });
+
+        mediatorMock.Setup(x => x.Send(It.Is<LoginWithRefreshTokenRequest>(x => x.RefreshToken == _validRefreshToken.Refreshtoken),
+           It.IsAny<CancellationToken>()))
+           .ReturnsAsync(new LoginWithRefreshTokenResponse
+           {
+               Email = _validUser.Email,
+               Name = _validUser.Name,
+               Profile = _validUser.Profile,
+               PublicId = _validUser.PublicId
+           });
 
         var inMemorySettings = new Dictionary<string, string> {
-            {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
-            {"JwtOptions:Issuer", "http://www.myapplication.com"},
-            {"JwtOptions:Audience", "http://www.myapplication.com"},
-            {"JwtOptions:TokenExpirationMinutes", "15"}
+           {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
+           {"JwtOptions:Issuer", "http://www.myapplication.com"},
+           {"JwtOptions:Audience", "http://www.myapplication.com"},
+           {"JwtOptions:TokenExpirationMinutes", "15"}
         };
 
         _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        _authController = new AuthController(userServiceMock.Object,mediatotMock.Object, _configuration);
+        _authController = new AuthController(mediatorMock.Object, _configuration);
     }
 }

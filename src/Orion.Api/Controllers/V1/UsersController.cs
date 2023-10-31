@@ -1,4 +1,3 @@
-using System.Net;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +8,10 @@ using Orion.Application.Core.Commands.UserDelete;
 using Orion.Application.Core.Commands.UserUpdate;
 using Orion.Application.Core.Queries.UserGetById;
 using Orion.Application.Core.Queries.UserGetPaginated;
-using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Exceptions;
 using Orion.Domain.Core.ValueObjects.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net;
 using static Orion.Domain.Core.Authentication.AuthorizationConfiguration;
 
 namespace Orion.Api.Controllers.V1;
@@ -28,7 +27,7 @@ public class UsersController : ApiController
     }
 
     [HttpGet]
-    [SwaggerResponse((int)HttpStatusCode.OK,"A success response with a list of Users paginated", typeof(PagedList<User>))]
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success response with a list of Users paginated", typeof(PagedList<UserGetPaginatedResponse>))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Get([FromQuery] UserGetPaginatedRequest filter)
     {

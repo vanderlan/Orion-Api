@@ -29,7 +29,7 @@ public class UserService : IUserService
 
     public async Task<User> AddAsync(User user)
     {
-        await ValidateUser(user);
+        await ValidateUser(user, validatePassword: true);
 
         user.Password = user.Password.ToSha512();
 
@@ -37,14 +37,6 @@ public class UserService : IUserService
         await _unitOfWork.CommitAsync();
 
         return added;
-    }
-
-    private async Task ValidateUser(User user)
-    {
-        var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
-
-        if (userFound != null && userFound.PublicId != user.PublicId)
-            throw new ConflictException(_messages[UserMessages.EmailExists], _messages[ExceptionsTitles.ValidationError]);
     }
 
     public async Task DeleteAsync(string publicId)
@@ -69,7 +61,7 @@ public class UserService : IUserService
     {
         var entitySaved = await FindByIdAsync(user.PublicId);
 
-        await ValidateUser(user);
+        await ValidateUser(user, validatePassword: false);
 
         entitySaved.Email = user.Email;
         entitySaved.Name = user.Name;
@@ -136,6 +128,17 @@ public class UserService : IUserService
         {
             throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
         }
+    }
+
+    private async Task ValidateUser(User user, bool validatePassword)
+    {
+        if (string.IsNullOrEmpty(user.Password) && validatePassword)
+            throw new BusinessException(_messages[UserMessages.EmptyPasword]);
+
+        var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
+
+        if (userFound != null && userFound.PublicId != user.PublicId)
+            throw new ConflictException(_messages[UserMessages.EmailExists], _messages[ExceptionsTitles.ValidationError]);
     }
 
     public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)

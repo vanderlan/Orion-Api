@@ -145,7 +145,6 @@ public class UserServiceTest : BaseServiceTest
 
         userSaved.Name = "Jane";
         userSaved.Email = "newemail@gmail.com";
-        userSaved.Password = "123";
 
         await userService.UpdateAsync(userSaved);
 
@@ -154,7 +153,6 @@ public class UserServiceTest : BaseServiceTest
 
         //assert
         Assert.Equal(userSaved.Email, userEdited.Email);
-        Assert.Equal(userSaved.Password.ToSha512(), userEdited.Password);
         Assert.Equal(userSaved.Name, userEdited.Name);
 
         await userService.DeleteAsync(userSaved.PublicId);
