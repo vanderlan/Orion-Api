@@ -178,7 +178,7 @@ public class UserServiceTest : BaseServiceTest
         Assert.NotNull(userFound);
 
         //act
-        var userLoged = await userService.LoginAsync(userFound.Email, userPassword);
+        var (userLoged, refreshToken) = await userService.SignInWithCredentialsAsync(userFound.Email, userPassword);
 
         //assert
         Assert.NotNull(userLoged);
@@ -190,7 +190,7 @@ public class UserServiceTest : BaseServiceTest
     }
 
     [Fact]
-    public async Task LoginAsync_WithInvalidCredentials_ThrowsUnauthorizedUserException()
+    public async Task SignInWithCredentialsAsync_WithInvalidCredentials_ThrowsUnauthorizedUserException()
     {
         //arrange
         using var scope = ServiceProvider.CreateScope();
@@ -200,45 +200,17 @@ public class UserServiceTest : BaseServiceTest
         var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
         //act & assert
-        await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.LoginAsync(userFound.Email, "wrong pass"));
+        await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithCredentialsAsync(userFound.Email, "wrong pass"));
         Assert.NotNull(userFound);
 
         await userService.DeleteAsync(userFound.PublicId);
     }
 
-    [Fact]
-    public async Task RefreshTokenAddAync_WithValidEmail_AddARefreskToken()
-    {
-        //arrange
-        using var scope = ServiceProvider.CreateScope();
-        var userService = scope.ServiceProvider.GetService<IUserService>();
-
-        var userAdded = await userService.AddAsync(UserFaker.Get());
-        var userFound = await userService.FindByIdAsync(userAdded.PublicId);
-        Assert.NotNull(userFound);
-
-        var refreshToken = Guid.NewGuid().ToString();
-
-        var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse { Email = userAdded.Email, Name = userAdded.Name, PublicId = userAdded.PublicId }, GetCofiguration());
-
-        var refreshTokenAdded = await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = refreshToken });
-
-        //act
-        var userByRefreshToken = await userService.SignInWithRehreshTokenAsync(refreshTokenAdded.Refreshtoken, token);
-
-        //assert
-        Assert.NotNull(userByRefreshToken);
-        Assert.Equal(userByRefreshToken.Email, userAdded.Email);
-        Assert.Equal(userByRefreshToken.Password, userAdded.Password);
-        Assert.Equal(userByRefreshToken.Name, userAdded.Name);
-
-        await userService.DeleteAsync(userFound.PublicId);
-    }
 
     [Theory]
     [InlineData(null, null)]
     [InlineData("Invalid refresh token", "invalid old token")]
-    public async Task GetUserByRefreshTokenAsync_WithInvalidId_ThrowsUnauthorizedUserException(string refreshToken, string token)
+    public async Task SignInWithRefreshTokenAsync_WithInvalidToken_ThrowsUnauthorizedUserException(string refreshToken, string token)
     {
         //arrange
         using var scope = ServiceProvider.CreateScope();
@@ -249,11 +221,9 @@ public class UserServiceTest : BaseServiceTest
         var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
         Assert.NotNull(userFound);
-
-        await userService.AddRefreshTokenAsync(new RefreshToken { Email = userAdded.Email, Refreshtoken = Guid.NewGuid().ToString() });
-
+      
         //act
-        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRehreshTokenAsync(refreshToken, token));
+        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRefreshTokenAsync(refreshToken, token));
 
         //assert
         Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);

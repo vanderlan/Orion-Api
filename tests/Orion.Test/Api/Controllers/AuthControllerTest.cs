@@ -8,6 +8,7 @@ using Orion.Api.Models;
 using Orion.Application.Core.Commands.LoginWithCredentials;
 using Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Entities.Enuns;
 using Orion.Test.Api.Controllers.BaseController;
 using Orion.Test.Faker;
 using System;
@@ -78,9 +79,16 @@ public class AuthControllerTest : BaseControllerTest
     public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
     {
         //arrange & act
-        var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse { Email = _validUser.Email, Name = _validUser.Name, PublicId = _validUser.PublicId }, _configuration);
+        var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse
+                                                                 {
+                                                                    Email = _validUser.Email,
+                                                                    Name = _validUser.Name,
+                                                                    PublicId = _validUser.PublicId,
+                                                                    Profile = UserProfile.Admin
+                                                                 },
+                                                                _configuration);
 
-        var result = await _authController.RefreshToken(new LoginWithRefreshTokenRequest { RefreshToken = _validRefreshToken.Refreshtoken, Token = token});
+        var result = await _authController.RefreshToken(new LoginWithRefreshTokenRequest { RefreshToken = _validRefreshToken.Refreshtoken, Token = token });
 
         var contentResult = (OkObjectResult)result;
         var userApiToken = (UserApiTokenModel)contentResult.Value;
@@ -113,14 +121,15 @@ public class AuthControllerTest : BaseControllerTest
     {
         var mediatorMock = new Mock<IMediator>();
 
-        mediatorMock.Setup(x => x.Send(It.Is<LoginWithCredentialsRequest>(x => x.Password == _validUser.Password && x.Email == _validUser.Email), 
+        mediatorMock.Setup(x => x.Send(It.Is<LoginWithCredentialsRequest>(x => x.Password == _validUser.Password && x.Email == _validUser.Email),
             It.IsAny<CancellationToken>()))
             .ReturnsAsync(new LoginWithCredentialsResponse
             {
                 Email = _validUser.Email,
                 Name = _validUser.Name,
                 Profile = _validUser.Profile,
-                PublicId = _validUser.PublicId
+                PublicId = _validUser.PublicId,
+                RefreshToken = _validRefreshToken.Refreshtoken
             });
 
         mediatorMock.Setup(x => x.Send(It.Is<LoginWithRefreshTokenRequest>(x => x.RefreshToken == _validRefreshToken.Refreshtoken),
@@ -130,7 +139,8 @@ public class AuthControllerTest : BaseControllerTest
                Email = _validUser.Email,
                Name = _validUser.Name,
                Profile = _validUser.Profile,
-               PublicId = _validUser.PublicId
+               PublicId = _validUser.PublicId,
+               RefreshToken = _validRefreshToken.Refreshtoken
            });
 
         var inMemorySettings = new Dictionary<string, string> {

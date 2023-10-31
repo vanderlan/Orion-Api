@@ -144,4 +144,7 @@
   <data name="User.EmptyEmail" xml:space="preserve">
     <value>É necessário informar o E-mail</value>
   </data>
+  <data name="User.EmptyId" xml:space="preserve">
+    <value>É necessário informar o Id</value>
+  </data>
 </root>

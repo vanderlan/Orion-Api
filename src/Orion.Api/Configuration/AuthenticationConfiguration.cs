@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Orion.Application.Core.Commands.LoginWithCredentials;
+using Orion.Domain.Core.Extensions;
 
 namespace Orion.Api.Configuration;
 
@@ -44,7 +45,7 @@ public static class AuthenticationConfiguration
             new Claim(ClaimTypes.Email, loginWithCredentialsResponse.Email),
             new Claim(ClaimTypes.GivenName, loginWithCredentialsResponse.Name),
             new Claim(ClaimTypes.Sid, loginWithCredentialsResponse.PublicId),
-            new Claim(ClaimTypes.Role, loginWithCredentialsResponse.ProfileDescription),
+            new Claim(ClaimTypes.Role, loginWithCredentialsResponse.Profile.Description()),
         };
 
         var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));

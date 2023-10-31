@@ -50,11 +50,17 @@ public class UserService : IUserService
         return await _unitOfWork.UserRepository.GetByIdAsync(publicId);
     }
 
-    public async Task<User> LoginAsync(string email, string password)
+    public async Task<(User User, RefreshToken RefreshToken)> SignInWithCredentialsAsync(string email, string password)
     {
         var user = await _unitOfWork.UserRepository.LoginAsync(email, password.ToSha512());
 
-        return user ?? throw new UnauthorizedUserException(_messages[UserMessages.InvalidCredentials], _messages[ExceptionsTitles.AuthenticationError]);
+        if (user is not null)
+        {
+            var refreshToken = await AddRefreshTokenAsync(user.Email);
+            return (user, refreshToken);
+        }
+
+        throw new UnauthorizedUserException(_messages[UserMessages.InvalidCredentials], _messages[ExceptionsTitles.AuthenticationError]);
     }
 
     public async Task UpdateAsync(User user)
@@ -71,12 +77,18 @@ public class UserService : IUserService
         await _unitOfWork.CommitAsync();
     }
 
-    public async Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken)
+    private async Task<RefreshToken> AddRefreshTokenAsync(string userEmail)
     {
-        var existantRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == refreshToken.Email)).FirstOrDefault();
+        var existantRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == userEmail)).FirstOrDefault();
 
         if (existantRefreshToken is not null)
             return existantRefreshToken;
+
+        var refreshToken = new RefreshToken
+        {
+            Email = userEmail,
+            Refreshtoken = Guid.NewGuid().ToString().ToSha512()
+        };
 
         var addedRefreshToken = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
         await _unitOfWork.CommitAsync();
@@ -84,7 +96,7 @@ public class UserService : IUserService
         return addedRefreshToken;
     }
 
-    public async Task<User> SignInWithRehreshTokenAsync(string refreshToken, string expiredToken)
+    public async Task<(User User, RefreshToken RefreshToken)> SignInWithRefreshTokenAsync(string refreshToken, string expiredToken)
     {
         if (string.IsNullOrEmpty(refreshToken))
         {
@@ -105,9 +117,9 @@ public class UserService : IUserService
             if (user is not null)
             {
                 await _unitOfWork.RefreshTokenRepository.DeleteAsync(userRefreshToken.PublicId);
-                await _unitOfWork.CommitAsync();
+                var newRefreshToken = await AddRefreshTokenAsync(user.Email);
 
-                return user;
+                return (user, newRefreshToken);
             }
         }
 

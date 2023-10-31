@@ -8,8 +8,7 @@ namespace Orion.Domain.Core.Services.Interfaces;
 
 public interface IUserService : IBaseService<User>
 {
-    Task<User> LoginAsync(string email, string password);
-    Task<RefreshToken> AddRefreshTokenAsync(RefreshToken refreshToken);
-    Task<User> SignInWithRehreshTokenAsync(string refreshToken, string expiredToken);
+    Task<(User User, RefreshToken RefreshToken)> SignInWithCredentialsAsync(string email, string password);
+    Task<(User User, RefreshToken RefreshToken)> SignInWithRefreshTokenAsync(string refreshToken, string expiredToken);
     Task<PagedList<User>> ListPaginateAsync(UserFilter filter);
 }

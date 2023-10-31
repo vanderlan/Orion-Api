@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using Orion.Domain.Core.Entities;
-using Orion.Domain.Core.Extensions;
 using Orion.Domain.Core.Services.Interfaces;
 
 namespace Orion.Application.Core.Commands.LoginWithRefreshToken;
@@ -16,14 +14,7 @@ public class LoginWithRefreshTokenRequestHandler : IRequestHandler<LoginWithRefr
     
     public async Task<LoginWithRefreshTokenResponse> Handle(LoginWithRefreshTokenRequest request, CancellationToken cancellationToken)
     {
-        var user = await _userService.SignInWithRehreshTokenAsync(request.RefreshToken, request.Token);
-
-        var refreshToken = await _userService.AddRefreshTokenAsync(
-            new RefreshToken
-            {
-                Email = user.Email,
-                Refreshtoken = Guid.NewGuid().ToString().ToSha512()
-            });
+        var (user, refreshToken) = await _userService.SignInWithRefreshTokenAsync(request.RefreshToken, request.Token);
 
         return new LoginWithRefreshTokenResponse
         {
