@@ -3,15 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Orion.Domain.Core.Extensions;
 using Orion.Croscutting.Resources;
-using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Exceptions;
 using Orion.Domain.Core.Filters;
 using Orion.Domain.Core.Repositories.UnitOfWork;
 using Orion.Domain.Core.Services.Interfaces;
 using Orion.Domain.Core.ValueObjects.Pagination;
+using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Domain.Core.Services;
 
@@ -40,9 +41,6 @@ public class UserService : IUserService
 
     private async Task ValidateUser(User user)
     {
-        if (string.IsNullOrEmpty(user.Password))
-            throw new BusinessException(_messages[UserMessages.EmptyPasword]);
-
         var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
 
         if (userFound != null && userFound.PublicId != user.PublicId)
@@ -75,7 +73,6 @@ public class UserService : IUserService
 
         entitySaved.Email = user.Email;
         entitySaved.Name = user.Name;
-        entitySaved.Password = user.Password.ToSha512();
 
         _unitOfWork.UserRepository.Update(entitySaved);
 
@@ -105,7 +102,7 @@ public class UserService : IUserService
             );
         }
 
-        var email = GetClaimFromJwtToken(expiredToken, JwtRegisteredClaimNames.Email);
+        var email = GetClaimFromJwtToken(expiredToken, ClaimTypes.Email);
 
         var userRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken) && x.Email == email)).FirstOrDefault();
 

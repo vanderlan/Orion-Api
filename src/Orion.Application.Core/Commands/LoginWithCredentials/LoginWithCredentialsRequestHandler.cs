@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Orion.Application.Core.Commands.UserCreate;
 using Orion.Domain.Core.Services.Interfaces;
 
 namespace Orion.Application.Core.Commands.LoginWithCredentials;
@@ -15,8 +14,8 @@ public class LoginWithCredentialsRequestHandler : IRequestHandler<LoginWithCrede
     
     public async Task<LoginWithCredentialsResponse> Handle(LoginWithCredentialsRequest request, CancellationToken cancellationToken)
     {
-        var customerCreated = await _userService.LoginAsync(request.Email, request.Password);
+        var user = await _userService.LoginAsync(request.Email, request.Password);
 
-        return (LoginWithCredentialsResponse)customerCreated;
+        return (LoginWithCredentialsResponse)user;
     }
 }

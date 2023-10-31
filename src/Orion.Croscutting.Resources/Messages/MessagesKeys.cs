@@ -17,6 +17,7 @@ public static class MessagesKeys
         public const string EmptyName = "User.EmptyName";
         public const string EmptyPasword = "User.EmptyPassword";
         public const string EmptyEmail = "User.EmptyEmail";
+        public const string EmptyId = "User.EmptyId"; //todo: add to resource
         public const string EmailExists = "User.EmailExists";
         public const string InvalidCredentials = "User.InvalidCredentials";
         public const string InvalidRefreshToken = "User.InvalidRefreshToken";

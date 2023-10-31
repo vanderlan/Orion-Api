@@ -11,11 +11,5 @@ public class OrionResources : ISharedResource
         _localizer = localizer;
     }
 
-    public string this[string index]
-    {
-        get
-        {
-            return _localizer[index];
-        }
-    }
+    public string this[string index] => _localizer[index];
 }

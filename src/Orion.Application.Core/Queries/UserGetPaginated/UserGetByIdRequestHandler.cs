@@ -1,22 +1,24 @@
 ﻿using MediatR;
-using Orion.Application.Core.Queries.UserGetById;
-using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Services.Interfaces;
 using Orion.Domain.Core.ValueObjects.Pagination;
 
 namespace Orion.Application.Core.Queries.UserGetPaginated;
 
-public class UserGetPaginatedRequestHandler : IRequestHandler<UserGetPaginatedRequest, PagedList<User>>
+public class UserGetPaginatedRequestHandler : IRequestHandler<UserGetPaginatedRequest, PagedList<UserGetPaginatedResponse>>
 {
-    private readonly IUserService _customerService;
+    private readonly IUserService _userService;
     
-    public UserGetPaginatedRequestHandler(IUserService customerService)
+    public UserGetPaginatedRequestHandler(IUserService userService)
     {
-        _customerService = customerService;
+        _userService = userService;
     }
     
-    public async Task<PagedList<User>> Handle(UserGetPaginatedRequest request, CancellationToken cancellationToken)
+    public async Task<PagedList<UserGetPaginatedResponse>> Handle(UserGetPaginatedRequest request, CancellationToken cancellationToken)
     {
-        return await _customerService.ListPaginateAsync(request);
+        var users = await _userService.ListPaginateAsync(request);
+
+        var usersPaginated = users.Items.Select(user => (UserGetPaginatedResponse)user).ToList();
+
+        return new PagedList<UserGetPaginatedResponse>(usersPaginated);
     }
 }

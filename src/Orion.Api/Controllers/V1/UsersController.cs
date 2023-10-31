@@ -28,7 +28,7 @@ public class UsersController : ApiController
     }
 
     [HttpGet]
-    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a list of Users paginated" ,typeof(PagedList<User>))]
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success response with a list of Users paginated", typeof(PagedList<User>))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Get([FromQuery] UserGetPaginatedRequest filter)
     {
@@ -38,7 +38,7 @@ public class UsersController : ApiController
     }
 
     [HttpGet("{id}")]
-    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a single User" ,typeof(UserGetByIdResponse))]
+    [SwaggerResponse((int)HttpStatusCode.OK,"A success response with a single User", typeof(UserGetByIdResponse))]
     [SwaggerResponse((int)HttpStatusCode.NotFound)]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Get(string id)

@@ -14,8 +14,8 @@ public class LoginWithRefreshTokenRequestHandler : IRequestHandler<LoginWithRefr
     
     public async Task<LoginWithRefreshTokenResponse> Handle(LoginWithRefreshTokenRequest request, CancellationToken cancellationToken)
     {
-        var customerCreated = await _userService.SignInWithRehreshTokenAsync(request.RefreshToken, request.Token);
+        var user = await _userService.SignInWithRehreshTokenAsync(request.RefreshToken, request.Token);
 
-        return (LoginWithRefreshTokenResponse)customerCreated;
+        return (LoginWithRefreshTokenResponse)user;
     }
 }
