@@ -1,31 +1,15 @@
-using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using Orion.Api.Models;
 
 namespace Orion.Api.Controllers.Base;
 
 [ApiController]
 public abstract class ApiController : ControllerBase
 {
-    protected readonly IMapper Mapper;
-    protected AuthUserModel AuthUser => GetAuthenticatedUser();
-    protected ApiController(IMapper mapper)
+    protected readonly IMediator Mediator;
+    protected ApiController(IMediator mediator)
     {
-        Mapper = mapper;
-    }
-
-    private AuthUserModel GetAuthenticatedUser()
-    {
-        var email = ((ClaimsIdentity)User.Identity)?.FindFirst(ClaimTypes.Email);
-        var givenName = ((ClaimsIdentity)User.Identity)?.FindFirst(ClaimTypes.GivenName);
-
-        return new AuthUserModel
-        (
-            PublicId: User?.Identity?.Name,
-            Email: email?.Value,
-            Name: givenName?.Value
-        );
+        Mediator = mediator;
     }
 
     protected CreatedResult Created(object entity)

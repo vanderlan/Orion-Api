@@ -3,10 +3,11 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Orion.Api.Attributes;
-using Orion.Api.AutoMapper;
 using Orion.Api.Configuration;
-using Orion.Api.Validators;
-using Orion.Ioc.Dependencies;
+using Orion.Application.Core;
+using Orion.Application.Core.Commands.UserCreate;
+using Orion.Croscutting.Ioc.Dependencies;
+using Orion.Domain.Core.Authentication;
 
 namespace Orion.Api;
 
@@ -51,7 +52,7 @@ public static class Bootstrapper
 
         services.AddFluentValidationAutoValidation();
 
-        services.AddValidatorsFromAssemblyContaining<CustomerValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserCreateRequestValidator>();
 
         services.ConfigureApiVersioning();
 
@@ -76,8 +77,9 @@ public static class Bootstrapper
         services.AddUnitOfWork();
         services.AddDomainServices();
 
-        services.ConfigureAutoMapper();
-
         services.AddHttpContextAccessor();
+        services.AddScoped<ICurrentUser, CurrentUser>();
+
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(IApplicationAssembly).Assembly));
     }
 }

@@ -18,7 +18,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 	+ CreatedAt and UpdatedAt by default;
 	+ Pagination.
 
-+ AutoMapper
++ MediaR
 + Swagger
 + Fluent Validation
 + Authentication and Authorization
@@ -44,14 +44,17 @@ The main objective is to start projects with a clean and simple architecture, wi
 	10. Docker and Docker-Compose;
 	11. API Version Configuration (by x-api-version header attribute);
 	12. Globalization;
-	13. In-Memory database for Testing.
+	13. In-Memory database for Testing;
+	14. Mediator + CQRS + Notification Pattern
+	15. Logs with Correlation Id
 
 **CI & CD**
 
 	1. Automated tests;
-	2. Continuous Integration;
-	3. Continuous Delivery;
-	4. DockerHub Integration.
+	2. Continuous Integration (GitHub CI);
+	3. Continuous Delivery (GitHub CI);
+	4. DockerHub Integration;
+	5. Sonar Cloud Integration.
 
 
 # **Create your Project based on the Orion Api Template**
@@ -60,13 +63,13 @@ The main objective is to start projects with a clean and simple architecture, wi
 
 	dotnet new install .
 
-	dotnet new orion-api -o MyNewProject --firstEntity "EntityName"
+	dotnet new orion-api -o MyNewProject
 
 **Migrations**
 
 	# in the src/ folder
 
-	dotnet ef migrations add MigrationName -p Orion.Data -s Orion.Api
-	dotnet ef database update -p Orion.Data -s Orion.Api --verbose
+	dotnet ef migrations add MigrationName -p Orion.Infra.Data -s Orion.Api
+	dotnet ef database update -p Orion.Infra.Data -s Orion.Api --verbose
 
 Author: https://github.com/vanderlan

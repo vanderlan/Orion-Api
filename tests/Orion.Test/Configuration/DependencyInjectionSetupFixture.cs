@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using Orion.Data.UnitOfWork;
-using Orion.Domain.Repositories.UnitOfWork;
-using Orion.Ioc.Dependencies;
+using Orion.Infra.Data.UnitOfWork;
+using Orion.Domain.Core.Repositories.UnitOfWork;
+using Orion.Croscutting.Ioc.Dependencies;
 
 namespace Orion.Test.Configuration;
 

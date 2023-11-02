@@ -1,32 +1,35 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Moq;
-using System;
-using System.Threading.Tasks;
-using Orion.Api.Models;
-using Orion.Domain.Services.Interfaces;
-using Orion.Test.MotherObjects;
-using Xunit;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using Orion.Test.Api.Controllers.BaseController;
-using Orion.Domain.Entities;
-using Orion.Api.Controllers.V1;
+using Moq;
 using Orion.Api.Configuration;
-using Orion.Api.AutoMapper.Output;
+using Orion.Api.Controllers.V1;
+using Orion.Api.Models;
+using Orion.Application.Core.Commands.LoginWithCredentials;
+using Orion.Application.Core.Commands.LoginWithRefreshToken;
+using Orion.Domain.Core.Entities;
+using Orion.Domain.Core.Entities.Enuns;
+using Orion.Test.Api.Controllers.BaseController;
+using Orion.Test.Faker;
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
 
 namespace Orion.Test.Api.Controllers;
 
 public class AuthControllerTest : BaseControllerTest
 {
     private AuthController _authController;
-    private IConfiguration configuration;
+    private IConfiguration _configuration;
     private readonly User _validUser = UserFaker.Get();
     private readonly RefreshToken _validRefreshToken;
 
     public AuthControllerTest()
     {
         _validRefreshToken = RefreshTokenFaker.Get(_validUser.Email);
-        SetupServiceMock();
+        SetupMediatorMock();
     }
 
     [Fact]
@@ -34,7 +37,7 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var result = await _authController.Login(
-            new UserLoginModel
+            new LoginWithCredentialsRequest
             {
                 Email = _validUser.Email,
                 Password = _validUser.Password
@@ -58,7 +61,7 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var result = await _authController.Login(
-            new UserLoginModel
+            new LoginWithCredentialsRequest
             {
                 Email = "invalid-login",
                 Password = "invalid-pass"
@@ -76,9 +79,16 @@ public class AuthControllerTest : BaseControllerTest
     public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
     {
         //arrange & act
-        var (Token, _) = AuthenticationConfiguration.CreateToken(new UserOutput { Email = _validUser.Email, Name = _validUser.Name, PublicId = _validUser.PublicId }, configuration);
+        var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse
+                                                                 {
+                                                                    Email = _validUser.Email,
+                                                                    Name = _validUser.Name,
+                                                                    PublicId = _validUser.PublicId,
+                                                                    Profile = UserProfile.Admin
+                                                                 },
+                                                                _configuration);
 
-        var result = await _authController.RefreshToken(new RefreshTokenModel { RefreshToken = _validRefreshToken.Refreshtoken, Token = Token});
+        var result = await _authController.RefreshToken(new LoginWithRefreshTokenRequest { RefreshToken = _validRefreshToken.Refreshtoken, Token = token });
 
         var contentResult = (OkObjectResult)result;
         var userApiToken = (UserApiTokenModel)contentResult.Value;
@@ -97,7 +107,7 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var result = await _authController.RefreshToken(
-            new RefreshTokenModel { RefreshToken = null }
+            new LoginWithRefreshTokenRequest { RefreshToken = null }
         );
 
         var contentResult = (UnauthorizedResult)result;
@@ -107,27 +117,43 @@ public class AuthControllerTest : BaseControllerTest
         Assert.Equal(401, contentResult.StatusCode);
     }
 
-    private void SetupServiceMock()
+    private void SetupMediatorMock()
     {
-        var userServiceMock = new Mock<IUserService>();
+        var mediatorMock = new Mock<IMediator>();
 
-        userServiceMock.Setup(x => x.LoginAsync(_validUser.Email, _validUser.Password))
-            .ReturnsAsync(_validUser);
+        mediatorMock.Setup(x => x.Send(It.Is<LoginWithCredentialsRequest>(x => x.Password == _validUser.Password && x.Email == _validUser.Email),
+            It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new LoginWithCredentialsResponse
+            {
+                Email = _validUser.Email,
+                Name = _validUser.Name,
+                Profile = _validUser.Profile,
+                PublicId = _validUser.PublicId,
+                RefreshToken = _validRefreshToken.Refreshtoken
+            });
 
-        userServiceMock.Setup(x => x.AddRefreshTokenAsync(It.IsAny<RefreshToken>())).ReturnsAsync(RefreshTokenFaker.Get());
-        userServiceMock.Setup(x => x.SignInWithRehreshTokenAsync(_validRefreshToken.Refreshtoken, It.IsAny<string>())).ReturnsAsync(_validUser);
+        mediatorMock.Setup(x => x.Send(It.Is<LoginWithRefreshTokenRequest>(x => x.RefreshToken == _validRefreshToken.Refreshtoken),
+           It.IsAny<CancellationToken>()))
+           .ReturnsAsync(new LoginWithRefreshTokenResponse
+           {
+               Email = _validUser.Email,
+               Name = _validUser.Name,
+               Profile = _validUser.Profile,
+               PublicId = _validUser.PublicId,
+               RefreshToken = _validRefreshToken.Refreshtoken
+           });
 
         var inMemorySettings = new Dictionary<string, string> {
-            {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
-            {"JwtOptions:Issuer", "http://www.myapplication.com"},
-            {"JwtOptions:Audience", "http://www.myapplication.com"},
-            {"JwtOptions:TokenExpirationMinutes", "15"}
+           {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
+           {"JwtOptions:Issuer", "http://www.myapplication.com"},
+           {"JwtOptions:Audience", "http://www.myapplication.com"},
+           {"JwtOptions:TokenExpirationMinutes", "15"}
         };
 
-        configuration = new ConfigurationBuilder()
+        _configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(inMemorySettings)
             .Build();
 
-        _authController = new AuthController(userServiceMock.Object, Mapper, configuration);
+        _authController = new AuthController(mediatorMock.Object, _configuration);
     }
 }

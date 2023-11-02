@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Orion.Api.AutoMapper.Output;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Orion.Application.Core.Commands.LoginWithCredentials;
+using Orion.Domain.Core.Extensions;
 
 namespace Orion.Api.Configuration;
 
@@ -35,16 +36,16 @@ public static class AuthenticationConfiguration
         });
     }
 
-    public static (string Token, DateTime ValidTo)CreateToken(UserOutput userOutput, IConfiguration configuration)
+    public static (string Token, DateTime ValidTo)CreateToken(LoginWithCredentialsResponse loginWithCredentialsResponse, IConfiguration configuration)
     {
         var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
         var claims = new[]
         {
-            new Claim(JwtRegisteredClaimNames.Email, userOutput.Email),
-            new Claim(JwtRegisteredClaimNames.GivenName, userOutput.Name),
-            new Claim(JwtRegisteredClaimNames.UniqueName, userOutput.PublicId),
-            new Claim(ClaimTypes.Role, userOutput.ProfileDescription),
+            new Claim(ClaimTypes.Email, loginWithCredentialsResponse.Email),
+            new Claim(ClaimTypes.GivenName, loginWithCredentialsResponse.Name),
+            new Claim(ClaimTypes.Sid, loginWithCredentialsResponse.PublicId),
+            new Claim(ClaimTypes.Role, loginWithCredentialsResponse.Profile.Description()),
         };
 
         var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));

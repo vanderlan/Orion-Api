@@ -1,10 +1,10 @@
-using Bogus;
-using Orion.Domain.Entities;
 using System;
+using Bogus;
+using Orion.Domain.Core.Entities;
 
-namespace Orion.Test.MotherObjects;
+namespace Orion.Test.Faker;
 
-public class RefreshTokenFaker
+public static class RefreshTokenFaker
 {
     public static RefreshToken Get(string forUserEmail = null)
     {
