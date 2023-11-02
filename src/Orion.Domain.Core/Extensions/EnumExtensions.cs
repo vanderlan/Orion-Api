@@ -12,7 +12,7 @@ namespace Orion.Domain.Core.Extensions
             var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
             if (attributes.Any())
-                return attributes.First().Description;
+                return attributes[0].Description;
 
             return string.Empty;
         }
