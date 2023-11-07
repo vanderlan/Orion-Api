@@ -12,7 +12,7 @@ public static class SwaggerConfiguration
             {
                 Version = "v1",
                 Title = "Orion API",
-                Description = "Orion API - A simple project template for creating a .NET API (v7.0) - test deploy azure"
+                Description = "Orion API - A simple project template for creating a .NET API (v7.0)"
             });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
