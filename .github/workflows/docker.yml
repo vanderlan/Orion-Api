@@ -19,6 +19,7 @@ jobs:
           images: |
             vanderlangs/orion-api
           tags: |
+            type=raw,value=latest
             type=ref,event=branch
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
