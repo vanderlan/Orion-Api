@@ -32,13 +32,13 @@ jobs:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v1
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
+#      - name: Cache SonarCloud scanner
+#        id: cache-sonar-scanner
+#        uses: actions/cache@v1
+#        with:
+#          path: .\.sonar\scanner
+#          key: ${{ runner.os }}-sonar-scanner
+#          restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
 #        shell: powershell
