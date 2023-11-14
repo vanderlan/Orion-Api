@@ -1,6 +1,6 @@
 ﻿using Orion.Application.Core.Commands.UserCreate;
-using Orion.Test.Api.Setup;
 using Orion.Test.Configuration.Faker;
+using Orion.Test.Integration.Setup;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -8,9 +8,9 @@ using Xunit;
 
 namespace Orion.Test.Api
 {
-    public class UsersApiTest : ApiTestsBootstrapper
+    public class UsersApiTest : IntegrationTestsBootstrapper
     {
-        public UsersApiTest(ApiTestsFixture fixture) : base(fixture)
+        public UsersApiTest(IntegrationTestsFixture fixture) : base(fixture)
         {
             AuthUser();
         }
