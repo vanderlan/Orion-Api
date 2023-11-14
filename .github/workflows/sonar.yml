@@ -41,15 +41,15 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar-scanner
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
+#        shell: powershell
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
+#          New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
+#        shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"vanderlan_Orion-Api" /o:"vanderlan-gomes" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="opencover.xml"
           dotnet build Orion.sln
