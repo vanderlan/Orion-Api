@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      - name: Start containers
+        run: docker-compose -f "docker-compose.yml" up -d --build
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
@@ -43,7 +45,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          docker-compose up -d
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"vanderlan_Orion-Api" /o:"vanderlan-gomes" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="opencover.xml"
           dotnet build Orion.sln
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  /p:CoverletOutput=coverage /p:Exclude=[xunit.*]* Orion.sln
