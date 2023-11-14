@@ -8,6 +8,20 @@ services:
     ports:
       - "5010:80"
     container_name: orion-api
+    depends_on:
+      - sqlserver
+    networks:
+      - backend-network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: "SqlServer2019!"
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1434:1433"
+    container_name: sqlserver
     networks:
       - backend-network
 

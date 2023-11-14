@@ -1,9 +1,11 @@
 # **Orion Api**
 
 [![Build](https://github.com/vanderlan/Orion-Api/actions/workflows/sonar.yml/badge.svg)](https://github.com/vanderlan/Orion-Api/actions/workflows/sonar.yml) 
-[![Coverage Status](https://coveralls.io/repos/github/vanderlan/Orion-Api/badge.svg)](https://coveralls.io/github/vanderlan/Orion-Api) <a href="https://codeclimate.com/github/vanderlan/Orion-Api/maintainability"><img src="https://api.codeclimate.com/v1/badges/76a30970ddd45c75129b/maintainability" /></a>
-[![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://GitHub.com/vanderlan/Orion-Api/) 
-[![GitHub repo size](https://img.shields.io/github/repo-size/vanderlan/Orion-Api)](https://github.com/vanderlan/Orion-Api)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vanderlan_Orion-Api&metric=coverage)](https://sonarcloud.io/summary/new_code?id=vanderlan_Orion-Api) 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vanderlan_Orion-Api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=vanderlan_Orion-Api)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vanderlan_Orion-Api&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=vanderlan_Orion-Api)
+[![Manteinability](https://api.codeclimate.com/v1/badges/76a30970ddd45c75129b/maintainability)](https://codeclimate.com/github/vanderlan/Orion-Api/maintainability) 
+[![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://github.com/vanderlan/Orion-Api/releases) 
 
 **About this Project**
 

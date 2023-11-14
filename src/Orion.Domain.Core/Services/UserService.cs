@@ -29,7 +29,7 @@ public class UserService : IUserService
 
     public async Task<User> AddAsync(User user)
     {
-        await ValidateUser(user, validatePassword: true);
+        await ValidateUser(user);
 
         user.Password = user.Password.ToSha512();
 
@@ -41,6 +41,11 @@ public class UserService : IUserService
 
     public async Task DeleteAsync(string publicId)
     {
+        var user = await FindByIdAsync(publicId);
+
+        if (user == null)
+            throw new NotFoundException(publicId);
+
         await _unitOfWork.UserRepository.DeleteAsync(publicId);
         await _unitOfWork.CommitAsync();
     }
@@ -67,10 +72,11 @@ public class UserService : IUserService
     {
         var entitySaved = await FindByIdAsync(user.PublicId);
 
-        await ValidateUser(user, validatePassword: false);
+        await ValidateUser(user);
 
         entitySaved.Email = user.Email;
         entitySaved.Name = user.Name;
+        entitySaved.Profile = user.Profile;
 
         _unitOfWork.UserRepository.Update(entitySaved);
 
@@ -142,11 +148,8 @@ public class UserService : IUserService
         }
     }
 
-    private async Task ValidateUser(User user, bool validatePassword)
+    private async Task ValidateUser(User user)
     {
-        if (string.IsNullOrEmpty(user.Password) && validatePassword)
-            throw new BusinessException(_messages[UserMessages.EmptyPasword]);
-
         var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
 
         if (userFound != null && userFound.PublicId != user.PublicId)
@@ -156,5 +159,22 @@ public class UserService : IUserService
     public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
     {
         return await _unitOfWork.UserRepository.ListPaginateAsync(filter);
+    }
+
+    public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
+    {
+        var user = await FindByIdAsync(userId);
+
+        if (user == null)
+            throw new NotFoundException(userId);
+
+        if(user.Password != currentPassword.ToSha512())
+            throw new BusinessException(_messages[UserMessages.InvalidPassword]);
+
+        user.Password = newPassword.ToSha512();
+
+        _unitOfWork.UserRepository.Update(user);
+
+        await _unitOfWork.CommitAsync();
     }
 }

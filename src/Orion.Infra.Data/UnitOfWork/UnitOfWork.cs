@@ -16,12 +16,7 @@ public class UnitOfWork : IUnitOfWork
 
     public UnitOfWork(IConfiguration configuration)
     {
-        DbContext = new DataContext(GetOptions(configuration.GetSection("DatabaseOptions:ConnectionString").Value));
-    }
-
-    public UnitOfWork(DbContextOptions<DataContext> dbContextOptions)
-    {
-        DbContext = new DataContext(dbContextOptions);
+        DbContext = new DataContext(configuration);
     }
 
     private IUserRepository _userRepository;
@@ -35,9 +30,9 @@ public class UnitOfWork : IUnitOfWork
         await DbContext.SaveChangesAsync();
     }
 
-    private static DbContextOptions GetOptions(string connection)
+    private static DbContextOptions GetDbContextOptions(string connectionString)
     {
-        return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connection).Options;
+        return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
     }
 
     public void DiscardChanges()

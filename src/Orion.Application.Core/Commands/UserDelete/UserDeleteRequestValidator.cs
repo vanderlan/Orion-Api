@@ -14,7 +14,6 @@ public class UserDeleteRequestValidator : AbstractValidator<UserDeleteRequest>
             .WithMessage(stringLocalizer[UserMessages.NullEntity]);
 
         RuleFor(c => c.PublicId)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyId])
-            .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyId]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyId]);
     }
 }

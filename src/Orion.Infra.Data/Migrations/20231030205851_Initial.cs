@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Orion.Infra.Data.Migrations
 {
-    /// <inheritdoc />
+    [ExcludeFromCodeCoverage]
     public partial class Initial : Migration
     {
         /// <inheritdoc />

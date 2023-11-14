@@ -8,6 +8,6 @@ public enum UserProfile
     [Description(Roles.Admin)]
     Admin = 1,
 
-    [Description(Roles.Customer)]
-    Customer = 2
+    [Description(Roles.Operator)]
+    Operator = 2
 }

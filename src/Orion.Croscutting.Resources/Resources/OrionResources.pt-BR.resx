@@ -147,4 +147,16 @@
   <data name="User.EmptyId" xml:space="preserve">
     <value>É necessário informar o Id</value>
   </data>
+  <data name="User.InvalidPassword" xml:space="preserve">
+    <value>A senha informada está incorreta</value>
+  </data>
+  <data name="User.EmptyNewPaswordConfirmation" xml:space="preserve">
+    <value>É necessário informar a Confirmação da Nova Senha</value>
+  </data>
+  <data name="User.InvalidNewPassword" xml:space="preserve">
+    <value>É necessário informar a Nova Senha</value>
+  </data>
+  <data name="User.PaswordConfirmationDifferent" xml:space="preserve">
+    <value>A nova senha e a confiração da senha precisam ser iguais</value>
+  </data>
 </root>

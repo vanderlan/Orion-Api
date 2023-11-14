@@ -6,8 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="coverage\**" />
     <Compile Remove="TestResults\**" />
+    <EmbeddedResource Remove="coverage\**" />
     <EmbeddedResource Remove="TestResults\**" />
+    <None Remove="coverage\**" />
     <None Remove="TestResults\**" />
   </ItemGroup>
 

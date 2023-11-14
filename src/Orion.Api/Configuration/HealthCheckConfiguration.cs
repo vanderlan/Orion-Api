@@ -15,7 +15,7 @@ public static class HealthCheckConfiguration
 
     public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHealthChecks().AddSqlServer(configuration["DatabaseOptions:ConnectionString"],
+        services.AddHealthChecks().AddSqlServer(configuration["ConnectionStrings:OrionDatabase"],
             tags: new[] 
             { 
                 "database"

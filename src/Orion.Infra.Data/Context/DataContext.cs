@@ -17,11 +17,6 @@ public class DataContext : DbContext
 
     }
 
-    public DataContext(DbContextOptions options) : base(options)
-    {
-
-    }
-
     #region DBSet
     public DbSet<User> Users { get; set; }
     public DbSet<RefreshToken> RefreshTokens { get; set; }
@@ -29,7 +24,7 @@ public class DataContext : DbContext
 
     private static DbContextOptions GetDefaultOptions(IConfiguration configuration)
     {
-        var connectionString = configuration.GetSection("DatabaseOptions:ConnectionString").Value;
+        var connectionString = configuration.GetSection("ConnectionStrings:OrionDatabase").Value;
 
         return new DbContextOptionsBuilder().UseSqlServer(connectionString).Options;
     }

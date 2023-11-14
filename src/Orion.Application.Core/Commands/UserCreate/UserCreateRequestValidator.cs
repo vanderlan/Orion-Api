@@ -14,15 +14,12 @@ public class UserCreateRequestValidator : AbstractValidator<UserCreateRequest>
             .WithMessage(stringLocalizer[UserMessages.NullEntity]);
 
         RuleFor(c => c.Name)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyName])
-             .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyName]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyName]);
         
         RuleFor(c => c.Email)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyEmail])
-            .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyEmail]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyEmail]);
         
         RuleFor(c => c.Password)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyPasword])
-            .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyPasword]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyPasword]);
     }
 }
