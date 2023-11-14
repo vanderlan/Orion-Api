@@ -9,6 +9,14 @@ jobs:
   build:
     name: Build
     runs-on: windows-latest
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        ports:
+          - 1434:1433
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: SqlServer2019!
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -18,10 +26,6 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Start containers
-        run: |
-          docker network create --driver bridge backend-network
-          docker-compose up -d --build
       - name: Cache SonarCloud packages
         uses: actions/cache@v1
         with:
