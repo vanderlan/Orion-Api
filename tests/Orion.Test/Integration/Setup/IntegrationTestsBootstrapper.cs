@@ -3,6 +3,7 @@ using Orion.Api.Models;
 using Orion.Domain.Core.Entities;
 using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,34 +12,42 @@ namespace Orion.Test.Integration.Setup;
 
 public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTestsFixture>, IDisposable
 {
-    protected readonly HttpClient HttpClient;
+    private readonly HttpClient _httpClient;
     protected readonly HttpClient AuthenticatedHttpClient;
-    protected readonly User DefaultSystemUser;
+    private readonly User _defaultSystemUser;
+    protected readonly IntegrationTestsFixture IntegrationTestsFixture;
+    
     protected IServiceProvider ServiceProvider { get; private set; }
 
-    public IntegrationTestsBootstrapper(IntegrationTestsFixture fixture)
+    protected IntegrationTestsBootstrapper(IntegrationTestsFixture fixture)
     {
-        HttpClient = fixture.HttpClient;
+        _httpClient = fixture.HttpClient;
         AuthenticatedHttpClient = fixture.AuthenticatedHttpClient;
-        DefaultSystemUser = fixture.DefaultSystemUser;
+        _defaultSystemUser = fixture.DefaultSystemUser;
         ServiceProvider = fixture.ServiceProvider;
+        IntegrationTestsFixture = fixture;
     }
 
-    protected void AuthUser()
+    protected void AuthDefaulthUser()
     {
-        var result = HttpClient.PostAsync("/api/Auth/Login", GetStringContent(
-            new UserLoginModel
-            {
-                Email = DefaultSystemUser.Email,
-                Password = "123"
-            }))
+        var tokenResult = AuthUser(_defaultSystemUser.Email, "123");
+
+        AuthenticatedHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
+    }
+
+    protected UserApiTokenModel AuthUser(string email, string password)
+    {
+        var result = _httpClient.PostAsync("/api/Auth/Login", GetStringContent(
+                new UserLoginModel
+                {
+                    Email = email,
+                    Password = password
+                }))
             .GetAwaiter().GetResult();
 
         var content = result.Content.ReadAsStringAsync().GetAwaiter().GetResult();
 
-        var tokenResult = JsonConvert.DeserializeObject<UserApiTokenModel>(content);
-
-        AuthenticatedHttpClient.DefaultRequestHeaders.Authorization = new("Bearer", tokenResult.Token);
+        return JsonConvert.DeserializeObject<UserApiTokenModel>(content);
     }
 
     protected static StringContent GetStringContent(object obj)
@@ -46,9 +55,9 @@ public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTe
         return new StringContent(JsonConvert.SerializeObject(obj), Encoding.Default, "application/json");
     }
 
-    private bool _disposedValue = false;
+    private bool _disposedValue;
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposedValue)
         {

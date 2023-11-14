@@ -18,8 +18,9 @@ namespace Orion.Test.Integration.Setup
         public readonly User DefaultSystemUser;
         public readonly IServiceProvider ServiceProvider;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly SqlConnection connection;
+        private readonly SqlConnection _sqlConnection;
         private IConfiguration _configuration;
+        private WebApplicationFactory<Program> AppFactory;
 
         public IntegrationTestsFixture()
         {
@@ -44,24 +45,31 @@ namespace Orion.Test.Integration.Setup
 
             DefaultSystemUser = UserFaker.GetDefaultSystemUser();
 
-            connection = new SqlConnection(_configuration["ConnectionStrings:OrionDatabase"]);
+            _sqlConnection = new SqlConnection(_configuration["ConnectionStrings:OrionDatabase"]);
 
+            AppFactory = appFactory;
+            
             BeforeEachTest();
+        }
+
+        public HttpClient GetNewHttpClient()
+        {
+            return AppFactory.CreateClient();
         }
         
         private void BeforeEachTest()
         {
             var tablesToTruncate = new[] { "User", "RefreshToken" };
 
-            lock (connection)
+            lock (_sqlConnection)
             {
-                using (connection)
+                using (_sqlConnection)
                 {
-                    connection.Open();
+                    _sqlConnection.Open();
 
                     foreach (var table in tablesToTruncate)
                     {
-                        var command = new SqlCommand($"TRUNCATE TABLE dbo.[{table}]", connection);
+                        var command = new SqlCommand($"TRUNCATE TABLE dbo.[{table}]", _sqlConnection);
 
                         command.ExecuteNonQuery();
                     }

@@ -3,7 +3,9 @@ using Orion.Test.Configuration.Faker;
 using Orion.Test.Integration.Setup;
 using System;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Orion.Application.Core.Commands.UserChangePassword;
 using Xunit;
 
 namespace Orion.Test.Api
@@ -12,7 +14,7 @@ namespace Orion.Test.Api
     {
         public UsersApiTest(IntegrationTestsFixture fixture) : base(fixture)
         {
-            AuthUser();
+            AuthDefaulthUser();
         }
 
         [Fact]
@@ -39,7 +41,7 @@ namespace Orion.Test.Api
         }
 
         [Fact]
-        public async Task PutUser_WithValidData_CreateAUser()
+        public async Task PutUser_WithValidData_UpdateUser()
         {
             //arrange
             var userCreated = await CreateUserAsync();
@@ -92,11 +94,61 @@ namespace Orion.Test.Api
             Assert.Equal(HttpStatusCode.NotFound, httpResponseDelete.StatusCode);
         }
 
-        private async Task<UserCreateResponse> CreateUserAsync()
+        [Theory]
+        [InlineData("123", "12345", "30298302")]
+        [InlineData("", "12345", "30298302")]
+        [InlineData("", "12345", null)]
+        [InlineData("", "", null)]
+        [InlineData("123", null, null)]
+        public async Task UpdateUserPassword_WithInvalidPasswordsAndConfirmation_ReturnsBadRequest(string currentPass, string newPass, string newPassConfirm)
         {
-            var createUserRequest = UserFaker.GetUserCreateRequest();
+            //arrange
+            var changePasswordRequest = new UserChangePasswordRequest
+            {
+                CurrentPassword = currentPass,
+                NewPassword = newPass,
+                NewPasswordConfirm = newPassConfirm
+            };
+            
+            //act
+            var httpResponsePatch = await AuthenticatedHttpClient.PatchAsync("/api/Users/Me/PasswordChange", GetStringContent(changePasswordRequest));
 
-            var httpResponsePost = await AuthenticatedHttpClient.PostAsync("/api/Users", GetStringContent(createUserRequest));
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponsePatch.StatusCode);
+        }
+        
+        [Fact]
+        public async Task UpdateUserPassword_WithValidPasswordsAndConfirmation_ReturnsAcepted()
+        {
+            //arrange
+            var user = UserFaker.GetUserCreateRequest();
+            
+            var userCreated = await CreateUserAsync(user);
+
+            var changePasswordRequest = new UserChangePasswordRequest
+            {
+                CurrentPassword = user.Password,
+                NewPassword = "Ab647477382",
+                NewPasswordConfirm = "Ab647477382"
+            };
+
+            var httpClient = IntegrationTestsFixture.GetNewHttpClient();
+
+            var tokenResult = AuthUser(userCreated.Email, user.Password);
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
+            
+            //act
+            var httpResponsePatch = await httpClient.PatchAsync("/api/Users/Me/PasswordChange", GetStringContent(changePasswordRequest));
+
+            //assert
+            Assert.Equal(HttpStatusCode.Accepted, httpResponsePatch.StatusCode);
+        }
+        
+        private async Task<UserCreateResponse> CreateUserAsync(UserCreateRequest userCreateRequest = null)
+        {
+            userCreateRequest ??= UserFaker.GetUserCreateRequest();
+
+            var httpResponsePost = await AuthenticatedHttpClient.PostAsync("/api/Users", GetStringContent(userCreateRequest));
 
             Assert.Equal(HttpStatusCode.Created, httpResponsePost.StatusCode);
 
