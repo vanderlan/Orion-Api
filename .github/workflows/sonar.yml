@@ -35,7 +35,7 @@ jobs:
       - name: Install SonarCloud scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         run: |
-           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+           dotnet tool install --global dotnet-sonarscanner --version 5.14.0
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
