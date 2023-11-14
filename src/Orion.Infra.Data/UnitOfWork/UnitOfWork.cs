@@ -29,12 +29,7 @@ public class UnitOfWork : IUnitOfWork
     {
         await DbContext.SaveChangesAsync();
     }
-
-    private static DbContextOptions GetDbContextOptions(string connectionString)
-    {
-        return SqlServerDbContextOptionsExtensions.UseSqlServer(new DbContextOptionsBuilder(), connectionString).Options;
-    }
-
+    
     public void DiscardChanges()
     {
         foreach (var entry in DbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))

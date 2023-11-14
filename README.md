@@ -52,7 +52,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 
 **CI & CD**
 
-	1. Automated tests;
+	1. Unit, Integration and Api Tests;
 	2. Continuous Integration (GitHub CI);
 	3. Continuous Delivery (GitHub CI);
 	4. DockerHub Integration;
@@ -74,4 +74,4 @@ The main objective is to start projects with a clean and simple architecture, wi
 	dotnet ef migrations add MigrationName -p Orion.Infra.Data -s Orion.Api
 	dotnet ef database update -p Orion.Infra.Data -s Orion.Api --verbose
 
-Author: https://github.com/vanderlan
+*author:* https://github.com/vanderlan
