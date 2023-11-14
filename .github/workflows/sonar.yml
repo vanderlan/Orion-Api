@@ -31,7 +31,7 @@ jobs:
            dotnet tool install --global dotnet-sonarscanner --version 5.14.0
       - name: Install EF Core Tools
         run: |
-          dotnet tool install --global dotnet-ef
+          dotnet tool install --global dotnet-ef --version 7.0.14
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,4 +41,5 @@ jobs:
           dotnet sonarscanner begin /k:"vanderlan_Orion-Api" /o:"vanderlan-gomes" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="opencover.xml"
           dotnet build Orion.sln
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  /p:CoverletOutput=coverage /p:Exclude=[xunit.*]* Orion.sln
-
+          cp tests/Orion.Test/coverage.opencover.xml opencover.xml
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
