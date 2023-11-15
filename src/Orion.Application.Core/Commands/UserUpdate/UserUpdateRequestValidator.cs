@@ -14,15 +14,12 @@ public class UserUpdateRequestValidator : AbstractValidator<UserUpdateRequest>
             .WithMessage(stringLocalizer[UserMessages.NullEntity]);
 
         RuleFor(c => c.Name)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyName])
-             .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyName]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyName]);
         
         RuleFor(c => c.Email)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyEmail])
-            .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyEmail]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyEmail]);
         
         RuleFor(c => c.PublicId)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyId])
-            .NotNull().WithMessage(stringLocalizer[UserMessages.EmptyId]);
+            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyId]);
     }
 }

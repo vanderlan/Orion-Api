@@ -24,5 +24,10 @@ public static class MessagesKeys
         public const string EmptyEmail = "User.EmptyEmail";
         public const string EmptyId = "User.EmptyId";
         public const string EmailExists = "User.EmailExists";
+        public const string InvalidPassword = "User.InvalidPassword";
+
+        public const string EmptyNewPasword = "User.InvalidNewPassword";
+        public const string EmptyNewPaswordConfirmation = "User.EmptyNewPaswordConfirmation";
+        public const string PaswordAndConfirmationDifferent = "User.PaswordConfirmationDifferent";
     }
 }

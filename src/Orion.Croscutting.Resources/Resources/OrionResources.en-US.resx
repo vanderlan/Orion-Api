@@ -147,4 +147,16 @@
   <data name="User.EmptyId" xml:space="preserve">
     <value>Is necessary to inform the Id</value>
   </data>
+  <data name="User.InvalidPassword" xml:space="preserve">
+    <value>The password entered is incorrect</value>
+  </data>
+  <data name="User.EmptyNewPaswordConfirmation" xml:space="preserve">
+    <value>Is necessary to inform the New Password Confirmation</value>
+  </data>
+  <data name="User.InvalidNewPassword" xml:space="preserve">
+    <value>Is necessary to inform the New Password</value>
+  </data>
+  <data name="User.PaswordConfirmationDifferent" xml:space="preserve">
+    <value>New Password and Confirmation must be equal</value>
+  </data>
 </root>

@@ -6,14 +6,14 @@ using Orion.Application.Core.Queries.UserGetById;
 using Orion.Application.Core.Queries.UserGetPaginated;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.ValueObjects.Pagination;
-using Orion.Test.Api.Controllers.BaseController;
-using Orion.Test.Faker;
+using Orion.Test.Configuration.Faker;
+using Orion.Test.Unit.Controllers.BaseController;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Orion.Test.Api.Controllers;
+namespace Orion.Test.Unit.Controllers;
 
 public class UsersControllerTestTest : BaseControllerTest
 {
@@ -110,11 +110,11 @@ public class UsersControllerTestTest : BaseControllerTest
 
         var userListPaginated = new PagedList<UserGetPaginatedResponse>(userList, 4);
 
-        mediatorMock.Setup(x => x.Send(It.IsAny<UserGetPaginatedRequest>(),It.IsAny<CancellationToken>()))
+        mediatorMock.Setup(x => x.Send(It.IsAny<UserGetPaginatedRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(userListPaginated);
 
-        mediatorMock.Setup(x => x.Send(It.IsAny<UserGetByIdRequest>(),It.IsAny<CancellationToken>()))
-          .ReturnsAsync((UserGetByIdResponse) _validUser);
+        mediatorMock.Setup(x => x.Send(It.IsAny<UserGetByIdRequest>(), It.IsAny<CancellationToken>()))
+          .ReturnsAsync((UserGetByIdResponse)_validUser);
 
         _usersController = new UsersController(mediatorMock.Object);
     }

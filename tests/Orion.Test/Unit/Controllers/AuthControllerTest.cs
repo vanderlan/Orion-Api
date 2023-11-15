@@ -9,15 +9,15 @@ using Orion.Application.Core.Commands.LoginWithCredentials;
 using Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Entities.Enuns;
-using Orion.Test.Api.Controllers.BaseController;
-using Orion.Test.Faker;
+using Orion.Test.Configuration.Faker;
+using Orion.Test.Unit.Controllers.BaseController;
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Orion.Test.Api.Controllers;
+namespace Orion.Test.Unit.Controllers;
 
 public class AuthControllerTest : BaseControllerTest
 {
@@ -80,12 +80,12 @@ public class AuthControllerTest : BaseControllerTest
     {
         //arrange & act
         var (token, _) = AuthenticationConfiguration.CreateToken(new LoginWithCredentialsResponse
-                                                                 {
-                                                                    Email = _validUser.Email,
-                                                                    Name = _validUser.Name,
-                                                                    PublicId = _validUser.PublicId,
-                                                                    Profile = UserProfile.Admin
-                                                                 },
+        {
+            Email = _validUser.Email,
+            Name = _validUser.Name,
+            PublicId = _validUser.PublicId,
+            Profile = UserProfile.Admin
+        },
                                                                 _configuration);
 
         var result = await _authController.RefreshToken(new LoginWithRefreshTokenRequest { RefreshToken = _validRefreshToken.Refreshtoken, Token = token });

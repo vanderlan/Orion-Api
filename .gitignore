@@ -263,3 +263,4 @@ __pycache__/
 /VBaseProject.Test/coverage.json
 /.editorconfig
 /.sonarqube
+/tests/Orion.Test/coverage

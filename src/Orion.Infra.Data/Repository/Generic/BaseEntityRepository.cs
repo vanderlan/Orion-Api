@@ -1,13 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Orion.Domain.Core.Entities;
+using Orion.Infra.Data.Context;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using Orion.Domain.Core.Entities;
-using Orion.Domain.Core.Filters;
-using Orion.Domain.Core.ValueObjects.Pagination;
-using Orion.Infra.Data.Context;
 
 namespace Orion.Infra.Data.Repository.Generic;
 

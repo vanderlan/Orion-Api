@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Orion.Api.Attributes;
 using Orion.Api.Controllers.Base;
+using Orion.Application.Core.Commands.UserChangePassword;
 using Orion.Application.Core.Commands.UserCreate;
 using Orion.Application.Core.Commands.UserDelete;
 using Orion.Application.Core.Commands.UserUpdate;
@@ -82,5 +83,17 @@ public class UsersController : ApiController
         await Mediator.Send(new UserDeleteRequest(id));
         
         return NoContent();
+    }
+
+    [HttpPatch("Me/PasswordChange")]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "A error response with the error description", typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.Accepted)]
+    [SwaggerResponse((int)HttpStatusCode.NotFound)]
+    [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
+    public async Task<IActionResult> PatchChangePassword([FromBody] UserChangePasswordRequest userChangePasswordRequest)
+    {
+        await Mediator.Send(userChangePasswordRequest);
+
+        return Accepted();
     }
 }

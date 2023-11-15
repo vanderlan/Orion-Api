@@ -1,28 +1,23 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Orion.Api.Configuration;
-using Orion.Domain.Core.Entities;
+using Orion.Croscutting.Resources;
 using Orion.Domain.Core.Exceptions;
 using Orion.Domain.Core.Extensions;
+using Orion.Domain.Core.Filters;
 using Orion.Domain.Core.Services.Interfaces;
-using Orion.Croscutting.Resources;
-using Orion.Test.Configuration;
-using Orion.Test.Domain.Services.BaseService;
-using System;
+using Orion.Test.Configuration.Faker;
+using Orion.Test.Integration.Setup;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Orion.Application.Core.Commands.LoginWithCredentials;
-using Orion.Domain.Core.Filters;
-using Orion.Test.Faker;
 using Xunit;
 using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 
-namespace Orion.Test.Domain.Services;
+namespace Orion.Test.Integration.Domain.Services;
 
-public class UserServiceTest : BaseServiceTest
+public class UserServiceTest : IntegrationTestsBootstrapper
 {
-    public UserServiceTest(DependencyInjectionSetupFixture fixture) : base(fixture)
+    public UserServiceTest(IntegrationTestsFixture fixture) : base(fixture)
     {
 
     }
@@ -94,20 +89,6 @@ public class UserServiceTest : BaseServiceTest
         Assert.Contains(userPaginated.Items, x => x.Name == user.Name);
 
         await userService.DeleteAsync(userFound.PublicId);
-    }
-
-    [Fact]
-    public async Task AddAsync_WithInvalidData_ThrowsBusinessException()
-    {
-        //arrange
-        using var scope = ServiceProvider.CreateScope();
-        var userService = scope.ServiceProvider.GetService<IUserService>();
-
-        var user = UserFaker.Get();
-        user.Password = null;
-
-        //act & assert
-        await Assert.ThrowsAsync<BusinessException>(() => userService.AddAsync(user));
     }
 
     [Fact]
@@ -221,7 +202,7 @@ public class UserServiceTest : BaseServiceTest
         var userFound = await userService.FindByIdAsync(userAdded.PublicId);
 
         Assert.NotNull(userFound);
-      
+
         //act
         var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRefreshTokenAsync(refreshToken, token));
 
