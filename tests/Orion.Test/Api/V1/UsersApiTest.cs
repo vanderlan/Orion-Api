@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 using Orion.Application.Core.Commands.UserChangePassword;
 using Xunit;
 
-namespace Orion.Test.Api
+namespace Orion.Test.Api.V1
 {
     public class UsersApiTest : IntegrationTestsBootstrapper
     {
         public UsersApiTest(IntegrationTestsFixture fixture) : base(fixture)
         {
-            AuthDefaulthUser();
+            LoginWithDefaultUser();
         }
 
         [Fact]

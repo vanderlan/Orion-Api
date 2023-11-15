@@ -6,13 +6,14 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using Orion.Application.Core.Commands.LoginWithCredentials;
 using Xunit;
 
 namespace Orion.Test.Integration.Setup;
 
 public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTestsFixture>, IDisposable
 {
-    private readonly HttpClient _httpClient;
+    protected readonly HttpClient HttpClient;
     protected readonly HttpClient AuthenticatedHttpClient;
     private readonly User _defaultSystemUser;
     protected readonly IntegrationTestsFixture IntegrationTestsFixture;
@@ -21,14 +22,14 @@ public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTe
 
     protected IntegrationTestsBootstrapper(IntegrationTestsFixture fixture)
     {
-        _httpClient = fixture.HttpClient;
+        HttpClient = fixture.HttpClient;
         AuthenticatedHttpClient = fixture.AuthenticatedHttpClient;
         _defaultSystemUser = fixture.DefaultSystemUser;
         ServiceProvider = fixture.ServiceProvider;
         IntegrationTestsFixture = fixture;
     }
 
-    protected void AuthDefaulthUser()
+    protected void LoginWithDefaultUser()
     {
         var tokenResult = AuthUser(_defaultSystemUser.Email, "123");
 
@@ -37,8 +38,8 @@ public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTe
 
     protected UserApiTokenModel AuthUser(string email, string password)
     {
-        var result = _httpClient.PostAsync("/api/Auth/Login", GetStringContent(
-                new UserLoginModel
+        var result = HttpClient.PostAsync("/api/Auth/Login", GetStringContent(
+                new LoginWithCredentialsRequest
                 {
                     Email = email,
                     Password = password
