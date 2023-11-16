@@ -85,7 +85,7 @@ public class UsersController : ApiController
         return NoContent();
     }
 
-    [HttpPatch("Me/PasswordChange")]
+    [HttpPatch("Me/Password")]
     [SwaggerResponse((int)HttpStatusCode.BadRequest, "A error response with the error description", typeof(ExceptionResponse))]
     [SwaggerResponse((int)HttpStatusCode.Accepted)]
     [SwaggerResponse((int)HttpStatusCode.NotFound)]

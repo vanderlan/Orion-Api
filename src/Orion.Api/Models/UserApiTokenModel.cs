@@ -2,7 +2,7 @@ namespace Orion.Api.Models;
 
 public class UserApiTokenModel
 {
-    public string Token { get; set; }
-    public string RefreshToken { get; set; }
-    public DateTime Expiration { get; set; }
+    public string Token { get; init; }
+    public string RefreshToken { get; init; }
+    public DateTime Expiration { get; init; }
 }

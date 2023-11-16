@@ -20,7 +20,7 @@ namespace Orion.Test.Integration.Setup
         private readonly IUnitOfWork _unitOfWork;
         private readonly SqlConnection _sqlConnection;
         private IConfiguration _configuration;
-        private WebApplicationFactory<Program> AppFactory;
+        private readonly WebApplicationFactory<Program> _appFactory;
 
         public IntegrationTestsFixture()
         {
@@ -47,14 +47,14 @@ namespace Orion.Test.Integration.Setup
 
             _sqlConnection = new SqlConnection(_configuration["ConnectionStrings:OrionDatabase"]);
 
-            AppFactory = appFactory;
+            _appFactory = appFactory;
             
             BeforeEachTest();
         }
 
         public HttpClient GetNewHttpClient()
         {
-            return AppFactory.CreateClient();
+            return _appFactory.CreateClient();
         }
         
         private void BeforeEachTest()

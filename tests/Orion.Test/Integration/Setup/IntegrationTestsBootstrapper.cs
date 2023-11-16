@@ -15,7 +15,7 @@ public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTe
 {
     protected readonly HttpClient HttpClient;
     protected readonly HttpClient AuthenticatedHttpClient;
-    private readonly User _defaultSystemUser;
+    protected readonly User DefaultSystemUser;
     protected readonly IntegrationTestsFixture IntegrationTestsFixture;
     
     protected IServiceProvider ServiceProvider { get; private set; }
@@ -24,14 +24,14 @@ public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTe
     {
         HttpClient = fixture.HttpClient;
         AuthenticatedHttpClient = fixture.AuthenticatedHttpClient;
-        _defaultSystemUser = fixture.DefaultSystemUser;
+        DefaultSystemUser = fixture.DefaultSystemUser;
         ServiceProvider = fixture.ServiceProvider;
         IntegrationTestsFixture = fixture;
     }
 
     protected void LoginWithDefaultUser()
     {
-        var tokenResult = AuthUser(_defaultSystemUser.Email, "123");
+        var tokenResult = AuthUser(DefaultSystemUser.Email, "123");
 
         AuthenticatedHttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
     }

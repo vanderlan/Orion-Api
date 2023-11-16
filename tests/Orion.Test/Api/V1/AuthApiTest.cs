@@ -57,7 +57,7 @@ namespace Orion.Test.Api.V1
         }
 
         [Fact]
-        public async Task AuthUser_WithValidRefreshToken_ReturnsNewToken()
+        public async Task AuthUser_WithValidRefreshTokenAndExpiredToken_ReturnsNewToken()
         {
             //arrange
             var user = UserFaker.GetUserCreateRequest();
@@ -83,6 +83,31 @@ namespace Orion.Test.Api.V1
             Assert.Equal(HttpStatusCode.OK, httpResponseRefreshToken.StatusCode);
             Assert.NotNull(refreshTokenResponse.Token);
             Assert.NotNull(refreshTokenResponse.RefreshToken);
+        }
+        
+        [Fact]
+        public async Task AuthUser_WithInvalidRefreshTokenAndValidExpiredToken_ReturnsUnauthorized()
+        {
+            //arrange
+            var user = UserFaker.GetUserCreateRequest();
+            
+            var userCreated = await CreateUserAsync(user);
+
+            var httpClient = IntegrationTestsFixture.GetNewHttpClient();
+
+            var tokenResult = AuthUser(userCreated.Email, user.Password);
+
+            var refreshTokenRequest = new LoginWithRefreshTokenRequest
+            {
+                RefreshToken = "invalid-refresh-token",
+                Token = tokenResult.Token
+            };
+            
+            //act
+            var httpResponseRefreshToken = await httpClient.PostAsync("/api/Auth/RefreshToken", GetStringContent(refreshTokenRequest));
+            
+            //assert
+            Assert.Equal(HttpStatusCode.Unauthorized, httpResponseRefreshToken.StatusCode);
         }
         
         private async Task<UserCreateResponse> CreateUserAsync(UserCreateRequest userCreateRequest = null)

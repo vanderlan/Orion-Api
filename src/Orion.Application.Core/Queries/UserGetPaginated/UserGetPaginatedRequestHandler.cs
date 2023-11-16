@@ -19,6 +19,6 @@ public class UserGetPaginatedRequestHandler : IRequestHandler<UserGetPaginatedRe
 
         var usersPaginated = users.Items.Select(user => (UserGetPaginatedResponse)user).ToList();
 
-        return new PagedList<UserGetPaginatedResponse>(usersPaginated);
+        return new PagedList<UserGetPaginatedResponse>(usersPaginated, users.Count);
     }
 }

@@ -6,6 +6,8 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Orion.Application.Core.Commands.UserChangePassword;
+using Orion.Application.Core.Queries.UserGetPaginated;
+using Orion.Domain.Core.ValueObjects.Pagination;
 using Xunit;
 
 namespace Orion.Test.Api.V1
@@ -15,6 +17,52 @@ namespace Orion.Test.Api.V1
         public UsersApiTest(IntegrationTestsFixture fixture) : base(fixture)
         {
             LoginWithDefaultUser();
+        }
+        
+        [Fact]
+        public async Task GetUserPaginated_WithoutFilter_ReturnsDefaultUser()
+        {
+            //arrange & act
+            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync("/api/Users");
+
+            var listUsersPaginated = await GetResultContentAsync<PagedList<UserGetPaginatedResponse>>(getUsersHttpResponse);
+
+            //assert
+            Assert.Contains(listUsersPaginated.Items, x => x.PublicId == DefaultSystemUser.PublicId);
+            Assert.Contains(listUsersPaginated.Items, x => x.Name == DefaultSystemUser.Name);
+            Assert.Contains(listUsersPaginated.Items, x => x.Email == DefaultSystemUser.Email);
+            Assert.True(listUsersPaginated.Count >= 1);
+            Assert.Equal(HttpStatusCode.OK, getUsersHttpResponse.StatusCode);
+        }
+        
+        [Fact]
+        public async Task GetUserPaginated_WithNameFilter_ReturnsDefaultUser()
+        {
+            //arrange & act
+            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync($"/api/Users?filter.Query={DefaultSystemUser.Name}");
+
+            var listUsersPaginated = await GetResultContentAsync<PagedList<UserGetPaginatedResponse>>(getUsersHttpResponse);
+
+            //assert
+            Assert.Contains(listUsersPaginated.Items, x => x.PublicId == DefaultSystemUser.PublicId);
+            Assert.Contains(listUsersPaginated.Items, x => x.Name == DefaultSystemUser.Name);
+            Assert.Contains(listUsersPaginated.Items, x => x.Email == DefaultSystemUser.Email);
+            Assert.True(listUsersPaginated.Count >= 1);
+            Assert.Equal(HttpStatusCode.OK, getUsersHttpResponse.StatusCode);
+        }
+        
+        [Fact]
+        public async Task GetUserPaginated_WithInvalidUserName_ReturnsEmptyList()
+        {
+            //arrange & act
+            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync($"/api/Users?filter.Query={Guid.NewGuid()}");
+
+            var listUsersPaginated = await GetResultContentAsync<PagedList<UserGetPaginatedResponse>>(getUsersHttpResponse);
+
+            //assert
+            Assert.Empty(listUsersPaginated.Items);
+            Assert.True(listUsersPaginated.Count == 0);
+            Assert.Equal(HttpStatusCode.OK, getUsersHttpResponse.StatusCode);
         }
 
         [Fact]
@@ -111,13 +159,13 @@ namespace Orion.Test.Api.V1
             };
             
             //act
-            var httpResponsePatch = await AuthenticatedHttpClient.PatchAsync("/api/Users/Me/PasswordChange", GetStringContent(changePasswordRequest));
+            var httpResponsePatch = await AuthenticatedHttpClient.PatchAsync("/api/Users/Me/Password", GetStringContent(changePasswordRequest));
 
             Assert.Equal(HttpStatusCode.BadRequest, httpResponsePatch.StatusCode);
         }
         
         [Fact]
-        public async Task UpdateUserPassword_WithValidPasswordsAndConfirmation_ReturnsAcepted()
+        public async Task UpdateUserPassword_WithValidPasswordsAndConfirmation_ReturnsAccepted()
         {
             //arrange
             var user = UserFaker.GetUserCreateRequest();
@@ -138,10 +186,38 @@ namespace Orion.Test.Api.V1
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
             
             //act
-            var httpResponsePatch = await httpClient.PatchAsync("/api/Users/Me/PasswordChange", GetStringContent(changePasswordRequest));
+            var httpResponsePatch = await httpClient.PatchAsync("/api/Users/Me/Password", GetStringContent(changePasswordRequest));
 
             //assert
             Assert.Equal(HttpStatusCode.Accepted, httpResponsePatch.StatusCode);
+        }
+        
+        [Fact]
+        public async Task UpdateUserPassword_WithInValidCurrentPassword_ReturnsBadRequest()
+        {
+            //arrange
+            var user = UserFaker.GetUserCreateRequest();
+            
+            var userCreated = await CreateUserAsync(user);
+
+            var changePasswordRequest = new UserChangePasswordRequest
+            {
+                CurrentPassword = "invalid-pass",
+                NewPassword = "Ab647477382",
+                NewPasswordConfirm = "Ab647477382"
+            };
+
+            var httpClient = IntegrationTestsFixture.GetNewHttpClient();
+
+            var tokenResult = AuthUser(userCreated.Email, user.Password);
+
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
+            
+            //act
+            var httpResponsePatch = await httpClient.PatchAsync("/api/Users/Me/Password", GetStringContent(changePasswordRequest));
+
+            //assert
+            Assert.Equal(HttpStatusCode.BadRequest, httpResponsePatch.StatusCode);
         }
         
         private async Task<UserCreateResponse> CreateUserAsync(UserCreateRequest userCreateRequest = null)
