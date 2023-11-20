@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace Orion.Domain.Core.Exceptions;
 
@@ -22,11 +21,6 @@ public class BusinessException : Exception
     }
 
     public BusinessException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
-
-    protected BusinessException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
     {
     }
 }

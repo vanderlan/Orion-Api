@@ -18,9 +18,10 @@ namespace Orion.Test.Integration.Setup
         public readonly User DefaultSystemUser;
         public readonly IServiceProvider ServiceProvider;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly SqlConnection _sqlConnection;
-        private IConfiguration _configuration;
+        private SqlConnection _sqlConnection;
         private readonly WebApplicationFactory<Program> _appFactory;
+        private string _databaseName;
+        private string _connectionString;
 
         public IntegrationTestsFixture()
         {
@@ -31,9 +32,9 @@ namespace Orion.Test.Integration.Setup
                                         .AddJsonFile("appsettings.Test.json", optional: false, reloadOnChange: true)
                                         .Build();
 
-                                    builder.UseConfiguration(config);
+                                    SetupDatabase(config);
 
-                                    _configuration = config;
+                                    builder.UseConfiguration(config);
                                 });
 
             ServiceProvider = appFactory.Services;
@@ -45,40 +46,45 @@ namespace Orion.Test.Integration.Setup
 
             DefaultSystemUser = UserFaker.GetDefaultSystemUser();
 
-            _sqlConnection = new SqlConnection(_configuration["ConnectionStrings:OrionDatabase"]);
-
             _appFactory = appFactory;
-            
-            BeforeEachTest();
+
+            _unitOfWork.UserRepository.AddAsync(DefaultSystemUser).GetAwaiter().GetResult();
+            _unitOfWork.CommitAsync().GetAwaiter().GetResult();
+        }
+
+        private void SetupDatabase(IConfigurationRoot config)
+        {
+            const string connectionPath = "ConnectionStrings:OrionDatabase";
+
+            _databaseName = $"OrionTests{DateTime.UtcNow.Ticks}";
+
+            _sqlConnection = new SqlConnection(config[connectionPath]);
+
+            CreateDatabase(_databaseName);
+
+            _connectionString = config[connectionPath].Replace("OrionTests", _databaseName);
+            config[connectionPath] = _connectionString;
+
+            _sqlConnection = new SqlConnection(_connectionString);
         }
 
         public HttpClient GetNewHttpClient()
         {
             return _appFactory.CreateClient();
         }
-        
-        private void BeforeEachTest()
-        {
-            var tablesToTruncate = new[] { "User", "RefreshToken" };
 
+        private void CreateDatabase(string databseName)
+        {
             lock (_sqlConnection)
             {
                 using (_sqlConnection)
                 {
                     _sqlConnection.Open();
+                    
+                    var command = new SqlCommand($"CREATE DATABASE {databseName}", _sqlConnection);
 
-                    foreach (var table in tablesToTruncate)
-                    {
-                        var command = new SqlCommand($"TRUNCATE TABLE dbo.[{table}]", _sqlConnection);
-
-                        command.ExecuteNonQuery();
-                    }
-
-                    lock (_unitOfWork)
-                    {
-                        _unitOfWork.UserRepository.AddAsync(DefaultSystemUser).GetAwaiter().GetResult();
-                        _unitOfWork.CommitAsync().GetAwaiter().GetResult();
-                    }
+                    command.ExecuteNonQuery();
+                    _sqlConnection.Close();
                 }
             }
         }
