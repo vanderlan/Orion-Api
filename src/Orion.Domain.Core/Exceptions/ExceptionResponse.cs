@@ -4,7 +4,7 @@ public class ExceptionResponse
 {
     public ExceptionResponse(string message, NotificationType notificationType)
     {
-        Errors = new string[] { message };
+        Errors = [message];
         NotificationType = notificationType.ToString().ToUpperInvariant();
     }
 

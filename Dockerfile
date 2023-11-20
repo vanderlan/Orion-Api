@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build-env
 WORKDIR /app
 
 COPY . ./
@@ -6,7 +6,7 @@ COPY . ./
 RUN dotnet restore "src/Orion.Api/Orion.Api.csproj"
 RUN dotnet publish "src/Orion.Api/Orion.Api.csproj" -c Release -o out
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:80  

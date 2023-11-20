@@ -19,9 +19,4 @@ public class ConflictException : BusinessException
     public ConflictException(string message, Exception innerException) : base(message, innerException)
     {
     }
-
-    protected ConflictException(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-    }
 }
