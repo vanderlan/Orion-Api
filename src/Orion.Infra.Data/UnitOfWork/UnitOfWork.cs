@@ -10,14 +10,9 @@ using Orion.Infra.Data.Repository.Implementations;
 
 namespace Orion.Infra.Data.UnitOfWork;
 
-public class UnitOfWork : IUnitOfWork
+public class UnitOfWork(IConfiguration configuration) : IUnitOfWork
 {
-    private DataContext DbContext { get; }
-
-    public UnitOfWork(IConfiguration configuration)
-    {
-        DbContext = new DataContext(configuration);
-    }
+    private DataContext DbContext { get; } = new(configuration);
 
     private IUserRepository _userRepository;
     public IUserRepository UserRepository => _userRepository ??= new UserRepository(DbContext);

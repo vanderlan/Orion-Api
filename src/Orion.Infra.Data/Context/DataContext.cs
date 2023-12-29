@@ -8,14 +8,9 @@ using Orion.Infra.Data.Mapping;
 
 namespace Orion.Infra.Data.Context;
 
-public class DataContext : DbContext
+public class DataContext(IConfiguration configuration) : DbContext(GetDefaultOptions(configuration))
 {
     public ModelBuilder ModelBuilder { get; private set; }
-
-    public DataContext(IConfiguration configuration) : base(GetDefaultOptions(configuration))
-    {
-
-    }
 
     #region DBSet
     public DbSet<User> Users { get; set; }

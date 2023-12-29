@@ -11,23 +11,15 @@ using Xunit;
 
 namespace Orion.Test.Integration.Setup;
 
-public abstract class IntegrationTestsBootstrapper : IClassFixture<IntegrationTestsFixture>, IDisposable
+public abstract class IntegrationTestsBootstrapper(IntegrationTestsFixture fixture)
+    : IClassFixture<IntegrationTestsFixture>, IDisposable
 {
-    protected readonly HttpClient HttpClient;
-    protected readonly HttpClient AuthenticatedHttpClient;
-    protected readonly User DefaultSystemUser;
-    protected readonly IntegrationTestsFixture IntegrationTestsFixture;
+    protected readonly HttpClient HttpClient = fixture.HttpClient;
+    protected readonly HttpClient AuthenticatedHttpClient = fixture.AuthenticatedHttpClient;
+    protected readonly User DefaultSystemUser = fixture.DefaultSystemUser;
+    protected readonly IntegrationTestsFixture IntegrationTestsFixture = fixture;
     
-    protected IServiceProvider ServiceProvider { get; private set; }
-
-    protected IntegrationTestsBootstrapper(IntegrationTestsFixture fixture)
-    {
-        HttpClient = fixture.HttpClient;
-        AuthenticatedHttpClient = fixture.AuthenticatedHttpClient;
-        DefaultSystemUser = fixture.DefaultSystemUser;
-        ServiceProvider = fixture.ServiceProvider;
-        IntegrationTestsFixture = fixture;
-    }
+    protected IServiceProvider ServiceProvider { get; private set; } = fixture.ServiceProvider;
 
     protected void LoginWithDefaultUser()
     {

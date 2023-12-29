@@ -3,18 +3,12 @@ using Orion.Domain.Core.Services.Interfaces;
 
 namespace Orion.Application.Core.Commands.LoginWithRefreshToken;
 
-public class LoginWithRefreshTokenRequestHandler : IRequestHandler<LoginWithRefreshTokenRequest, LoginWithRefreshTokenResponse>
+public class LoginWithRefreshTokenRequestHandler(IUserService userService)
+    : IRequestHandler<LoginWithRefreshTokenRequest, LoginWithRefreshTokenResponse>
 {
-    private readonly IUserService _userService;
-    
-    public LoginWithRefreshTokenRequestHandler(IUserService userService)
-    {
-        _userService = userService;
-    }
-    
     public async Task<LoginWithRefreshTokenResponse> Handle(LoginWithRefreshTokenRequest request, CancellationToken cancellationToken)
     {
-        var (user, refreshToken) = await _userService.SignInWithRefreshTokenAsync(request.RefreshToken, request.Token);
+        var (user, refreshToken) = await userService.SignInWithRefreshTokenAsync(request.RefreshToken, request.Token);
 
         return new LoginWithRefreshTokenResponse
         {

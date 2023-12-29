@@ -3,13 +3,8 @@ using Orion.Domain.Core.Entities;
 
 namespace Orion.Application.Core.Notifications.UserCreated
 {
-    public class UserCreatedNotification : INotification
+    public class UserCreatedNotification(User user) : INotification
     {
-        public UserCreatedNotification(User user)
-        {
-            Entity = user;
-        }
-
-        public User Entity { get; set; }
+        public User Entity { get; set; } = user;
     }
 }

@@ -24,6 +24,17 @@ services:
     container_name: sqlserver
     networks:
       - backend-network
+    
+  mssqltools:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      - sqlserver
+    volumes:
+      - ./scripts/initial-script.sql:/tmp/initial-script.sql
+      - ./scripts/init-sqlserver.sh:/tmp/init-sqlserver.sh
+    command: /bin/bash ./tmp/init-sqlserver.sh
+    networks:
+      - backend-network
 
   elasticsearch:
     container_name: elasticsearch

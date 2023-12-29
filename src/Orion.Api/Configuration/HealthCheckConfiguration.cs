@@ -5,6 +5,25 @@ namespace Orion.Api.Configuration;
 
 public static class HealthCheckConfiguration
 {
+    private static readonly string[] DatabaseTags =
+            [
+                "database"
+            ];
+    private static readonly string[] ElasticSearchTags =
+            [
+                "elasticsearch", 
+                "kibana" 
+            ];
+
+    public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHealthChecks().AddSqlServer(configuration["ConnectionStrings:OrionDatabase"],
+            tags: DatabaseTags);
+
+        services.AddHealthChecks().AddElasticsearch(configuration["ElasticConfiguration:Uri"],
+            tags: ElasticSearchTags);
+    }
+
     public static void ConfigureHealthCheck(this IApplicationBuilder app) 
     {
         app.UseHealthChecks("/health", new HealthCheckOptions
@@ -13,19 +32,4 @@ public static class HealthCheckConfiguration
         });
     }
 
-    public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddHealthChecks().AddSqlServer(configuration["ConnectionStrings:OrionDatabase"],
-            tags: new[] 
-            { 
-                "database"
-            });
-
-        services.AddHealthChecks().AddElasticsearch(configuration["ElasticConfiguration:Uri"],
-            tags: new[] 
-            { 
-                "elasticsearch", 
-                "kibana" 
-            });
-    }
 }

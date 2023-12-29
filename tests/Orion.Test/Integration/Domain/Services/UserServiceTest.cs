@@ -15,13 +15,8 @@ using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Test.Integration.Domain.Services;
 
-public class UserServiceTest : IntegrationTestsBootstrapper
+public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTestsBootstrapper(fixture)
 {
-    public UserServiceTest(IntegrationTestsFixture fixture) : base(fixture)
-    {
-
-    }
-
     #region User CRUD tests
     [Fact]
     public async Task AddAsync_WithValidData_AddUserAsSuccess()

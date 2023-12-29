@@ -16,25 +16,17 @@ using static Orion.Croscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Domain.Core.Services;
 
-public class UserService : IUserService
+public class UserService(IUnitOfWork unitOfWork, IStringLocalizer<OrionResources> resourceMessages)
+    : IUserService
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly IStringLocalizer<OrionResources> _messages;
-
-    public UserService(IUnitOfWork unitOfWork, IStringLocalizer<OrionResources> resourceMessages)
-    {
-        _unitOfWork = unitOfWork;
-        _messages = resourceMessages;
-    }
-
     public async Task<User> AddAsync(User user)
     {
         await ValidateUser(user);
 
         user.Password = user.Password.ToSha512();
 
-        var added = await _unitOfWork.UserRepository.AddAsync(user);
-        await _unitOfWork.CommitAsync();
+        var added = await unitOfWork.UserRepository.AddAsync(user);
+        await unitOfWork.CommitAsync();
 
         return added;
     }
@@ -46,18 +38,18 @@ public class UserService : IUserService
         if (user == null)
             throw new NotFoundException(publicId);
 
-        await _unitOfWork.UserRepository.DeleteAsync(publicId);
-        await _unitOfWork.CommitAsync();
+        await unitOfWork.UserRepository.DeleteAsync(publicId);
+        await unitOfWork.CommitAsync();
     }
 
     public async Task<User> FindByIdAsync(string publicId)
     {
-        return await _unitOfWork.UserRepository.GetByIdAsync(publicId);
+        return await unitOfWork.UserRepository.GetByIdAsync(publicId);
     }
 
     public async Task<(User User, RefreshToken RefreshToken)> SignInWithCredentialsAsync(string email, string password)
     {
-        var user = await _unitOfWork.UserRepository.LoginAsync(email, password.ToSha512());
+        var user = await unitOfWork.UserRepository.LoginAsync(email, password.ToSha512());
 
         if (user is not null)
         {
@@ -65,7 +57,7 @@ public class UserService : IUserService
             return (user, refreshToken);
         }
 
-        throw new UnauthorizedUserException(_messages[UserMessages.InvalidCredentials], _messages[ExceptionsTitles.AuthenticationError]);
+        throw new UnauthorizedUserException(resourceMessages[UserMessages.InvalidCredentials], resourceMessages[ExceptionsTitles.AuthenticationError]);
     }
 
     public async Task UpdateAsync(User user)
@@ -78,17 +70,17 @@ public class UserService : IUserService
         entitySaved.Name = user.Name;
         entitySaved.Profile = user.Profile;
 
-        _unitOfWork.UserRepository.Update(entitySaved);
+        unitOfWork.UserRepository.Update(entitySaved);
 
-        await _unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync();
     }
 
     private async Task<RefreshToken> AddRefreshTokenAsync(string userEmail)
     {
-        var existantRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == userEmail)).FirstOrDefault();
+        var existentRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == userEmail)).FirstOrDefault();
 
-        if (existantRefreshToken is not null)
-            return existantRefreshToken;
+        if (existentRefreshToken is not null)
+            return existentRefreshToken;
 
         var refreshToken = new RefreshToken
         {
@@ -96,8 +88,8 @@ public class UserService : IUserService
             Refreshtoken = Guid.NewGuid().ToString().ToSha512()
         };
 
-        var addedRefreshToken = await _unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
-        await _unitOfWork.CommitAsync();
+        var addedRefreshToken = await unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
+        await unitOfWork.CommitAsync();
 
         return addedRefreshToken;
     }
@@ -107,29 +99,29 @@ public class UserService : IUserService
         if (string.IsNullOrEmpty(refreshToken))
         {
             throw new UnauthorizedUserException(
-                _messages[UserMessages.InvalidRefreshToken],
-                _messages[ExceptionsTitles.AuthenticationError]
+                resourceMessages[UserMessages.InvalidRefreshToken],
+                resourceMessages[ExceptionsTitles.AuthenticationError]
             );
         }
 
         var email = GetClaimFromJwtToken(expiredToken, ClaimTypes.Email);
 
-        var userRefreshToken = (await _unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken) && x.Email == email)).FirstOrDefault();
+        var userRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(refreshToken) && x.Email == email)).FirstOrDefault();
 
         if (userRefreshToken is not null)
         {
-            var user = (await _unitOfWork.UserRepository.SearchByAsync(x => x.Email == userRefreshToken.Email)).FirstOrDefault();
+            var user = (await unitOfWork.UserRepository.SearchByAsync(x => x.Email == userRefreshToken.Email)).FirstOrDefault();
 
             if (user is not null)
             {
-                await _unitOfWork.RefreshTokenRepository.DeleteAsync(userRefreshToken.PublicId);
+                await unitOfWork.RefreshTokenRepository.DeleteAsync(userRefreshToken.PublicId);
                 var newRefreshToken = await AddRefreshTokenAsync(user.Email);
 
                 return (user, newRefreshToken);
             }
         }
 
-        throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
+        throw new UnauthorizedUserException(resourceMessages[UserMessages.InvalidRefreshToken], resourceMessages[ExceptionsTitles.AuthenticationError]);
     }
 
     private string GetClaimFromJwtToken(string jtwToken, string claimName)
@@ -144,21 +136,21 @@ public class UserService : IUserService
         }
         catch (Exception)
         {
-            throw new UnauthorizedUserException(_messages[UserMessages.InvalidRefreshToken], _messages[ExceptionsTitles.AuthenticationError]);
+            throw new UnauthorizedUserException(resourceMessages[UserMessages.InvalidRefreshToken], resourceMessages[ExceptionsTitles.AuthenticationError]);
         }
     }
 
     private async Task ValidateUser(User user)
     {
-        var userFound = await _unitOfWork.UserRepository.FindByEmailAsync(user.Email);
+        var userFound = await unitOfWork.UserRepository.FindByEmailAsync(user.Email);
 
         if (userFound != null && userFound.PublicId != user.PublicId)
-            throw new ConflictException(_messages[UserMessages.EmailExists], _messages[ExceptionsTitles.ValidationError]);
+            throw new ConflictException(resourceMessages[UserMessages.EmailExists], resourceMessages[ExceptionsTitles.ValidationError]);
     }
 
     public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
     {
-        return await _unitOfWork.UserRepository.ListPaginateAsync(filter);
+        return await unitOfWork.UserRepository.ListPaginateAsync(filter);
     }
 
     public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
@@ -169,12 +161,12 @@ public class UserService : IUserService
             throw new NotFoundException(userId);
 
         if(user.Password != currentPassword.ToSha512())
-            throw new BusinessException(_messages[UserMessages.InvalidPassword]);
+            throw new BusinessException(resourceMessages[UserMessages.InvalidPassword]);
 
         user.Password = newPassword.ToSha512();
 
-        _unitOfWork.UserRepository.Update(user);
+        unitOfWork.UserRepository.Update(user);
 
-        await _unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync();
     }
 }

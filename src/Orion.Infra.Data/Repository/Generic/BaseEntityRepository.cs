@@ -9,14 +9,10 @@ using System.Threading.Tasks;
 
 namespace Orion.Infra.Data.Repository.Generic;
 
-internal abstract class BaseEntityRepository<T> : IBaseEntityRepository<T> where T : BaseEntity
+internal abstract class BaseEntityRepository<T>(DataContext dataContext) : IBaseEntityRepository<T>
+    where T : BaseEntity
 {
-    protected DataContext DataContext { get; }
-
-    protected BaseEntityRepository(DataContext dataContext)
-    {
-        DataContext = dataContext;
-    }
+    protected DataContext DataContext { get; } = dataContext;
 
     public virtual async Task<T> AddAsync(T entity)
     {
