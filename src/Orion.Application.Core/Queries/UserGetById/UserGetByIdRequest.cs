@@ -2,12 +2,7 @@
 
 namespace Orion.Application.Core.Queries.UserGetById;
 
-public class UserGetByIdRequest : IRequest <UserGetByIdResponse>
+public class UserGetByIdRequest(string publicId) : IRequest<UserGetByIdResponse>
 {
-    public UserGetByIdRequest(string publicId)
-    {
-        PublicId = publicId;
-    }
-
-    public string PublicId { get; private set; }
+    public string PublicId { get; private set; } = publicId;
 }

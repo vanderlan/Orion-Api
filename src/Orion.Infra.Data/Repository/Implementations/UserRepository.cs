@@ -10,12 +10,8 @@ using Orion.Infra.Data.Repository.Generic;
 
 namespace Orion.Infra.Data.Repository.Implementations;
 
-internal class UserRepository : BaseEntityRepository<User>, IUserRepository
+internal class UserRepository(DataContext context) : BaseEntityRepository<User>(context), IUserRepository
 {
-    public UserRepository(DataContext context) : base(context)
-    {
-    }
-
     public async Task<User> LoginAsync(string email, string password)
     {
         var user = await DataContext.Users.AsNoTracking()

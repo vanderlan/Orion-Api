@@ -5,9 +5,5 @@ using Orion.Infra.Data.Repository.Generic;
 
 namespace Orion.Infra.Data.Repository.Implementations;
 
-internal class RefreshTokenRepository : BaseEntityRepository<RefreshToken>, IRefreshTokenRepository
-{
-    public RefreshTokenRepository(DataContext context) : base(context)
-    {
-    }
-}
+internal class RefreshTokenRepository(DataContext context)
+    : BaseEntityRepository<RefreshToken>(context), IRefreshTokenRepository;

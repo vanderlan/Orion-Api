@@ -16,15 +16,8 @@ namespace Orion.Api.Controllers.V1;
 [ApiVersion(1.0)]
 [Route("api/[controller]")]
 [AllowAnonymous]
-public class AuthController : ApiController
+public class AuthController(IMediator mediator, IConfiguration configuration) : ApiController(mediator)
 {
-    private readonly IConfiguration _configuration;
-
-    public AuthController(IMediator mediator, IConfiguration configuration) : base(mediator)
-    {
-        _configuration = configuration;
-    }
-
     [HttpPost("Login")]
     [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a Token, Refresh Token and expiration date" ,typeof(LoginWithCredentialsResponse))]
     [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description", typeof(ExceptionResponse))]
@@ -51,7 +44,7 @@ public class AuthController : ApiController
     {
         if (loginWithCredentialsResponse != null)
         {
-            var (token, validTo) = AuthenticationConfiguration.CreateToken(loginWithCredentialsResponse, _configuration);
+            var (token, validTo) = AuthenticationConfiguration.CreateToken(loginWithCredentialsResponse, configuration);
 
             return Ok(
               new UserApiTokenModel

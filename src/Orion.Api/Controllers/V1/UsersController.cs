@@ -20,13 +20,8 @@ namespace Orion.Api.Controllers.V1;
 [ApiVersion(1.0)]
 [Route("api/[controller]")]
 [AuthorizeFor(Roles.Admin)]
-public class UsersController : ApiController
+public class UsersController(IMediator mediator) : ApiController(mediator)
 {
-    public UsersController(IMediator mediator) : base(mediator)
-    {
-        
-    }
-
     [HttpGet]
     [SwaggerResponse((int)HttpStatusCode.OK,"A success response with a list of Users paginated", typeof(PagedList<UserGetPaginatedResponse>))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]

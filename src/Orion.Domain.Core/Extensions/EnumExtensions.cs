@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel;
-using System.Linq;
 
 namespace Orion.Domain.Core.Extensions
 {
@@ -11,7 +10,7 @@ namespace Orion.Domain.Core.Extensions
 
             var attributes = (DescriptionAttribute[])fieldInfo.GetCustomAttributes(typeof(DescriptionAttribute), false);
 
-            if (attributes.Any())
+            if (attributes.Length != 0)
                 return attributes[0].Description;
 
             return string.Empty;
