@@ -47,8 +47,8 @@ The main objective is to start projects with a clean and simple architecture, wi
 	11. API Version Configuration (by x-api-version header attribute);
 	12. Globalization;
 	13. In-Memory database for Testing;
-	14. Mediator + CQRS + Notification Pattern
-	15. Logs with Correlation Id
+	14. Mediator + CQRS + Notification Pattern;
+	15. Logs with Correlation Id.
 
 **CI & CD**
 
