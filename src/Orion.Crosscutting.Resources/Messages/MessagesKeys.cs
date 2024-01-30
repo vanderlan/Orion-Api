@@ -1,4 +1,4 @@
-namespace Orion.Croscutting.Resources.Messages;
+namespace Orion.Crosscutting.Resources.Messages;
 
 /// <summary>
 /// Update all resource files to maintain globalization support
@@ -20,14 +20,14 @@ public static class MessagesKeys
         //User
         public const string NullEntity = "User.NullEntity";
         public const string EmptyName = "User.EmptyName";
-        public const string EmptyPasword = "User.EmptyPassword";
+        public const string EmptyPassword = "User.EmptyPassword";
         public const string EmptyEmail = "User.EmptyEmail";
         public const string EmptyId = "User.EmptyId";
         public const string EmailExists = "User.EmailExists";
         public const string InvalidPassword = "User.InvalidPassword";
 
-        public const string EmptyNewPasword = "User.InvalidNewPassword";
-        public const string EmptyNewPaswordConfirmation = "User.EmptyNewPaswordConfirmation";
-        public const string PaswordAndConfirmationDifferent = "User.PaswordConfirmationDifferent";
+        public const string EmptyNewPassword = "User.InvalidNewPassword";
+        public const string EmptyNewPasswordConfirmation = "User.EmptyNewPasswordConfirmation";
+        public const string PasswordAndConfirmationDifferent = "User.PasswordConfirmationDifferent";
     }
 }

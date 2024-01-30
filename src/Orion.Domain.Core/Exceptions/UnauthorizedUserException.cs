@@ -10,10 +10,6 @@ public class UnauthorizedUserException : BusinessException
 
     }
 
-    public UnauthorizedUserException() : base()
-    {
-    }
-
     public UnauthorizedUserException(string message) : base(message)
     {
     }

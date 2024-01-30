@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Localization;
-using Orion.Croscutting.Resources;
-using static Orion.Croscutting.Resources.Messages.MessagesKeys;
+using Orion.Crosscutting.Resources;
+using Orion.Crosscutting.Resources.Messages;
 
 namespace Orion.Application.Core.Commands.UserUpdate;
 
@@ -11,15 +11,15 @@ public class UserUpdateRequestValidator : AbstractValidator<UserUpdateRequest>
     {
         RuleFor(c => c)
             .NotNull()
-            .WithMessage(stringLocalizer[UserMessages.NullEntity]);
+            .WithMessage(stringLocalizer[MessagesKeys.UserMessages.NullEntity]);
 
         RuleFor(c => c.Name)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyName]);
+            .NotEmpty().WithMessage(stringLocalizer[MessagesKeys.UserMessages.EmptyName]);
         
         RuleFor(c => c.Email)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyEmail]);
+            .NotEmpty().WithMessage(stringLocalizer[MessagesKeys.UserMessages.EmptyEmail]);
         
         RuleFor(c => c.PublicId)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyId]);
+            .NotEmpty().WithMessage(stringLocalizer[MessagesKeys.UserMessages.EmptyId]);
     }
 }

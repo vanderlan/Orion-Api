@@ -4,7 +4,4 @@ using Orion.Domain.Core.ValueObjects.Pagination;
 
 namespace Orion.Application.Core.Queries.UserGetPaginated;
 
-public class UserGetPaginatedRequest :  UserFilter, IRequest<PagedList<UserGetPaginatedResponse>>
-{
-    
-}
+public class UserGetPaginatedRequest :  UserFilter, IRequest<PagedList<UserGetPaginatedResponse>>;

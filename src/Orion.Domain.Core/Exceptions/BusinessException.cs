@@ -11,10 +11,6 @@ public class BusinessException : Exception
     {
         Title = title;
     }
-    
-    public BusinessException() : base()
-    {
-    }
 
     public BusinessException(string message) : base(message)
     {

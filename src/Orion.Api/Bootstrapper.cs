@@ -6,7 +6,7 @@ using Orion.Api.Attributes;
 using Orion.Api.Configuration;
 using Orion.Application.Core;
 using Orion.Application.Core.Commands.UserCreate;
-using Orion.Croscutting.Ioc.Dependencies;
+using Orion.Crosscutting.Ioc.Dependencies;
 using Orion.Domain.Core.Authentication;
 
 namespace Orion.Api;

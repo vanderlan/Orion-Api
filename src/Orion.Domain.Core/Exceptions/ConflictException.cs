@@ -1,5 +1,4 @@
 using System;
-using System.Runtime.Serialization;
 
 namespace Orion.Domain.Core.Exceptions;
 
@@ -11,7 +10,7 @@ public class ConflictException : BusinessException
 
     }
 
-    public ConflictException() : base()
+    public ConflictException(string message) : base(message)
     {
 
     }

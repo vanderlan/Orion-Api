@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Orion.Domain.Core.Repositories;
 using Orion.Domain.Core.Repositories.UnitOfWork;
 using Orion.Infra.Data.Context;
@@ -10,7 +12,8 @@ using Orion.Infra.Data.Repository.Implementations;
 
 namespace Orion.Infra.Data.UnitOfWork;
 
-public class UnitOfWork(IConfiguration configuration) : IUnitOfWork
+[SuppressMessage("ReSharper", "GCSuppressFinalizeForTypeWithoutDestructor")]
+public sealed class UnitOfWork(IConfiguration configuration, ILogger<UnitOfWork> logger) : IUnitOfWork
 {
     private DataContext DbContext { get; } = new(configuration);
 
@@ -22,7 +25,21 @@ public class UnitOfWork(IConfiguration configuration) : IUnitOfWork
 
     public async Task CommitAsync()
     {
-        await DbContext.SaveChangesAsync();
+        try
+        {
+            logger.LogInformation("Trying to commit changes");
+            
+            await DbContext.SaveChangesAsync();
+            
+            logger.LogInformation("The changes were successfully committed");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error when trying commit changes. Error message: {errorMessage}", e.Message);
+            DiscardChanges();
+            logger.LogWarning("The changes were successfully rolled back");
+            throw;
+        }
     }
     
     public void DiscardChanges()
@@ -44,7 +61,7 @@ public class UnitOfWork(IConfiguration configuration) : IUnitOfWork
 
     private bool _disposed;
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
         if (!_disposed && disposing)
         {

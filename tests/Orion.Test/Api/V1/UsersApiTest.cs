@@ -148,7 +148,7 @@ namespace Orion.Test.Api.V1
         [InlineData("", "12345", null)]
         [InlineData("", "", null)]
         [InlineData("123", null, null)]
-        public async Task UpdateUserPassword_WithInvalidPasswordsAndConfirmation_ReturnsBadRequest(string currentPass, string newPass, string newPassConfirm)
+        public async Task ChangePassword_WithInvalidPasswordsAndConfirmation_ReturnsBadRequest(string currentPass, string newPass, string newPassConfirm)
         {
             //arrange
             var changePasswordRequest = new UserChangePasswordRequest
@@ -165,7 +165,7 @@ namespace Orion.Test.Api.V1
         }
         
         [Fact]
-        public async Task UpdateUserPassword_WithValidPasswordsAndConfirmation_ReturnsAccepted()
+        public async Task ChangePassword_WithValidPasswordsAndConfirmation_ReturnsAccepted()
         {
             //arrange
             var user = UserFaker.GetUserCreateRequest();
@@ -193,7 +193,7 @@ namespace Orion.Test.Api.V1
         }
         
         [Fact]
-        public async Task UpdateUserPassword_WithInValidCurrentPassword_ReturnsBadRequest()
+        public async Task ChangePassword_WithInValidCurrentPassword_ReturnsBadRequest()
         {
             //arrange
             var user = UserFaker.GetUserCreateRequest();

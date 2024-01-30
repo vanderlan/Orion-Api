@@ -23,7 +23,7 @@ public static class AuthenticationConfiguration
         {
             options.SaveToken = true;
             options.RequireHttpsMetadata = true;
-            options.TokenValidationParameters = new TokenValidationParameters()
+            options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience = true,
                 ValidAudience = jwtOptions.Audience,

@@ -1,6 +1,3 @@
 namespace Orion.Domain.Core.Filters;
 
-public class UserFilter: BaseFilter
-{
-    
-}
+public class UserFilter: BaseFilter;

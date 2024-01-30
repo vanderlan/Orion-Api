@@ -26,8 +26,8 @@
     <ProjectReference Include="..\..\src\Orion.Api\Orion.Api.csproj" />
     <ProjectReference Include="..\..\src\Orion.Infra.Data\Orion.Infra.Data.csproj" />
     <ProjectReference Include="..\..\src\Orion.Domain.Core\Orion.Domain.Core.csproj" />
-    <ProjectReference Include="..\..\src\Orion.Croscutting.Ioc\Orion.Croscutting.Ioc.csproj" />
-    <ProjectReference Include="..\..\src\Orion.Croscutting.Resources\Orion.Croscutting.Resources.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Crosscutting.Ioc\Orion.Crosscutting.Ioc.csproj" />
+    <ProjectReference Include="..\..\src\Orion.Crosscutting.Resources\Orion.Crosscutting.Resources.csproj" />
   </ItemGroup>
 
 </Project>

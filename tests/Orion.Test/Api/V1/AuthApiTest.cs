@@ -23,7 +23,7 @@ namespace Orion.Test.Api.V1
         public async Task AuthUser_WithCredentialsInvalid_ReturnsUnauthorized(string email, string password)
         {
             //arrange
-            var request = new LoginWithCredentialsRequest()
+            var request = new LoginWithCredentialsRequest
             {
                 Email = email,
                 Password = password
@@ -43,7 +43,7 @@ namespace Orion.Test.Api.V1
         public async Task AuthUser_WithRefreshTokenInvalid_ReturnsUnauthorized(string refreshToken, string token)
         {
             //arrange
-            var request = new LoginWithRefreshTokenRequest()
+            var request = new LoginWithRefreshTokenRequest
             {
                 RefreshToken = refreshToken,
                 Token = token

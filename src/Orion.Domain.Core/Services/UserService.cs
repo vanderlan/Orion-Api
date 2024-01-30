@@ -2,7 +2,7 @@ using Microsoft.Extensions.Localization;
 using System.Linq;
 using System.Threading.Tasks;
 using Orion.Domain.Core.Extensions;
-using Orion.Croscutting.Resources;
+using Orion.Crosscutting.Resources;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,7 +12,7 @@ using Orion.Domain.Core.Filters;
 using Orion.Domain.Core.Repositories.UnitOfWork;
 using Orion.Domain.Core.Services.Interfaces;
 using Orion.Domain.Core.ValueObjects.Pagination;
-using static Orion.Croscutting.Resources.Messages.MessagesKeys;
+using static Orion.Crosscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Domain.Core.Services;
 

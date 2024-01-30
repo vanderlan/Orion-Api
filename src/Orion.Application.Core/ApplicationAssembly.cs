@@ -1,3 +1,3 @@
 ﻿namespace Orion.Application.Core;
 
-public interface IApplicationAssembly { }
+public interface IApplicationAssembly;

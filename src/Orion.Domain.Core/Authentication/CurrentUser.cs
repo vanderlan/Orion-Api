@@ -13,7 +13,7 @@ public class CurrentUser : ICurrentUser
     public CurrentUser(IHttpContextAccessor accessor)
     {
         _accessor = accessor;
-        _claims = _accessor.HttpContext.User.Claims.ToList();
+        _claims = _accessor?.HttpContext?.User.Claims.ToList();
     }
 
     public string Name => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.GivenName)?.Value : string.Empty;
@@ -23,14 +23,11 @@ public class CurrentUser : ICurrentUser
 
     public bool IsAuthenticated()
     {
-        return _accessor.HttpContext.User.Identity.IsAuthenticated;
+        return _accessor?.HttpContext?.User.Identity?.IsAuthenticated is true;
     }
 
-    public override string ToString() 
+    public override string ToString()
     {
-        if(IsAuthenticated())
-            return $"Name: {Name} - Id: {Id} - Email: {Email} - Profile: {Profile}";
-
-        return "Anonymous User";
+        return IsAuthenticated() ? $"Name: {Name} - Id: {Id} - Email: {Email} - Profile: {Profile}" : "Anonymous User";
     }
 }

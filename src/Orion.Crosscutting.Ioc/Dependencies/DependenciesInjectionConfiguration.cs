@@ -5,7 +5,7 @@ using Orion.Domain.Core.Repositories.UnitOfWork;
 using Orion.Domain.Core.Services;
 using Orion.Infra.Data.Context;
 
-namespace Orion.Croscutting.Ioc.Dependencies;
+namespace Orion.Crosscutting.Ioc.Dependencies;
 
 public static class DependenciesInjectionConfiguration
 {

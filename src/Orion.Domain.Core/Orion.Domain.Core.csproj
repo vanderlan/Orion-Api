@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orion.Croscutting.Resources\Orion.Croscutting.Resources.csproj" />
+    <ProjectReference Include="..\Orion.Crosscutting.Resources\Orion.Crosscutting.Resources.csproj" />
   </ItemGroup>
 
 </Project>

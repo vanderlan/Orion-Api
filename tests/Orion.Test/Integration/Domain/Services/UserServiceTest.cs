@@ -1,17 +1,16 @@
-using Microsoft.Extensions.Configuration;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
-using Orion.Croscutting.Resources;
+using Orion.Crosscutting.Resources;
 using Orion.Domain.Core.Exceptions;
 using Orion.Domain.Core.Extensions;
 using Orion.Domain.Core.Filters;
 using Orion.Domain.Core.Services.Interfaces;
 using Orion.Test.Configuration.Faker;
 using Orion.Test.Integration.Setup;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
-using static Orion.Croscutting.Resources.Messages.MessagesKeys;
+using static Orion.Crosscutting.Resources.Messages.MessagesKeys;
 
 namespace Orion.Test.Integration.Domain.Services;
 
@@ -74,9 +73,11 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
 
         //act
         var userPaginated = await userService.ListPaginateAsync(
-            new UserFilter()
+            new UserFilter
             {
-                Query = user.Name
+                Query = user.Name,
+                Page = 1,
+                Quantity = 1
             });
 
         //assert
@@ -87,7 +88,7 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
     }
 
     [Fact]
-    public async Task DeleteAsync_WithExistantId_RemoveUserAsSuccess()
+    public async Task DeleteAsync_WithExistentId_RemoveUserAsSuccess()
     {
         //arrange
         using var scope = ServiceProvider.CreateScope();
@@ -133,6 +134,57 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
 
         await userService.DeleteAsync(userSaved.PublicId);
     }
+    
+    [Fact]
+    public async Task ChangePasswordAsync_WithValidData_ChangePasswordAsSuccess()
+    {
+        //arrange
+        using var scope = ServiceProvider.CreateScope();
+        var userService = scope.ServiceProvider.GetService<IUserService>();
+
+        var user = UserFaker.Get();
+        user.Password = "123456789";
+
+        var userSaved = await userService.AddAsync(user);
+
+        var newPassword = "my@$n2pass";
+
+        await userService.UpdateAsync(userSaved);
+
+        //act
+        await userService.ChangePasswordAsync(userSaved.PublicId, "123456789", newPassword);
+
+        var userPasswordChanged = await userService.FindByIdAsync(userSaved.PublicId);
+        
+        //assert
+        Assert.Equal(newPassword.ToSha512(), userPasswordChanged.Password);
+
+        await userService.DeleteAsync(userSaved.PublicId);
+    }
+    
+    [Fact]
+    public async Task ChangePasswordAsync_WithInvalidUser_ThrowsNotFoundException()
+    {
+        //arrange
+        using var scope = ServiceProvider.CreateScope();
+        var userService = scope.ServiceProvider.GetService<IUserService>();
+
+        var user = UserFaker.Get();
+        user.Password = "123456789";
+
+        var userSaved = await userService.AddAsync(user);
+
+        var newPassword = "my@$n2pass";
+
+        await userService.UpdateAsync(userSaved);
+
+        //act
+        await userService.ChangePasswordAsync(userSaved.PublicId, "123456789", newPassword);
+        
+        await Assert.ThrowsAsync<NotFoundException>(() => userService.ChangePasswordAsync(Guid.NewGuid().ToString(), "123456789", newPassword));
+
+        await userService.DeleteAsync(userSaved.PublicId);
+    }
 
     #endregion
 
@@ -154,13 +206,13 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
         Assert.NotNull(userFound);
 
         //act
-        var (userLoged, refreshToken) = await userService.SignInWithCredentialsAsync(userFound.Email, userPassword);
+        var (userLogged, _) = await userService.SignInWithCredentialsAsync(userFound.Email, userPassword);
 
         //assert
-        Assert.NotNull(userLoged);
-        Assert.Equal(userLoged.Email, userAdded.Email);
-        Assert.Equal(userLoged.Password, userAdded.Password);
-        Assert.Equal(userLoged.Name, userAdded.Name);
+        Assert.NotNull(userLogged);
+        Assert.Equal(userLogged.Email, userAdded.Email);
+        Assert.Equal(userLogged.Password, userAdded.Password);
+        Assert.Equal(userLogged.Name, userAdded.Name);
 
         await userService.DeleteAsync(userFound.PublicId);
     }
@@ -199,10 +251,10 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
         Assert.NotNull(userFound);
 
         //act
-        var exeption = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRefreshTokenAsync(refreshToken, token));
+        var exception = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRefreshTokenAsync(refreshToken, token));
 
         //assert
-        Assert.Equal(exeption.Message, messages[UserMessages.InvalidRefreshToken]);
+        Assert.Equal(exception.Message, messages[UserMessages.InvalidRefreshToken]);
 
         await userService.DeleteAsync(userFound.PublicId);
     }
@@ -214,21 +266,6 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
         const string expectedHash = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";
 
         Assert.Equal(expectedHash, passwordTest.ToSha512());
-    }
-
-    private static IConfiguration GetCofiguration()
-    {
-
-        var inMemorySettings = new Dictionary<string, string> {
-            {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
-            {"JwtOptions:Issuer", "http://www.myapplication.com"},
-            {"JwtOptions:Audience", "http://www.myapplication.com"},
-            {"JwtOptions:TokenExpirationMinutes", "15"}
-        };
-
-        return new ConfigurationBuilder()
-            .AddInMemoryCollection(inMemorySettings)
-            .Build();
     }
 
     #endregion

@@ -4,17 +4,17 @@ using Xunit;
 
 namespace Orion.Test.Unit.Domain.Exceptions;
 
-public class BusinessExceptionTests
+public class UnauthorizedUseExceptionTests
 {
     [Fact]
     public void Constructor_WithMessageAndTitle_SetsProperties()
     {
         // Arrange
-        var title = "Validation error";
-        var message = "The message test";
+        var title = "Unauthorized user";
+        var message = "The user can't access this resource";
 
         // Act
-        var exception = new BusinessException(message, title);
+        var exception = new UnauthorizedUserException(message, title);
 
         // Assert
         Assert.Equal(message, exception.Message);
@@ -24,10 +24,11 @@ public class BusinessExceptionTests
     [Fact]
     public void Constructor_WithMessage_SetsMessageAndNullTitle()
     {
+        //Arrange 
+        var message = "Unauthorized user";
+
         // Act
-        var message = "The message test";
-        
-        var exception = new BusinessException(message);
+        var exception = new UnauthorizedUserException(message);
 
         // Assert
         Assert.Equal(message, exception.Message);
@@ -38,13 +39,13 @@ public class BusinessExceptionTests
     public void Constructor_WithMessageAndInnerException_SetsProperties()
     {
         // Arrange
-        var innerMessage = "Validation error";
-        var message = "The message test";
-        
+        var innerMessage = "Some message inner exception";
+        var message = "Error message";
+
         var innerException = new Exception(innerMessage);
 
         // Act
-        var exception = new BusinessException(message, innerException);
+        var exception = new UnauthorizedUserException(message, innerException);
 
         // Assert
         Assert.Equal(message, exception.Message);

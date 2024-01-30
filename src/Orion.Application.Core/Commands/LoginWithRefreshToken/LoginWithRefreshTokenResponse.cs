@@ -2,7 +2,4 @@
 
 namespace Orion.Application.Core.Commands.LoginWithRefreshToken;
 
-public class LoginWithRefreshTokenResponse : LoginWithCredentialsResponse
-{
-    
-}
+public class LoginWithRefreshTokenResponse : LoginWithCredentialsResponse;

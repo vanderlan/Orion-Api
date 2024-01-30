@@ -14,7 +14,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Test", "tests\Orion.T
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Infra.Data", "src\Orion.Infra.Data\Orion.Infra.Data.csproj", "{7C877ABA-17F2-470A-99EB-5E172C6EA44B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Croscutting.Resources", "src\Orion.Croscutting.Resources\Orion.Croscutting.Resources.csproj", "{105D1EB4-5091-493E-B75E-2131169CC9AC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Crosscutting.Resources", "src\Orion.Crosscutting.Resources\Orion.Crosscutting.Resources.csproj", "{105D1EB4-5091-493E-B75E-2131169CC9AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{2D8CC498-597C-4415-95BF-48E623039F90}"
 	ProjectSection(SolutionItems) = preProject
@@ -32,7 +32,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{434E301F-C36C-4203-B334-D3948130B660}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Croscutting.Ioc", "src\Orion.Croscutting.Ioc\Orion.Croscutting.Ioc.csproj", "{BF0248B6-C870-4419-862D-1DCAD4561946}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Crosscutting.Ioc", "src\Orion.Crosscutting.Ioc\Orion.Crosscutting.Ioc.csproj", "{BF0248B6-C870-4419-862D-1DCAD4561946}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Domain.Core", "src\Orion.Domain.Core\Orion.Domain.Core.csproj", "{9F14F904-BBC6-4616-BB80-76E485EAEC14}"
 EndProject
@@ -41,7 +41,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "template-config", "template
 		.template-config\template.json = .template-config\template.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Croscutting", "4 - Croscutting", "{34D11C13-159D-47B0-A5B8-3DF32677792F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4 - Crosscutting", "4 - Crosscutting", "{34D11C13-159D-47B0-A5B8-3DF32677792F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orion.Application.Core", "src\Orion.Application.Core\Orion.Application.Core.csproj", "{1F3FDF5B-999B-4D96-81F7-25F854EB40D6}"
 EndProject

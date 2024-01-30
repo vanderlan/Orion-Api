@@ -1,7 +1,7 @@
 using FluentValidation;
 using Microsoft.Extensions.Localization;
-using Orion.Croscutting.Resources;
-using static Orion.Croscutting.Resources.Messages.MessagesKeys;
+using Orion.Crosscutting.Resources;
+using Orion.Crosscutting.Resources.Messages;
 
 namespace Orion.Application.Core.Commands.UserChangePassword;
 
@@ -11,15 +11,15 @@ public class UserChangePasswordRequestValidator : AbstractValidator<UserChangePa
     {
 
         RuleFor(c => c.CurrentPassword)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyPasword]);
+            .NotEmpty().WithMessage(stringLocalizer[MessagesKeys.UserMessages.EmptyPassword]);
 
         RuleFor(c => c.NewPassword)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyNewPasword]);
+            .NotEmpty().WithMessage(stringLocalizer[MessagesKeys.UserMessages.EmptyNewPassword]);
 
         RuleFor(c => c.NewPasswordConfirm)
-            .NotEmpty().WithMessage(stringLocalizer[UserMessages.EmptyNewPaswordConfirmation]);
+            .NotEmpty().WithMessage(stringLocalizer[MessagesKeys.UserMessages.EmptyNewPasswordConfirmation]);
 
         RuleFor(x => x.NewPassword).Equal(x => x.NewPasswordConfirm)
-            .WithMessage(stringLocalizer[UserMessages.PaswordAndConfirmationDifferent]);
+            .WithMessage(stringLocalizer[MessagesKeys.UserMessages.PasswordAndConfirmationDifferent]);
     }
 }
