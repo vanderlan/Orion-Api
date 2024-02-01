@@ -10,42 +10,42 @@ namespace Orion.Test.Integration.UnitOfWork;
 
 public class UnitOfWorkTests(IntegrationTestsFixture fixture) : IntegrationTestsBootstrapper(fixture)
 {
+    //[Fact]
+    //public async Task CommitAsync_WithUniqueIndexViolation_ThrowsDbUpdateException()
+    //{
+    //     arrange
+    //    using var scope = ServiceProvider.CreateScope();
+    //    var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
+
+    //    var user = UserFaker.Get();
+    //    var user2 = UserFaker.Get();
+
+    //    user2.Email = user.Email;
+
+    //    await unitOfWork.UserRepository.AddAsync(user);
+    //    await unitOfWork.UserRepository.AddAsync(user2);
+
+    //     act & assert
+    //    await Assert.ThrowsAsync<DbUpdateException>(unitOfWork.CommitAsync);
+    //}
+
     [Fact]
-    public async Task CommitAsync_WithUniqueIndexViolation_ThrowsDbUpdateException()
+    public async Task CommitAsync_WithValidInsert_SaveRegistry()
     {
         // arrange
         using var scope = ServiceProvider.CreateScope();
         var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
 
-        var user = UserFaker.Get();
-        var user2 = UserFaker.Get();
+        var validUser = UserFaker.Get();
 
-        user2.Email = user.Email;
+        // act
+        await unitOfWork.UserRepository.AddAsync(validUser);
 
-        await unitOfWork.UserRepository.AddAsync(user);
-        await unitOfWork.UserRepository.AddAsync(user2);
+        Assert.Equal(0, validUser.UserId);
 
-        // act & assert
-        await Assert.ThrowsAsync<DbUpdateException>(() => unitOfWork.CommitAsync());
+        // act
+        await unitOfWork.CommitAsync();
+
+        Assert.NotEqual(0, validUser.UserId);
     }
-
-    //[Fact]
-    //public async Task CommitAsync_WithValidInsert_SaveRegistry()
-    //{
-    //    // arrange
-    //    using var scope = ServiceProvider.CreateScope();
-    //    var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
-
-    //    var validUser = UserFaker.Get();
-
-    //    // act
-    //    await unitOfWork.UserRepository.AddAsync(validUser);
-
-    //    Assert.Equal(0, validUser.UserId);
-
-    //    // act
-    //    await unitOfWork.CommitAsync();
-
-    //    Assert.NotEqual(0, validUser.UserId);
-    //}
 }
