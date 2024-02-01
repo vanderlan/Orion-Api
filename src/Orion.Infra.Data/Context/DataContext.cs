@@ -43,7 +43,12 @@ public class DataContext(IConfiguration configuration) : DbContext(GetDefaultOpt
 
     private void AddTimestamps()
     {
-        var entities = ChangeTracker.Entries().Where(x => x.Entity is BaseEntity && (x.State == EntityState.Added || x.State == EntityState.Modified));
+        var entities = ChangeTracker.Entries().Where(x => x 
+            is
+            {
+                Entity: BaseEntity,
+                State: EntityState.Added or EntityState.Modified
+            });
 
         foreach (var entity in entities)
         {

@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Orion.Domain.Core.Repositories.Base;
 
 namespace Orion.Infra.Data.Repository.Generic;
 
-internal abstract class BaseEntityRepository<T>(DataContext dataContext) : IBaseEntityRepository<T>
+public abstract class BaseEntityRepository<T>(DataContext dataContext) : IBaseEntityRepository<T>
     where T : BaseEntity
 {
     protected DataContext DataContext { get; } = dataContext;

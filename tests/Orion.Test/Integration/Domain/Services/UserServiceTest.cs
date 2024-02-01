@@ -6,9 +6,9 @@ using Orion.Domain.Core.Exceptions;
 using Orion.Domain.Core.Extensions;
 using Orion.Domain.Core.Filters;
 using Orion.Domain.Core.Services.Interfaces;
-using Orion.Test.Configuration.Faker;
 using Orion.Test.Integration.Setup;
 using System.Threading.Tasks;
+using Orion.Test.Shared.Faker;
 using Xunit;
 using static Orion.Crosscutting.Resources.Messages.MessagesKeys;
 
@@ -260,7 +260,7 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
     }
 
     [Fact]
-    public void CryptoSha512Test()
+    public void ToSha512_ReturnsARightHash()
     {
         const string passwordTest = "userPawssTest1234A%@&!";
         const string expectedHash = "8c890b40034e242c05f27eec302a1f552be2a0a879b25b546c38d73c096d04aa8dfbf013a6c7e63a06ef42a346035c0e2256726d5aecb628df7bf6b42804802a";

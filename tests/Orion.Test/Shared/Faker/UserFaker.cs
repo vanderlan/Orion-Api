@@ -6,7 +6,7 @@ using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Entities.Enuns;
 using Orion.Domain.Core.Extensions;
 
-namespace Orion.Test.Configuration.Faker;
+namespace Orion.Test.Shared.Faker;
 
 public static class UserFaker
 {

@@ -1,5 +1,4 @@
 ﻿using Orion.Application.Core.Commands.UserCreate;
-using Orion.Test.Configuration.Faker;
 using Orion.Test.Integration.Setup;
 using System;
 using System.Net;
@@ -8,6 +7,7 @@ using System.Threading.Tasks;
 using Orion.Application.Core.Commands.UserChangePassword;
 using Orion.Application.Core.Queries.UserGetPaginated;
 using Orion.Domain.Core.ValueObjects.Pagination;
+using Orion.Test.Shared.Faker;
 using Xunit;
 
 namespace Orion.Test.Api.V1

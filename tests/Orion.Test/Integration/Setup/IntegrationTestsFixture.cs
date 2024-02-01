@@ -5,9 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.Repositories.UnitOfWork;
-using Orion.Test.Configuration.Faker;
 using System;
 using System.Net.Http;
+using Orion.Test.Shared.Faker;
 
 namespace Orion.Test.Integration.Setup
 {
@@ -52,7 +52,7 @@ namespace Orion.Test.Integration.Setup
             _unitOfWork.CommitAsync().GetAwaiter().GetResult();
         }
 
-        private void SetupDatabase(IConfigurationRoot config)
+        private void SetupDatabase(IConfiguration config)
         {
             const string connectionPath = "ConnectionStrings:OrionDatabase";
 
@@ -73,7 +73,7 @@ namespace Orion.Test.Integration.Setup
             return _appFactory.CreateClient();
         }
 
-        private void CreateDatabase(string databseName)
+        private void CreateDatabase(string databaseName)
         {
             lock (_sqlConnection)
             {
@@ -81,7 +81,7 @@ namespace Orion.Test.Integration.Setup
                 {
                     _sqlConnection.Open();
                     
-                    var command = new SqlCommand($"CREATE DATABASE {databseName}", _sqlConnection);
+                    var command = new SqlCommand($"CREATE DATABASE {databaseName}", _sqlConnection);
 
                     command.ExecuteNonQuery();
                     _sqlConnection.Close();

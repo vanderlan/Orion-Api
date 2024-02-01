@@ -2,7 +2,7 @@ using System;
 using Bogus;
 using Orion.Domain.Core.Entities;
 
-namespace Orion.Test.Configuration.Faker;
+namespace Orion.Test.Shared.Faker;
 
 public static class RefreshTokenFaker
 {

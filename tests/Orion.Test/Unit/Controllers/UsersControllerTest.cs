@@ -6,11 +6,11 @@ using Orion.Application.Core.Queries.UserGetById;
 using Orion.Application.Core.Queries.UserGetPaginated;
 using Orion.Domain.Core.Entities;
 using Orion.Domain.Core.ValueObjects.Pagination;
-using Orion.Test.Configuration.Faker;
 using Orion.Test.Unit.Controllers.BaseController;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Orion.Test.Shared.Faker;
 using Xunit;
 
 namespace Orion.Test.Unit.Controllers;

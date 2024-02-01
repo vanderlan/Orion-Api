@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -12,8 +11,7 @@ using Orion.Infra.Data.Repository.Implementations;
 
 namespace Orion.Infra.Data.UnitOfWork;
 
-[SuppressMessage("ReSharper", "GCSuppressFinalizeForTypeWithoutDestructor")]
-public sealed class UnitOfWork(IConfiguration configuration, ILogger<UnitOfWork> logger) : IUnitOfWork
+public sealed class UnitOfWork(IConfiguration configuration, ILogger<UserRepository> logger) : IUnitOfWork
 {
     private DataContext DbContext { get; } = new(configuration);
 

@@ -10,7 +10,7 @@ using Orion.Infra.Data.Repository.Generic;
 
 namespace Orion.Infra.Data.Repository.Implementations;
 
-internal class UserRepository(DataContext context) : BaseEntityRepository<User>(context), IUserRepository
+public sealed class UserRepository(DataContext context) : BaseEntityRepository<User>(context), IUserRepository
 {
     public async Task<User> LoginAsync(string email, string password)
     {
@@ -18,7 +18,7 @@ internal class UserRepository(DataContext context) : BaseEntityRepository<User>(
             .Where(x => x.Email.Equals(email) && x.Password.Equals(password))
             .FirstOrDefaultAsync();
 
-        return user ?? null;
+        return user;
     }
 
     private static IQueryable<User> ApplyFilters(UserFilter filter, IQueryable<User> query)
@@ -34,7 +34,7 @@ internal class UserRepository(DataContext context) : BaseEntityRepository<User>(
         return await DataContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email.Equals(email));
     }
     
-    public virtual async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
+    public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
     {
         IQueryable<User> query = DataContext.Set<User>();
 

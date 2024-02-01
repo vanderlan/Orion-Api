@@ -1,10 +1,10 @@
 ﻿using Orion.Application.Core.Commands.UserCreate;
-using Orion.Test.Configuration.Faker;
 using Orion.Test.Integration.Setup;
 using System.Net;
 using System.Threading.Tasks;
 using Orion.Application.Core.Commands.LoginWithCredentials;
 using Orion.Application.Core.Commands.LoginWithRefreshToken;
+using Orion.Test.Shared.Faker;
 using Xunit;
 
 namespace Orion.Test.Api.V1
