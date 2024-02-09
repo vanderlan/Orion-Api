@@ -42,19 +42,15 @@ public class AuthController(IMediator mediator, IConfiguration configuration) : 
 
     private IActionResult AuthorizeUser(LoginWithCredentialsResponse loginWithCredentialsResponse)
     {
-        if (loginWithCredentialsResponse != null)
-        {
-            var (token, validTo) = AuthenticationConfiguration.CreateToken(loginWithCredentialsResponse, configuration);
+       
+        var (token, validTo) = AuthenticationConfiguration.CreateToken(loginWithCredentialsResponse, configuration);
 
-            return Ok(
-              new UserApiTokenModel
-              {
-                  Token = token,
-                  Expiration = validTo,
-                  RefreshToken = loginWithCredentialsResponse.RefreshToken
-              });
-        }
-
-        return Unauthorized();
+        return Ok(
+            new UserApiTokenModel
+            {
+                Token = token,
+                Expiration = validTo,
+                RefreshToken = loginWithCredentialsResponse.RefreshToken
+            });
     }
 }

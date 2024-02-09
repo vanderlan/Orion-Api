@@ -57,25 +57,6 @@ public class AuthControllerTest : BaseControllerTest
     }
 
     [Fact]
-    public async Task Login_WithInvalidCredentials_RetunsUnauthorized()
-    {
-        //arrange & act
-        var result = await _authController.Login(
-            new LoginWithCredentialsRequest
-            {
-                Email = "invalid-login",
-                Password = "invalid-pass"
-            }
-        );
-
-        var contentResult = (UnauthorizedResult)result;
-
-        //assert
-        Assert.IsType<UnauthorizedResult>(contentResult);
-        Assert.Equal(401, contentResult.StatusCode);
-    }
-
-    [Fact]
     public async Task RefreshToken_WithValidRefreshToken_ReturnsNewToken()
     {
         //arrange & act
@@ -85,8 +66,7 @@ public class AuthControllerTest : BaseControllerTest
             Name = _validUser.Name,
             PublicId = _validUser.PublicId,
             Profile = UserProfile.Admin
-        },
-                                                                _configuration);
+        },_configuration);
 
         var result = await _authController.RefreshToken(new LoginWithRefreshTokenRequest { RefreshToken = _validRefreshToken.Refreshtoken, Token = token });
 
@@ -100,21 +80,6 @@ public class AuthControllerTest : BaseControllerTest
         Assert.IsType<UserApiTokenModel>(contentResult.Value);
         Assert.NotNull(userApiToken.Token);
         Assert.True(userApiToken.Expiration > DateTime.Now);
-    }
-
-    [Fact]
-    public async Task RefreshToken_WithInvalidRefreshToken_ReturnsUnauthorized()
-    {
-        //arrange & act
-        var result = await _authController.RefreshToken(
-            new LoginWithRefreshTokenRequest { RefreshToken = null }
-        );
-
-        var contentResult = (UnauthorizedResult)result;
-
-        //assert
-        Assert.IsType<UnauthorizedResult>(contentResult);
-        Assert.Equal(401, contentResult.StatusCode);
     }
 
     private void SetupMediatorMock()
