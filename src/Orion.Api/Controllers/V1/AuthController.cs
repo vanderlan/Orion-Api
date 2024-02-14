@@ -19,30 +19,25 @@ namespace Orion.Api.Controllers.V1;
 public class AuthController(IMediator mediator, IConfiguration configuration) : ApiController(mediator)
 {
     [HttpPost("Login")]
-    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a Token, Refresh Token and expiration date" ,typeof(LoginWithCredentialsResponse))]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description", typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.OK, "A success reponse with a Token, Refresh Token and expiration date", typeof(LoginWithCredentialsResponse))]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "A error response with the error description", typeof(ExceptionResponse))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Login([FromBody] LoginWithCredentialsRequest loginWithCredentialsRequest)
     {
-        var loginResponse = await Mediator.Send(loginWithCredentialsRequest);
-
-        return AuthorizeUser(loginResponse);
+        return AuthorizeUser(await Mediator.Send(loginWithCredentialsRequest));
     }
 
     [HttpPost("RefreshToken")]
-    [SwaggerResponse((int)HttpStatusCode.OK,"A success reponse with a Token, Refresh Token and expiration date" ,typeof(LoginWithRefreshTokenResponse))]
-    [SwaggerResponse((int)HttpStatusCode.BadRequest,"A error response with the error description", typeof(ExceptionResponse))]
+    [SwaggerResponse((int)HttpStatusCode.OK, "A success reponse with a Token, Refresh Token and expiration date", typeof(LoginWithRefreshTokenResponse))]
+    [SwaggerResponse((int)HttpStatusCode.BadRequest, "A error response with the error description", typeof(ExceptionResponse))]
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> RefreshToken([FromBody] LoginWithRefreshTokenRequest loginWithRefreshTokenRequest)
     {
-        var loginResponse = await Mediator.Send(loginWithRefreshTokenRequest);
-
-        return AuthorizeUser(loginResponse);
+        return AuthorizeUser(await Mediator.Send(loginWithRefreshTokenRequest));
     }
 
-    private IActionResult AuthorizeUser(LoginWithCredentialsResponse loginWithCredentialsResponse)
+    private OkObjectResult AuthorizeUser(LoginWithCredentialsResponse loginWithCredentialsResponse)
     {
-       
         var (token, validTo) = AuthenticationConfiguration.CreateToken(loginWithCredentialsResponse, configuration);
 
         return Ok(

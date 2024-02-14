@@ -27,9 +27,7 @@ public class UsersController(IMediator mediator) : ApiController(mediator)
     [SwaggerResponse((int)HttpStatusCode.Unauthorized)]
     public async Task<IActionResult> Get([FromQuery] UserGetPaginatedRequest filter)
     {
-        var userOutputList = await Mediator.Send(filter);
-
-        return Ok(userOutputList);
+        return Ok(await Mediator.Send(filter));
     }
 
     [HttpGet("{id}")]
