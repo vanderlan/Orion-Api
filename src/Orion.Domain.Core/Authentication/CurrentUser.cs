@@ -16,10 +16,10 @@ public class CurrentUser : ICurrentUser
         _claims = _accessor?.HttpContext?.User.Claims.ToList();
     }
 
-    public string Name => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.GivenName)?.Value : string.Empty;
-    public string Id => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Sid)?.Value: string.Empty;
-    public string Email => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Email)?.Value: string.Empty;
-    public string Profile => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Role)?.Value: string.Empty;
+    public string Name => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.GivenName).Value : string.Empty;
+    public string Id => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Sid).Value: string.Empty;
+    public string Email => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Email).Value: string.Empty;
+    public string Profile => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Role).Value : string.Empty;
 
     public bool IsAuthenticated()
     {

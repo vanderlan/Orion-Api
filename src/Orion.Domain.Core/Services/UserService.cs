@@ -155,12 +155,9 @@ public class UserService(IUnitOfWork unitOfWork, IStringLocalizer<OrionResources
 
     public async Task ChangePasswordAsync(string userId, string currentPassword, string newPassword)
     {
-        var user = await FindByIdAsync(userId);
+        var user = await FindByIdAsync(userId) ?? throw new NotFoundException(userId);
 
-        if (user == null)
-            throw new NotFoundException(userId);
-
-        if(user.Password != currentPassword.ToSha512())
+        if (user.Password != currentPassword.ToSha512())
             throw new BusinessException(resourceMessages[UserMessages.InvalidPassword]);
 
         user.Password = newPassword.ToSha512();

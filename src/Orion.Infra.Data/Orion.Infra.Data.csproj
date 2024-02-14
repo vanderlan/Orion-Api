@@ -16,11 +16,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Orion.Application.Core\Orion.Application.Core.csproj" />
     <ProjectReference Include="..\Orion.Domain.Core\Orion.Domain.Core.csproj" />
   </ItemGroup>
 
