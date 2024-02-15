@@ -2,14 +2,11 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace Orion.Infra.Data.Migrations
 {
     [ExcludeFromCodeCoverage]
-    public partial class Initial : Migration
+    public partial class InitialMigration : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -31,12 +28,12 @@ namespace Orion.Infra.Data.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Profile = table.Column<int>(type: "int", nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     PublicId = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -48,8 +45,8 @@ namespace Orion.Infra.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "User",
-                columns: new[] { "UserId", "CreatedAt", "Email", "LastUpdated", "Name", "Password", "Profile", "PublicId" },
-                values: new object[] { 1, new DateTime(2023, 10, 30, 20, 58, 51, 289, DateTimeKind.Utc).AddTicks(1590), "adm@orion-api.com", new DateTime(2023, 10, 30, 20, 58, 51, 289, DateTimeKind.Utc).AddTicks(1592), "Orion Admin User", "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2", 1, "80302277-52d6-4c78-b7a7-0d458ecdea8b" });
+                columns: ["UserId", "CreatedAt", "Email", "LastUpdated", "Name", "Password", "Profile", "PublicId"],
+                values: [638435945715400715L, new DateTime(2024, 2, 15, 11, 49, 31, 540, DateTimeKind.Utc).AddTicks(746), "adm@orion-api.com", new DateTime(2024, 2, 15, 11, 49, 31, 540, DateTimeKind.Utc).AddTicks(749), "Orion Admin User", "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2", 1, "874d0ee7-6f77-4857-bac9-7b63b2b4ccaf"]);
 
             migrationBuilder.CreateIndex(
                 name: "IX_RefreshToken_Email",
@@ -76,7 +73,6 @@ namespace Orion.Infra.Data.Migrations
                 unique: true);
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

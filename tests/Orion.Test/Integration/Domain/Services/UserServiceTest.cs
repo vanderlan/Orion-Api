@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using Orion.Test.Shared.Faker;
 using Xunit;
 using static Orion.Crosscutting.Resources.Messages.MessagesKeys;
+using Orion.Domain.Core.Repositories.UnitOfWork;
+using Orion.Domain.Core.Entities;
 
 namespace Orion.Test.Integration.Domain.Services;
 
@@ -234,7 +236,6 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
         await userService.DeleteAsync(userFound.PublicId);
     }
 
-
     [Theory]
     [InlineData(null, null)]
     [InlineData("Invalid refresh token", "invalid old token")]
@@ -260,6 +261,27 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
     }
 
     [Fact]
+    public async Task SignInWithRefreshTokenAsync_WithExistentInvalidToken_ThrowsUnauthorizedUserException()
+    {
+        //arrange
+        using var scope = ServiceProvider.CreateScope();
+        var userService = scope.ServiceProvider.GetService<IUserService>();
+        var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
+        var messages = scope.ServiceProvider.GetService<IStringLocalizer<OrionResources>>();
+
+        var refreshToken = Guid.NewGuid().ToString();
+
+        var addedRefreshToken = await unitOfWork.RefreshTokenRepository.AddAsync(new RefreshToken { Email = "orion.test@gmail.com", Refreshtoken = refreshToken });
+        await unitOfWork.CommitAsync();
+
+        //act
+        var exception = await Assert.ThrowsAsync<UnauthorizedUserException>(() => userService.SignInWithRefreshTokenAsync(addedRefreshToken.Refreshtoken, ExpiredToken));
+
+        //assert
+        Assert.Equal(exception.Message, messages[UserMessages.InvalidRefreshToken]);
+    }
+
+    [Fact]
     public void ToSha512_ReturnsARightHash()
     {
         const string passwordTest = "userPawssTest1234A%@&!";
@@ -267,6 +289,9 @@ public class UserServiceTest(IntegrationTestsFixture fixture) : IntegrationTests
 
         Assert.Equal(expectedHash, passwordTest.ToSha512());
     }
+
+    //Email: orion.test@gmail.com
+    private const string ExpiredToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJvcmlvbi50ZXN0QGdtYWlsLmNvbSJ9.fTWKiV_2vaRYdfhAc5aUT1fQ7Zzf3gpUaEoPaoguIHI84u5rzRFaPE6GtJzo7-5eyjqZ0S6noBBUZUJJGKs3WA";
 
     #endregion
 }
