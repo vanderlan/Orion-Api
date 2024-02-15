@@ -12,7 +12,7 @@ using Orion.Infra.Data.Context;
 namespace Orion.Infra.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240214184714_InitialMigration")]
+    [Migration("20240215114931_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -60,11 +60,11 @@ namespace Orion.Infra.Data.Migrations
 
             modelBuilder.Entity("Orion.Domain.Core.Entities.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<long>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserId"));
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -108,14 +108,14 @@ namespace Orion.Infra.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = 2147483647,
-                            CreatedAt = new DateTime(2024, 2, 14, 18, 47, 14, 711, DateTimeKind.Utc).AddTicks(2172),
+                            UserId = 638435945715400715L,
+                            CreatedAt = new DateTime(2024, 2, 15, 11, 49, 31, 540, DateTimeKind.Utc).AddTicks(746),
                             Email = "adm@orion-api.com",
-                            LastUpdated = new DateTime(2024, 2, 14, 18, 47, 14, 711, DateTimeKind.Utc).AddTicks(2173),
+                            LastUpdated = new DateTime(2024, 2, 15, 11, 49, 31, 540, DateTimeKind.Utc).AddTicks(749),
                             Name = "Orion Admin User",
                             Password = "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2",
                             Profile = 1,
-                            PublicId = "0fff8a22-d50e-4f2b-b211-9c7e7e049e0f"
+                            PublicId = "874d0ee7-6f77-4857-bac9-7b63b2b4ccaf"
                         });
                 });
 #pragma warning restore 612, 618

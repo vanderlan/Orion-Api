@@ -22,7 +22,7 @@ public class UserMapping : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                UserId = int.MaxValue,
+                UserId = DateTime.UtcNow.Ticks,
                 PublicId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
                 Email = "adm@orion-api.com",

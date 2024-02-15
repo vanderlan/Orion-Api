@@ -4,7 +4,7 @@ namespace Orion.Domain.Core.Entities;
 
 public class User : BaseEntity
 {
-    public int UserId { get; set; }
+    public long UserId { get; set; }
     public required string Name { get; set; }
     public required string Email { get; set; }
     public required UserProfile Profile { get; set; }
