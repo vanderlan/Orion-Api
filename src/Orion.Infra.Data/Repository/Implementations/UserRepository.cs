@@ -48,6 +48,6 @@ public sealed class UserRepository(DataContext context) : BaseEntityRepository<U
             .Take(filter.Quantity)
             .ToListAsync();
 
-        return new PagedList<User>(entityList, query.Count());
+        return new PagedList<User>(entityList, await query.CountAsync());
     }
 }
