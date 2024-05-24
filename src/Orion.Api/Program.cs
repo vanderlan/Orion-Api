@@ -21,4 +21,4 @@ app.ConfigureApp();
 
 app.RunMigrations();
 
-app.Run();
+await app.RunAsync();
