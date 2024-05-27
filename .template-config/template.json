@@ -19,5 +19,23 @@
         }
       ]
     }
-  ]
+  ],
+  "symbols": {
+    "companyName": {
+      "type": "parameter",
+      "replaces": "Company",
+      "defaultValue": "Company",
+      "isRequired": true,
+      "fileRename": "Company"
+    },
+    "companyNameUpper": {
+      "type": "generated",
+      "generator": "casing",
+      "parameters": {
+        "source": "companyName",
+        "toLower": false
+      },
+      "replaces": "{companyNameUpper}"
+    }
+  }
 }
