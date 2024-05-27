@@ -64,7 +64,7 @@ The main objective is to start projects with a clean and simple architecture, wi
 **Install template and create your project**
 
 	dotnet new install .
-	dotnet new orion-api -o MyNewProject
+	dotnet new orion-api --companyName "MyCompany" --output MyProjectName
 
 **Migrations**
 

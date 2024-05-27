@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.5.1" />
+    <PackageReference Include="coverlet.msbuild" Version="6.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+    <PackageReference Include="Moq" Version="4.20.70" />
+    <PackageReference Include="xunit" Version="2.8.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Company.Orion.Api\Company.Orion.Api.csproj" />
+    <ProjectReference Include="..\..\src\Company.Orion.Infra.Data\Company.Orion.Infra.Data.csproj" />
+    <ProjectReference Include="..\..\src\Company.Orion.Domain.Core\Company.Orion.Domain.Core.csproj" />
+    <ProjectReference Include="..\..\src\Company.Orion.Crosscutting.Ioc\Company.Orion.Crosscutting.Ioc.csproj" />
+    <ProjectReference Include="..\..\src\Company.Orion.Crosscutting.Resources\Company.Orion.Crosscutting.Resources.csproj" />
+  </ItemGroup>
+
+</Project>

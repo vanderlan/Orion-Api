@@ -3,8 +3,8 @@ WORKDIR /app
 
 COPY . ./
 
-RUN dotnet restore "src/Orion.Api/Orion.Api.csproj"
-RUN dotnet publish "src/Orion.Api/Orion.Api.csproj" -c Release -o out
+RUN dotnet restore "src/Company.Orion.Api/Company.Orion.Api.csproj"
+RUN dotnet publish "src/Company.Orion.Api/Company.Orion.Api.csproj" -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
@@ -15,4 +15,4 @@ EXPOSE 80
 WORKDIR /app
 COPY --from=build-env /app/out .
 
-ENTRYPOINT ["dotnet", "Orion.Api.dll"]
+ENTRYPOINT ["dotnet", "Company.Orion.Api.dll"]
