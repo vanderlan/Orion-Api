@@ -46,7 +46,7 @@ services:
     hostname: postgresql
     image: postgres:16.3
     environment:
-      POSTGRES_DB: Athena
+      POSTGRES_DB: OrionDev
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: "123PgSql"
     ports:
