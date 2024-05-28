@@ -36,6 +36,24 @@
         "toLower": false
       },
       "replaces": "{companyNameUpper}"
+    },
+    "systemDatabase": {
+      "type": "parameter",
+      "description": "The database that be used on project",
+      "datatype": "choice",
+      "allowMultipleValues": true,
+      "enableQuotelessLiterals": true,
+      "choices": [
+        {
+          "choice": "SqlServer",
+          "description": "SqlServer database"
+        },
+        {
+          "choice": "PostgreSql",
+          "description": "PostgreSql database"
+        }
+      ],
+      "defaultValue": "SqlServer"
     }
   }
 }

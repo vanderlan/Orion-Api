@@ -17,8 +17,14 @@ public static class HealthCheckConfiguration
 
     public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddHealthChecks().AddSqlServer(configuration["ConnectionStrings:OrionDatabase"] ?? string.Empty,
+
+#if (systemDatabase == SqlServer)
+        services.AddHealthChecks().AddSqlServer(configuration["ConnectionStrings:SqlServer"],
             tags: DatabaseTags);
+#else
+        services.AddHealthChecks().AddNpgSql(configuration["ConnectionStrings:PostgreSql"], 
+            tags: DatabaseTags);
+#endif
 
         services.AddHealthChecks().AddElasticsearch(configuration["ElasticConfiguration:Uri"],
             tags: ElasticSearchTags);
