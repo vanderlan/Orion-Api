@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Company.Orion.Domain.Core.Entities;
@@ -8,6 +7,11 @@ using Company.Orion.Domain.Core.Repositories.UnitOfWork;
 using System;
 using System.Net.Http;
 using Company.Orion.Test.Shared.Faker;
+#if (systemDatabase == SqlServer)
+using Microsoft.Data.SqlClient;
+#else
+using Npgsql;
+#endif
 
 namespace Company.Orion.Test.Integration.Setup
 {
@@ -18,7 +22,6 @@ namespace Company.Orion.Test.Integration.Setup
         public readonly User DefaultSystemUser;
         public readonly IServiceProvider ServiceProvider;
         private readonly IUnitOfWork _unitOfWork;
-        private SqlConnection _sqlConnection;
         private readonly WebApplicationFactory<Program> _appFactory;
         private string _databaseName;
         private string _connectionString;
@@ -32,7 +35,11 @@ namespace Company.Orion.Test.Integration.Setup
                                         .AddJsonFile("appsettings.Test.json", optional: false, reloadOnChange: true)
                                         .Build();
 
-                                    SetupDatabase(config);
+                                #if (systemDatabase == SqlServer)
+                                    SetupSqlServerDatabase(config);
+                                #else
+                                    SetupPostgreSqlDatabase(config);
+                                #endif
 
                                     builder.UseConfiguration(config);
                                 });
@@ -52,41 +59,61 @@ namespace Company.Orion.Test.Integration.Setup
             _unitOfWork.CommitAsync().GetAwaiter().GetResult();
         }
 
-        private void SetupDatabase(IConfiguration config)
+#if (systemDatabase == SqlServer)
+        private void SetupSqlServerDatabase(IConfiguration config)
         {
-            const string connectionPath = "ConnectionStrings:OrionDatabase";
+            const string connectionPath = "ConnectionStrings:SqlServer";
 
             _databaseName = $"OrionTests{DateTime.UtcNow.Ticks}";
 
-            _sqlConnection = new SqlConnection(config[connectionPath]);
+            var sqlServerConnection = new SqlConnection(config[connectionPath]);
 
-            CreateDatabase(_databaseName);
+            lock (sqlServerConnection)
+            {
+                using (sqlServerConnection)
+                {
+                    sqlServerConnection.Open();
+
+                    var command = new SqlCommand($"CREATE DATABASE {_databaseName}", sqlServerConnection);
+
+                    command.ExecuteNonQuery();
+                    sqlServerConnection.Close();
+                }
+            }
 
             _connectionString = config[connectionPath].Replace("OrionTests", _databaseName);
             config[connectionPath] = _connectionString;
-
-            _sqlConnection = new SqlConnection(_connectionString);
         }
+#else
+        private void SetupPostgreSqlDatabase(IConfiguration config)
+        {
+            const string connectionPath = "ConnectionStrings:PostgreSql";
+
+            _databaseName = $"OrionTests{DateTime.UtcNow.Ticks}";
+
+            var postgreSqlConnection = new NpgsqlConnection(config[connectionPath]);
+
+            lock (postgreSqlConnection)
+            {
+                using (postgreSqlConnection)
+                {
+                    postgreSqlConnection.Open();
+
+                    var command = new NpgsqlCommand($"CREATE DATABASE {_databaseName}", postgreSqlConnection);
+
+                    command.ExecuteNonQuery();
+                    postgreSqlConnection.Close();
+                }
+            }
+
+            _connectionString = config[connectionPath].Replace("OrionTests", _databaseName);
+            config[connectionPath] = _connectionString;
+        }
+#endif
 
         public HttpClient GetNewHttpClient()
         {
             return _appFactory.CreateClient();
-        }
-
-        private void CreateDatabase(string databaseName)
-        {
-            lock (_sqlConnection)
-            {
-                using (_sqlConnection)
-                {
-                    _sqlConnection.Open();
-                    
-                    var command = new SqlCommand($"CREATE DATABASE {databaseName}", _sqlConnection);
-
-                    command.ExecuteNonQuery();
-                    _sqlConnection.Close();
-                }
-            }
         }
     }
 }

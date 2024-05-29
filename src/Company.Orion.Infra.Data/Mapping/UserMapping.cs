@@ -25,7 +25,7 @@ public class UserMapping : IEntityTypeConfiguration<User>
                 UserId = DateTime.UtcNow.Ticks,
                 PublicId = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.UtcNow,
-                Email = "adm@orion-api.com",
+                Email = "adm@orion.com",
                 Name = "Orion Admin User",
                 LastUpdated = DateTime.UtcNow,
                 Profile = UserProfile.Admin,

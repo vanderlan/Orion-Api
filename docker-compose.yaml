@@ -9,10 +9,14 @@ services:
       - "5010:80"
     container_name: orion-api
     depends_on:
+#if (systemDatabase == SqlServer)
       - sqlserver
+#else
+      - postgresql
+#endif
     networks:
       - backend-network
-
+#if (systemDatabase == SqlServer)
   sqlserver:
     container_name: sqlserver
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -35,7 +39,21 @@ services:
       - ./scripts/init-sqlserver.sh:/tmp/init-sqlserver.sh
     command: /bin/bash ./tmp/init-sqlserver.sh
     networks:
-      - backend-network
+      - backend-network  
+#else
+  postgresql:
+    container_name: postgresql
+    hostname: postgresql
+    image: postgres:16.3
+    environment:
+      POSTGRES_DB: OrionDev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "123PgSql"
+    ports:
+      - "5432:5432"
+    networks:
+        - backend-network
+#endif
 
   elasticsearch:
     container_name: elasticsearch

@@ -8,7 +8,7 @@ using Company.Orion.Infra.Data.Mapping;
 
 namespace Company.Orion.Infra.Data.Context;
 
-public class DataContext(IConfiguration configuration) : DbContext(GetDefaultOptions(configuration))
+public class DataContext(IConfiguration configuration) : DbContext(GetDbContextOptions(configuration))
 {
     public ModelBuilder ModelBuilder { get; private set; }
 
@@ -17,12 +17,21 @@ public class DataContext(IConfiguration configuration) : DbContext(GetDefaultOpt
     public DbSet<RefreshToken> RefreshTokens { get; set; }
     #endregion
 
-    private static DbContextOptions GetDefaultOptions(IConfiguration configuration)
+#if (systemDatabase == SqlServer)
+    private static DbContextOptions GetDbContextOptions(IConfiguration configuration)
     {
-        var connectionString = configuration.GetSection("ConnectionStrings:OrionDatabase").Value;
+        var connectionString = configuration.GetSection("ConnectionStrings:SqlServer").Value;
 
         return new DbContextOptionsBuilder().UseSqlServer(connectionString).Options;
     }
+#else
+    private static DbContextOptions GetDbContextOptions(IConfiguration configuration)
+    {
+        var connectionString = configuration.GetSection("ConnectionStrings:PostgreSql").Value;
+
+        return new DbContextOptionsBuilder().UseNpgsql(connectionString).Options;
+    }
+#endif
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

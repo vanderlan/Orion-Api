@@ -64,13 +64,14 @@ The main objective is to start projects with a clean and simple architecture, wi
 **Install template and create your project**
 
 	dotnet new install .
-	dotnet new orion-api --companyName "MyCompany" --output MyProjectName
+	dotnet new orion-api --companyName "MyCompany" --output "MyProjectName" --systemDatabase "PostgreSql"
+	dotnet new orion-api --companyName "MyCompany" --output "MyProjectName" --systemDatabase "SqlServer"
 
 **Migrations**
 
 	# in the src/ folder
 
-	dotnet ef migrations add MigrationName -p Orion.Infra.Data -s Orion.Api
-	dotnet ef database update -p Orion.Infra.Data -s Orion.Api --verbose
+	dotnet ef migrations add MigrationName -p Company.Orion.Infra.Data -s Company.Orion.Api
+	dotnet ef database update -p Company.Orion.Infra.Data -s Company.Orion.Api --verbose
 
 *author:* https://github.com/vanderlan
