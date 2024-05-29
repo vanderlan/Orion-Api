@@ -109,7 +109,7 @@ namespace Company.Orion.Infra.Data.Migrations
                     {
                         UserId = 638435945715400715L,
                         CreatedAt = new DateTime(2024, 2, 15, 11, 49, 31, 540, DateTimeKind.Utc).AddTicks(746),
-                        Email = "adm@orion-api.com",
+                        Email = "adm@orion.com",
                         LastUpdated = new DateTime(2024, 2, 15, 11, 49, 31, 540, DateTimeKind.Utc).AddTicks(749),
                         Name = "Orion Admin User",
                         Password = "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2",
@@ -233,7 +233,7 @@ namespace Company.Orion.Infra.Data.Migrations
                         {
                             UserId = 638524961200726109L,
                             CreatedAt = new DateTime(2024, 5, 28, 12, 28, 40, 72, DateTimeKind.Utc).AddTicks(6137),
-                            Email = "adm@orion-api.com",
+                            Email = "adm@orion.com",
                             LastUpdated = new DateTime(2024, 5, 28, 12, 28, 40, 72, DateTimeKind.Utc).AddTicks(6138),
                             Name = "Orion Admin User",
                             Password = "3c9909afec25354d551dae21590bb26e38d53f2173b8d3dc3eee4c047e7ab1c1eb8b85103e3be7ba613b31bb5c9c36214dc9f14a42fd7a2fdb84856bca5c44c2",
