@@ -19,15 +19,15 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution items", "Solution items", "{2D8CC498-597C-4415-95BF-48E623039F90}"
 	ProjectSection(SolutionItems) = preProject
 		.dockerignore = .dockerignore
-		docker-compose.yaml = docker-compose.yaml
+		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github-workflows", "github-workflows", "{8C70C31A-892F-4C8F-B7B0-A710C97A55FA}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\docker.yml = .github\workflows\docker.yml
-		.github\workflows\sonar.yml = .github\workflows\sonar.yml
+		.github\workflows\build.yml = .github\workflows\build.yml
+		.github\workflows\deploy.yml = .github\workflows\deploy.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3 - Infra", "3 - Infra", "{434E301F-C36C-4203-B334-D3948130B660}"
