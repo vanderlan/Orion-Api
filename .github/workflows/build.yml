@@ -9,7 +9,7 @@ env:
   ASPNETCORE_ENVIRONMENT: Test
 jobs:
   build:
-    name: Build
+    name: Build and test
     runs-on: ubuntu-latest
     services:
 #if (systemDatabase == SqlServer)
@@ -45,7 +45,7 @@ jobs:
       - name: Install EF Core Tools
         run: |
           dotnet tool install --global dotnet-ef --version 8.0.1
-      - name: Build and analyze
+      - name: Build and test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
