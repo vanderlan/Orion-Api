@@ -14,7 +14,7 @@ using Company.Orion.Api.Models;
 namespace Company.Orion.Api.Controllers.V1;
 
 [ApiVersion(1.0)]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [AllowAnonymous]
 public class AuthController(IMediator mediator, IConfiguration configuration) : ApiController(mediator)
 {

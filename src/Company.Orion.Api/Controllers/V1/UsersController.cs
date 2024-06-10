@@ -18,7 +18,7 @@ using static Company.Orion.Domain.Core.Authentication.AuthorizationConfiguration
 namespace Company.Orion.Api.Controllers.V1;
 
 [ApiVersion(1.0)]
-[Route("api/[controller]")]
+[Route("[controller]")]
 [AuthorizeFor(Roles.Admin)]
 public class UsersController(IMediator mediator) : ApiController(mediator)
 {
