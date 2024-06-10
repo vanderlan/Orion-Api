@@ -4,7 +4,7 @@ using Company.Orion.Domain.Core.Entities.Enuns;
 
 namespace Company.Orion.Application.Core.Commands.UserUpdate;
 
-public class UserUpdateRequest : IRequest <Unit>
+public class UserUpdateRequest : IRequest
 {
     public string PublicId { get; set; }
     public string Name { get; set; }
