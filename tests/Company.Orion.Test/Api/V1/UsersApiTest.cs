@@ -23,7 +23,7 @@ namespace Company.Orion.Test.Api.V1
         public async Task GetUserPaginated_WithoutFilter_ReturnsDefaultUser()
         {
             //arrange & act
-            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync("/api/Users");
+            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync("/Users");
 
             var listUsersPaginated = await GetResultContentAsync<PagedList<UserGetPaginatedResponse>>(getUsersHttpResponse);
 
@@ -39,7 +39,7 @@ namespace Company.Orion.Test.Api.V1
         public async Task GetUserPaginated_WithNameFilter_ReturnsDefaultUser()
         {
             //arrange & act
-            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync($"/api/Users?filter.Query={DefaultSystemUser.Name}");
+            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync($"/Users?filter.Query={DefaultSystemUser.Name}");
 
             var listUsersPaginated = await GetResultContentAsync<PagedList<UserGetPaginatedResponse>>(getUsersHttpResponse);
 
@@ -55,7 +55,7 @@ namespace Company.Orion.Test.Api.V1
         public async Task GetUserPaginated_WithInvalidUserName_ReturnsEmptyList()
         {
             //arrange & act
-            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync($"/api/Users?filter.Query={Guid.NewGuid()}");
+            var getUsersHttpResponse = await AuthenticatedHttpClient.GetAsync($"/Users?filter.Query={Guid.NewGuid()}");
 
             var listUsersPaginated = await GetResultContentAsync<PagedList<UserGetPaginatedResponse>>(getUsersHttpResponse);
 
@@ -72,7 +72,7 @@ namespace Company.Orion.Test.Api.V1
             var request = UserFaker.GetUserCreateRequest();
 
             //act
-            var httpResponse = await AuthenticatedHttpClient.PostAsync("/api/Users", GetStringContent(request));
+            var httpResponse = await AuthenticatedHttpClient.PostAsync("/Users", GetStringContent(request));
 
             var userCreated = await GetResultContentAsync<UserCreateResponse>(httpResponse);
 
@@ -98,11 +98,11 @@ namespace Company.Orion.Test.Api.V1
             userUpdateRequest.PublicId = userCreated.PublicId;
 
             //act
-            var httpResponsePut = await AuthenticatedHttpClient.PutAsync($"/api/Users/{userCreated.PublicId}", GetStringContent(userUpdateRequest));
+            var httpResponsePut = await AuthenticatedHttpClient.PutAsync($"/Users/{userCreated.PublicId}", GetStringContent(userUpdateRequest));
 
             Assert.Equal(HttpStatusCode.Accepted, httpResponsePut.StatusCode);
 
-            var userGetHttpResponse = await AuthenticatedHttpClient.GetAsync($"/api/Users/{userCreated.PublicId}");
+            var userGetHttpResponse = await AuthenticatedHttpClient.GetAsync($"/Users/{userCreated.PublicId}");
 
             var user = await GetResultContentAsync<UserCreateResponse>(userGetHttpResponse);
 
@@ -122,11 +122,11 @@ namespace Company.Orion.Test.Api.V1
             var userCreated = await CreateUserAsync();
 
             //act
-            var httpResponsePut = await AuthenticatedHttpClient.DeleteAsync($"/api/Users/{userCreated.PublicId}");
+            var httpResponsePut = await AuthenticatedHttpClient.DeleteAsync($"/Users/{userCreated.PublicId}");
 
             Assert.Equal(HttpStatusCode.NoContent, httpResponsePut.StatusCode);
 
-            var userGetHttpResponse = await AuthenticatedHttpClient.GetAsync($"/api/Users/{userCreated.PublicId}");
+            var userGetHttpResponse = await AuthenticatedHttpClient.GetAsync($"/Users/{userCreated.PublicId}");
 
             //assert
             Assert.Equal(HttpStatusCode.NotFound, userGetHttpResponse.StatusCode);
@@ -136,7 +136,7 @@ namespace Company.Orion.Test.Api.V1
         public async Task DeleteUser_WithInvalidId_ReturnsNotFound()
         {
             //arrange & act
-            var httpResponseDelete = await AuthenticatedHttpClient.DeleteAsync($"/api/Users/{Guid.NewGuid()}");
+            var httpResponseDelete = await AuthenticatedHttpClient.DeleteAsync($"/Users/{Guid.NewGuid()}");
 
             //assert
             Assert.Equal(HttpStatusCode.NotFound, httpResponseDelete.StatusCode);
@@ -159,7 +159,7 @@ namespace Company.Orion.Test.Api.V1
             };
             
             //act
-            var httpResponsePatch = await AuthenticatedHttpClient.PatchAsync("/api/Users/Me/Password", GetStringContent(changePasswordRequest));
+            var httpResponsePatch = await AuthenticatedHttpClient.PatchAsync("/Users/Me/Password", GetStringContent(changePasswordRequest));
 
             Assert.Equal(HttpStatusCode.BadRequest, httpResponsePatch.StatusCode);
         }
@@ -186,7 +186,7 @@ namespace Company.Orion.Test.Api.V1
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
             
             //act
-            var httpResponsePatch = await httpClient.PatchAsync("/api/Users/Me/Password", GetStringContent(changePasswordRequest));
+            var httpResponsePatch = await httpClient.PatchAsync("/Users/Me/Password", GetStringContent(changePasswordRequest));
 
             //assert
             Assert.Equal(HttpStatusCode.Accepted, httpResponsePatch.StatusCode);
@@ -214,7 +214,7 @@ namespace Company.Orion.Test.Api.V1
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokenResult.Token);
             
             //act
-            var httpResponsePatch = await httpClient.PatchAsync("/api/Users/Me/Password", GetStringContent(changePasswordRequest));
+            var httpResponsePatch = await httpClient.PatchAsync("/Users/Me/Password", GetStringContent(changePasswordRequest));
 
             //assert
             Assert.Equal(HttpStatusCode.BadRequest, httpResponsePatch.StatusCode);
@@ -224,7 +224,7 @@ namespace Company.Orion.Test.Api.V1
         {
             userCreateRequest ??= UserFaker.GetUserCreateRequest();
 
-            var httpResponsePost = await AuthenticatedHttpClient.PostAsync("/api/Users", GetStringContent(userCreateRequest));
+            var httpResponsePost = await AuthenticatedHttpClient.PostAsync("/Users", GetStringContent(userCreateRequest));
 
             Assert.Equal(HttpStatusCode.Created, httpResponsePost.StatusCode);
 
