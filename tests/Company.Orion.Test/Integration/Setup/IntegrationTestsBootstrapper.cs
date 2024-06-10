@@ -30,7 +30,7 @@ public abstract class IntegrationTestsBootstrapper(IntegrationTestsFixture fixtu
 
     protected UserApiTokenModel AuthUser(string email, string password)
     {
-        var result = HttpClient.PostAsync("/api/Auth/Login", GetStringContent(
+        var result = HttpClient.PostAsync("/Auth/Login", GetStringContent(
                 new LoginWithCredentialsRequest
                 {
                     Email = email,

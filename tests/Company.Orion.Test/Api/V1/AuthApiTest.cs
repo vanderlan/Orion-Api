@@ -30,7 +30,7 @@ namespace Company.Orion.Test.Api.V1
             };
 
             //act
-            var httpResponse = await HttpClient.PostAsync("/api/Auth/Login", GetStringContent(request));
+            var httpResponse = await HttpClient.PostAsync("/Auth/Login", GetStringContent(request));
 
             //assert
             Assert.Equal(HttpStatusCode.Unauthorized, httpResponse.StatusCode);
@@ -50,7 +50,7 @@ namespace Company.Orion.Test.Api.V1
             };
 
             //act
-            var httpResponse = await HttpClient.PostAsync("/api/Auth/RefreshToken", GetStringContent(request));
+            var httpResponse = await HttpClient.PostAsync("/Auth/RefreshToken", GetStringContent(request));
 
             //assert
             Assert.Equal(HttpStatusCode.Unauthorized, httpResponse.StatusCode);
@@ -75,7 +75,7 @@ namespace Company.Orion.Test.Api.V1
             };
             
             //act
-            var httpResponseRefreshToken = await httpClient.PostAsync("/api/Auth/RefreshToken", GetStringContent(refreshTokenRequest));
+            var httpResponseRefreshToken = await httpClient.PostAsync("/Auth/RefreshToken", GetStringContent(refreshTokenRequest));
 
             var refreshTokenResponse = await GetResultContentAsync<LoginWithRefreshTokenRequest>(httpResponseRefreshToken);
             
@@ -104,7 +104,7 @@ namespace Company.Orion.Test.Api.V1
             };
             
             //act
-            var httpResponseRefreshToken = await httpClient.PostAsync("/api/Auth/RefreshToken", GetStringContent(refreshTokenRequest));
+            var httpResponseRefreshToken = await httpClient.PostAsync("/Auth/RefreshToken", GetStringContent(refreshTokenRequest));
             
             //assert
             Assert.Equal(HttpStatusCode.Unauthorized, httpResponseRefreshToken.StatusCode);
@@ -114,7 +114,7 @@ namespace Company.Orion.Test.Api.V1
         {
             userCreateRequest ??= UserFaker.GetUserCreateRequest();
 
-            var httpResponsePost = await AuthenticatedHttpClient.PostAsync("/api/Users", GetStringContent(userCreateRequest));
+            var httpResponsePost = await AuthenticatedHttpClient.PostAsync("/Users", GetStringContent(userCreateRequest));
 
             Assert.Equal(HttpStatusCode.Created, httpResponsePost.StatusCode);
 
