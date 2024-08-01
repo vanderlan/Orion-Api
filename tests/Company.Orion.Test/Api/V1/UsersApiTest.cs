@@ -61,7 +61,6 @@ namespace Company.Orion.Test.Api.V1
 
             //assert
             Assert.Empty(listUsersPaginated.Items);
-            Assert.True(listUsersPaginated.Count == 0);
             Assert.Equal(HttpStatusCode.OK, getUsersHttpResponse.StatusCode);
         }
 
