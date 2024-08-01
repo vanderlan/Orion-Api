@@ -2,14 +2,14 @@ using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Company.Orion.Application.Core.Commands.LoginWithCredentials;
-using Company.Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Company.Orion.Domain.Core.Exceptions;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using Company.Orion.Api.Configuration;
 using Company.Orion.Api.Controllers.Base;
 using Company.Orion.Api.Models;
+using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
+using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithRefreshToken;
 
 namespace Company.Orion.Api.Controllers.V1;
 

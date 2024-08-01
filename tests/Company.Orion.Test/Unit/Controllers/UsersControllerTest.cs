@@ -2,8 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Company.Orion.Api.Controllers.V1;
-using Company.Orion.Application.Core.Queries.UserGetById;
-using Company.Orion.Application.Core.Queries.UserGetPaginated;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.ValueObjects.Pagination;
 using System.Collections.Generic;
@@ -12,6 +10,8 @@ using System.Threading.Tasks;
 using Company.Orion.Test.Shared.Faker;
 using Company.Orion.Test.Unit.Controllers.BaseController;
 using Xunit;
+using Company.Orion.Application.Core.UseCases.User.Queries.GetById;
+using Company.Orion.Application.Core.UseCases.User.Queries.GetPaginated;
 
 namespace Company.Orion.Test.Unit.Controllers;
 

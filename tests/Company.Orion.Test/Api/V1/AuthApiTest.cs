@@ -1,11 +1,11 @@
-﻿using Company.Orion.Application.Core.Commands.UserCreate;
-using System.Net;
+﻿using System.Net;
 using System.Threading.Tasks;
 using Company.Orion.Test.Integration.Setup;
 using Company.Orion.Test.Shared.Faker;
 using Company.Orion.Application.Core.Commands.LoginWithCredentials;
-using Company.Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Xunit;
+using Company.Orion.Application.Core.UseCases.User.Commands.Create;
+using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithRefreshToken;
 
 namespace Company.Orion.Test.Api.V1
 {

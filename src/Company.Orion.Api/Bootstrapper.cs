@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Company.Orion.Api.Configuration;
 using Company.Orion.Application.Core;
-using Company.Orion.Application.Core.Commands.UserCreate;
 using Company.Orion.Crosscutting.Ioc.Dependencies;
 using Company.Orion.Domain.Core.Authentication;
+using Company.Orion.Application.Core.UseCases.User.Commands.Create;
 
 namespace Company.Orion.Api;
 

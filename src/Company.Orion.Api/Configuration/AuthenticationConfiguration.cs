@@ -3,8 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Company.Orion.Application.Core.Commands.LoginWithCredentials;
 using Company.Orion.Domain.Core.Extensions;
+using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
 
 namespace Company.Orion.Api.Configuration;
 

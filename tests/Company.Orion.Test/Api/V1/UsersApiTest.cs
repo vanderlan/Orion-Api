@@ -1,14 +1,14 @@
-﻿using Company.Orion.Application.Core.Commands.UserCreate;
-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Company.Orion.Application.Core.Commands.UserChangePassword;
-using Company.Orion.Application.Core.Queries.UserGetPaginated;
 using Company.Orion.Domain.Core.ValueObjects.Pagination;
 using Company.Orion.Test.Integration.Setup;
 using Company.Orion.Test.Shared.Faker;
 using Xunit;
+using Company.Orion.Application.Core.UseCases.User.Commands.Create;
+using Company.Orion.Application.Core.UseCases.User.Queries.GetPaginated;
 
 namespace Company.Orion.Test.Api.V1
 {
