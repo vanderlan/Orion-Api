@@ -1,7 +1,7 @@
 using System;
 using Bogus;
-using Company.Orion.Application.Core.UseCases.User.Commands.Create;
-using Company.Orion.Application.Core.UseCases.User.Commands.Update;
+using Company.Orion.Application.Core.UseCases.Users.Commands.Create;
+using Company.Orion.Application.Core.UseCases.Users.Commands.Update;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Entities.Enuns;
 using Company.Orion.Domain.Core.Extensions;

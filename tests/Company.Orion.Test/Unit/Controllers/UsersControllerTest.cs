@@ -7,11 +7,11 @@ using Company.Orion.Domain.Core.ValueObjects.Pagination;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Company.Orion.Application.Core.UseCases.Users.Queries.GetById;
+using Company.Orion.Application.Core.UseCases.Users.Queries.GetPaginated;
 using Company.Orion.Test.Shared.Faker;
 using Company.Orion.Test.Unit.Controllers.BaseController;
 using Xunit;
-using Company.Orion.Application.Core.UseCases.User.Queries.GetById;
-using Company.Orion.Application.Core.UseCases.User.Queries.GetPaginated;
 
 namespace Company.Orion.Test.Unit.Controllers;
 

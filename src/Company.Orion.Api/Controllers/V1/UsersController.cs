@@ -1,19 +1,19 @@
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Company.Orion.Application.Core.Commands.UserDelete;
 using Company.Orion.Domain.Core.Exceptions;
 using Company.Orion.Domain.Core.ValueObjects.Pagination;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Net;
 using Company.Orion.Api.Attributes;
 using Company.Orion.Api.Controllers.Base;
+using Company.Orion.Application.Core.UseCases.Users.Commands.ChangePassword;
+using Company.Orion.Application.Core.UseCases.Users.Commands.Create;
+using Company.Orion.Application.Core.UseCases.Users.Commands.Delete;
+using Company.Orion.Application.Core.UseCases.Users.Commands.Update;
+using Company.Orion.Application.Core.UseCases.Users.Queries.GetById;
+using Company.Orion.Application.Core.UseCases.Users.Queries.GetPaginated;
 using static Company.Orion.Domain.Core.Authentication.AuthorizationConfiguration;
-using Company.Orion.Application.Core.UseCases.User.Commands.Update;
-using Company.Orion.Application.Core.UseCases.User.Commands.Create;
-using Company.Orion.Application.Core.UseCases.User.Queries.GetPaginated;
-using Company.Orion.Application.Core.UseCases.User.Commands.ChangePassword;
-using Company.Orion.Application.Core.UseCases.User.Queries.GetById;
 
 namespace Company.Orion.Api.Controllers.V1;
 

@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using Company.Orion.Application.Core.Commands.LoginWithCredentials;
+using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
 using Xunit;
 
 namespace Company.Orion.Test.Integration.Setup;

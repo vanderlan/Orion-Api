@@ -5,8 +5,6 @@ using Moq;
 using Company.Orion.Api.Configuration;
 using Company.Orion.Api.Controllers.V1;
 using Company.Orion.Api.Models;
-using Company.Orion.Application.Core.Commands.LoginWithCredentials;
-using Company.Orion.Application.Core.Commands.LoginWithRefreshToken;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Entities.Enuns;
 using System;
