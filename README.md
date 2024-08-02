@@ -42,13 +42,12 @@ The main objective is to start projects with a clean and simple architecture, wi
 	6. Base Repository;
 	7. Environments configuration;
 	8. CORS Configuration;
-	9. Async API methods;
-	10. Docker and Docker-Compose;
-	11. API Version Configuration (by x-api-version header attribute);
-	12. Globalization;
-	13. In-Memory database for Testing;
-	14. Mediator + CQRS + Notification Pattern;
-	15. Logs with Correlation Id.
+	9. Docker and Docker-Compose;
+	10. API Versioning Configuration (by x-api-version header attribute);
+	11. Globalization;
+	12. Real database on CI Tests;
+	13. Mediator + CQRS + Notification Pattern;
+	14. Logs with Correlation Id.
 
 **CI & CD**
 
@@ -74,4 +73,4 @@ The main objective is to start projects with a clean and simple architecture, wi
 	dotnet ef migrations add MigrationName -p Company.Orion.Infra.Data -s Company.Orion.Api
 	dotnet ef database update -p Company.Orion.Infra.Data -s Company.Orion.Api --verbose
 
-*author:* https://github.com/vanderlan
+*Owner:* https://github.com/vanderlan
