@@ -12,7 +12,7 @@
 
   <ItemGroup>
 <!--#if (systemDatabase == SqlServer) -->
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
 <!-- #else -->
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
 <!-- #endif -->
