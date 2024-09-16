@@ -8,6 +8,7 @@ namespace Company.Orion.Api.Attributes;
 /// <summary>
 /// This filter changes the FluentValidation default response
 /// </summary>
+[AttributeUsage(AttributeTargets.Delegate)]
 public class CustomValidationAttribute : ActionFilterAttribute
 {
     public override void OnActionExecuting(ActionExecutingContext context)
