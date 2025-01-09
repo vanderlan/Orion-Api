@@ -45,10 +45,10 @@ jobs:
           fetch-depth: 0
       - name: Install SonarCloud scanner
         run: |
-           dotnet tool install --global dotnet-sonarscanner --version 6.1.0
+           dotnet tool install --global dotnet-sonarscanner --version 9.0.2
       - name: Install EF Core Tools
         run: |
-          dotnet tool install --global dotnet-ef --version 8.0.10
+          dotnet tool install --global dotnet-ef --version 9.0.0
       - name: Build and test
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

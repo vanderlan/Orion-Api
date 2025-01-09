@@ -22,12 +22,12 @@ public class UserMapping : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                UserId = DateTime.UtcNow.Ticks,
-                PublicId = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
+                UserId = 923165498765432123,
+                PublicId = "16537902-1ca7-49ca-82e5-0be137f9aeeb",
+                CreatedAt = DateTime.Parse("2025-01-01"),
                 Email = "adm@orion.com",
                 Name = "Orion Admin User",
-                LastUpdated = DateTime.UtcNow,
+                LastUpdated = DateTime.Parse("2025-01-01"),
                 Profile = UserProfile.Admin,
                 Password =  "123".ToSha512()
             }

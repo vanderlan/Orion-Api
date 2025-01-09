@@ -9,7 +9,7 @@
 
 **About this Project**
 
-*A simple project template for creating a .NET Web Api (v8.0)*
+*A simple project template for creating a .NET Web Api (v9.0)*
 
 The main objective is to start projects with a clean and simple architecture, without having to redo the entire configuration whenever starting a new project with similar characteristics.
 
