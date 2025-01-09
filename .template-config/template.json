@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/template",
   "author": "Vanderlan Gomes",
   "name": "Orion API Project Template",
-  "description": "A complete project template for creating a .NET 8 Web API",
+  "description": "A complete project template for creating a .NET 9 Web API",
   "classifications": [ "WebApi" ],
   "identity": "Orion.Api.Project.Template",
   "shortName": "orion-api",

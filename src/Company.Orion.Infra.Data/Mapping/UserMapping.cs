@@ -4,6 +4,7 @@ using System;
 using Company.Orion.Domain.Core.Entities.Enuns;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Extensions;
+using System.Globalization;
 
 namespace Company.Orion.Infra.Data.Mapping;
 
@@ -22,12 +23,12 @@ public class UserMapping : IEntityTypeConfiguration<User>
         builder.HasData(
             new User
             {
-                UserId = DateTime.UtcNow.Ticks,
-                PublicId = Guid.NewGuid().ToString(),
-                CreatedAt = DateTime.UtcNow,
+                UserId = 923165498765432123,
+                PublicId = "16537902-1ca7-49ca-82e5-0be137f9aeeb",
+                CreatedAt = DateTime.Parse("2025-01-01", new CultureInfo("en-US")),
                 Email = "adm@orion.com",
                 Name = "Orion Admin User",
-                LastUpdated = DateTime.UtcNow,
+                LastUpdated = DateTime.Parse("2025-01-01", new CultureInfo("en-US")),
                 Profile = UserProfile.Admin,
                 Password =  "123".ToSha512()
             }
