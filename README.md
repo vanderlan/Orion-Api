@@ -4,7 +4,6 @@
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=vanderlan_Orion-Api&metric=coverage)](https://sonarcloud.io/summary/overall?id=vanderlan_Orion-Api) 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=vanderlan_Orion-Api&metric=alert_status)](https://sonarcloud.io/summary/overall?id=vanderlan_Orion-Api)
 [![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=vanderlan_Orion-Api&metric=sqale_index)](https://sonarcloud.io/summary/overall?id=vanderlan_Orion-Api)
-[![Maintainability](https://api.codeclimate.com/v1/badges/76a30970ddd45c75129b/maintainability)](https://codeclimate.com/github/vanderlan/Orion-Api/maintainability) 
 [![GitHub release](https://img.shields.io/github/release/vanderlan/Orion-Api.svg)](https://github.com/vanderlan/Orion-Api/releases) 
 
 **About this Project**
