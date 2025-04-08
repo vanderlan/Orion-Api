@@ -33,5 +33,4 @@ public static class LoggingConfiguration
             .ReadFrom.Configuration(configuration)
             .CreateLogger();
     }
-
 }

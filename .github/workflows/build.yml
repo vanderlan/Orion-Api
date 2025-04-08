@@ -31,7 +31,7 @@ jobs:
           - "5432:5432"
 #endif
       elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
         ports:
           - "9200:9200"
         env:
@@ -65,7 +65,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           dotnet ef database update -p src/Company.Orion.Infra.Data -s src/Company.Orion.Api --verbose
-          dotnet sonarscanner begin /k:"vanderlan_Orion-Api" /o:"vanderlan-gomes" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="opencover.xml"
+          dotnet sonarscanner begin /k:"vanderlan_Orion-Api" /o:"vanderlan-gomes" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths="opencover.xml" "/d:sonar.scanner.scanAll=false"
           dotnet build Orion.sln
           dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover  /p:CoverletOutput=coverage /p:Exclude=[xunit.*]* Orion.sln
           cp tests/Company.Orion.Test/coverage.opencover.xml opencover.xml
