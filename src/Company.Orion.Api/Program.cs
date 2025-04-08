@@ -15,7 +15,7 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
-app.UseMiddleware<OrionMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.ConfigureApp();
 

@@ -10,12 +10,11 @@ using System.Threading.Tasks;
 using Company.Orion.Application.Core.UseCases.Users.Queries.GetById;
 using Company.Orion.Application.Core.UseCases.Users.Queries.GetPaginated;
 using Company.Orion.Test.Shared.Faker;
-using Company.Orion.Test.Unit.Controllers.BaseController;
 using Xunit;
 
-namespace Company.Orion.Test.Unit.Controllers;
+namespace Company.Orion.Test.Unit.Api.Controllers;
 
-public class UsersControllerTestTest : BaseControllerTest
+public class UsersControllerTestTest
 {
     private UsersController _usersController;
     private readonly User _validUser = UserFaker.Get();

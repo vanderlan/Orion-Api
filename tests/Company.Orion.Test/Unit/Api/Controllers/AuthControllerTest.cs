@@ -12,14 +12,13 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Company.Orion.Test.Shared.Faker;
-using Company.Orion.Test.Unit.Controllers.BaseController;
 using Xunit;
 using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
 using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithRefreshToken;
 
-namespace Company.Orion.Test.Unit.Controllers;
+namespace Company.Orion.Test.Unit.Api.Controllers;
 
-public class AuthControllerTest : BaseControllerTest
+public class AuthControllerTest
 {
     private AuthController _authController;
     private IConfiguration _configuration;

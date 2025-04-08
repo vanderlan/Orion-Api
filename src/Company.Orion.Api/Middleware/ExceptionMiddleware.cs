@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Company.Orion.Api.Middleware;
 
-public class OrionMiddleware(RequestDelegate next, ILogger<OrionMiddleware> logger, IHostEnvironment env)
+public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
 {
     public async Task Invoke(HttpContext context)
     {
