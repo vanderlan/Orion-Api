@@ -4,7 +4,7 @@ using System.Net;
 
 namespace Company.Orion.Api.Middleware;
 
-public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger, IHostEnvironment env)
+public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
 {
     public async Task Invoke(HttpContext context)
     {
@@ -26,15 +26,6 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
         var statusCode = GetStatusCodeByException(exception);
 
         var errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-
-        if (exception is not BusinessException && env.IsDevelopment())
-        {
-            errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-        }
-        if (exception is UnauthorizedUserException)
-        {
-            errorResponse = new ExceptionResponse(exception.Message, NotificationType.Error);
-        }
 
         if (exception is BusinessException businessException)
         {
@@ -58,12 +49,14 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
 
     private async Task ProccessResponseAsync(HttpContext context, HttpStatusCode statusCode, ExceptionResponse errorResponse, Exception exception)
     {
-        var errrorReturn = JsonConvert.SerializeObject(errorResponse);
-
         if (statusCode == HttpStatusCode.InternalServerError)
+        {
+            errorResponse.Title = "Unexpected error";
             foreach (var error in errorResponse.Errors)
                 logger.LogError(exception, "Internal Server Error: {message}", error);
+        }
        
+        var errrorReturn = JsonConvert.SerializeObject(errorResponse);
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json";
 

@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Xunit;
 using Company.Orion.Api.Middleware;
@@ -15,15 +14,13 @@ public class ExceptionMiddlewareTests
 {
     private readonly Mock<RequestDelegate> _nextMock;
     private readonly Mock<ILogger<ExceptionMiddleware>> _loggerMock;
-    private readonly Mock<IHostEnvironment> _envMock;
     private readonly ExceptionMiddleware _middleware;
 
     public ExceptionMiddlewareTests()
     {
         _nextMock = new Mock<RequestDelegate>();
         _loggerMock = new Mock<ILogger<ExceptionMiddleware>>();
-        _envMock = new Mock<IHostEnvironment>();
-        _middleware = new ExceptionMiddleware(_nextMock.Object, _loggerMock.Object, _envMock.Object);
+        _middleware = new ExceptionMiddleware(_nextMock.Object, _loggerMock.Object);
     }
 
     [Fact]
@@ -60,6 +57,22 @@ public class ExceptionMiddlewareTests
     [InlineData(typeof(BusinessException), HttpStatusCode.BadRequest)]
     [InlineData(typeof(Exception), HttpStatusCode.InternalServerError)]
     public async Task HandleExceptionAsync_SetCorrectStatusCode(Type exceptionType, HttpStatusCode expectedStatusCode)
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        var exception = (Exception)Activator.CreateInstance(exceptionType, "Test Exception");
+
+        // Act
+        await InvokeHandleExceptionAsync(context, exception);
+
+        // Assert
+        Assert.Equal((int)expectedStatusCode, context.Response.StatusCode);
+    }
+
+    [Theory]
+    [InlineData(typeof(Exception), HttpStatusCode.InternalServerError)]
+    [InlineData(typeof(ArgumentNullException), HttpStatusCode.InternalServerError)]
+    public async Task HandleExceptionAsync_WithNoBusinessException_SetInternalServerError(Type exceptionType, HttpStatusCode expectedStatusCode)
     {
         // Arrange
         var context = new DefaultHttpContext();

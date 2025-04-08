@@ -29,7 +29,7 @@ public static class AuthenticationConfiguration
                 ValidAudience = jwtOptions.Audience,
                 ValidateIssuer = true,
                 ValidIssuer = jwtOptions.Issuer,
-                ValidAlgorithms = new[] { SecurityAlgorithms.HmacSha512 },
+                ValidAlgorithms = [SecurityAlgorithms.HmacSha512],
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey)),
                 ClockSkew = TimeSpan.Zero
             };
