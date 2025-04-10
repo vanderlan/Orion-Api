@@ -12,7 +12,7 @@ using Company.Orion.Application.Core.UseCases.Users.Queries.GetPaginated;
 using Company.Orion.Test.Shared.Faker;
 using Xunit;
 
-namespace Company.Orion.Test.Unit.Api.Controllers;
+namespace Company.Orion.Test.Unit.Api.Controllers.V1;
 
 public class UsersControllerTestTest
 {

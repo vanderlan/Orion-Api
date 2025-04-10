@@ -16,7 +16,7 @@ using Xunit;
 using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
 using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithRefreshToken;
 
-namespace Company.Orion.Test.Unit.Api.Controllers;
+namespace Company.Orion.Test.Unit.Api.Controllers.V1;
 
 public class AuthControllerTest
 {
