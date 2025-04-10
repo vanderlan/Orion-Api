@@ -11,7 +11,7 @@ public class UserUpdateRequest : IRequest
     public string Email { get; set; }
     public UserProfile Profile { get; set; }
 
-    public static implicit operator User(UserUpdateRequest request)
+    public static explicit operator User(UserUpdateRequest request)
     {
         if (request is null)
             return default;

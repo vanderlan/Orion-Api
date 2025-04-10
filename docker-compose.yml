@@ -12,6 +12,7 @@ services:
 #else
       - postgresql
 #endif
+      - elasticsearch
     networks:
       - backend-network
 #if (systemDatabase == SqlServer)

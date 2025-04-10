@@ -2,7 +2,7 @@
 
 namespace Company.Orion.Application.Core.UseCases.Users.Commands.ChangePassword
 {
-    public class UserChangePasswordRequest : IRequest<Unit>
+    public class UserChangePasswordRequest : IRequest
     {
         public string CurrentPassword { get; set; }
         public string NewPassword { get; set; }

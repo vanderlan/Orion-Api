@@ -11,7 +11,7 @@ public class UserCreateRequest : IRequest<UserCreateResponse>
     public string Email { get; set; }
     public UserProfile Profile { get; set; }
 
-    public static implicit operator User(UserCreateRequest request)
+    public static explicit operator User(UserCreateRequest request)
     {
         if (request is null)
             return default;
