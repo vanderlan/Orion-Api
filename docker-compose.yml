@@ -42,8 +42,9 @@ services:
 #else
   postgresql:
     container_name: postgresql
-    hostname: postgresql
     image: postgres:16.3
+    restart: unless-stopped
+    hostname: postgresql
     environment:
       POSTGRES_DB: OrionDev
       POSTGRES_USER: postgres
