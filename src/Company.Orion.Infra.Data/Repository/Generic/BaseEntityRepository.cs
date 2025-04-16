@@ -45,7 +45,6 @@ public abstract class BaseEntityRepository<T>(DataContext dataContext) : IBaseEn
 
     public virtual void Update(T entity)
     {
-        DataContext.ChangeTracker.Clear();
         DataContext.Entry(entity).State = EntityState.Modified;
         DataContext.Set<T>().Update(entity);
     }
