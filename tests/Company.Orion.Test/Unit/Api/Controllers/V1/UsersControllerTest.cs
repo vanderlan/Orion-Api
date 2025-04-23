@@ -14,12 +14,12 @@ using Xunit;
 
 namespace Company.Orion.Test.Unit.Api.Controllers.V1;
 
-public class UsersControllerTestTest
+public class UsersControllerTest
 {
     private UsersController _usersController;
     private readonly User _validUser = UserFaker.Get();
 
-    public UsersControllerTestTest()
+    public UsersControllerTest()
     {
         SetupMediatorMock();
     }
