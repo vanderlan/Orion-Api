@@ -8,6 +8,7 @@ on:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    name: Docker Build and Push
     steps:
       - name: Checkout
         uses: actions/checkout@v4
