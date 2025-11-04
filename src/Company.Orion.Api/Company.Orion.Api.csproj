@@ -20,16 +20,16 @@
     <PackageReference Include="Elastic.Serilog.Sinks" Version="9.0.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.10" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.10">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4">
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.4">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
@@ -38,8 +38,8 @@
     <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="8.1.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="9.0.6" />
   </ItemGroup>
 
   <ItemGroup>
