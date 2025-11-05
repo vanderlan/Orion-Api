@@ -1,6 +1,5 @@
 using Company.Orion.Api.Attributes;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Company.Orion.Api.Configuration;
@@ -50,15 +49,13 @@ public static class Bootstrapper
 
         services.AddControllers();
 
-        services.AddFluentValidationAutoValidation();
-
         services.AddValidatorsFromAssemblyContaining<UserCreateRequestValidator>();
 
         services.ConfigureApiVersioning();
 
         services.AddMvc(options =>
                         {
-                            options.Filters.Add(typeof(CustomValidationAttribute));
+                            options.Filters.Add<CustomValidationAttribute>();
                         })
             .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
             .AddDataAnnotationsLocalization();
