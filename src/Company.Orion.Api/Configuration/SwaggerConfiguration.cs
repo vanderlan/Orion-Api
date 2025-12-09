@@ -1,4 +1,4 @@
-﻿using Microsoft.OpenApi.Models;
+﻿using Microsoft.OpenApi;
 
 namespace Company.Orion.Api.Configuration;
 
@@ -12,7 +12,7 @@ public static class SwaggerConfiguration
             {
                 Version = "v1",
                 Title = "Orion API",
-                Description = "Orion API - A simple project template for creating a .NET API (v8.0)"
+                Description = "Orion API - A simple project template for creating a .NET API (v10.0)"
             });
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -24,24 +24,6 @@ public static class SwaggerConfiguration
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
-            });
-
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header
-                    },
-                    new List<string>()
-                }
             });
         });
     }

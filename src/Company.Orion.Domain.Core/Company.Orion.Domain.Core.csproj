@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -9,12 +9,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="13.1.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.14.0" />
-    <PackageReference Include="FluentValidation" Version="12.1.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+    <PackageReference Include="MediatR" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup>
 
   <ItemGroup>

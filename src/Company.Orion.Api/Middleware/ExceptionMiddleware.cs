@@ -53,7 +53,7 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
         {
             errorResponse.Title = "Unexpected error";
             foreach (var error in errorResponse.Errors)
-                logger.LogError(exception, "Internal Server Error: {message}", error);
+                logger.LogError(exception, "Internal Server Error: {Message}", error);
         }
        
         var errrorReturn = JsonConvert.SerializeObject(errorResponse);
