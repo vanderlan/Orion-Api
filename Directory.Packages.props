@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageVersion Include="AspNetCore.HealthChecks.SqlServer" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
-    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.0" />
+    <PackageVersion Include="Asp.Versioning.Mvc" Version="8.1.1" />
     <PackageVersion Include="AspNetCore.HealthChecks.Elasticsearch" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.UI.Client" Version="9.0.0" />
     <PackageVersion Include="Elastic.Serilog.Sinks" Version="9.0.0" />
