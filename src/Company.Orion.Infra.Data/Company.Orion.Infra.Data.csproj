@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" VersionOverride="10.0.2" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 
