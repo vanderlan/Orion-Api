@@ -9,11 +9,6 @@ public static class HealthCheckConfiguration
             [
                 "database"
             ];
-    private static readonly string[] ElasticSearchTags =
-            [
-                "elasticsearch", 
-                "kibana" 
-            ];
 
     public static void AddApplicationHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
@@ -26,8 +21,6 @@ public static class HealthCheckConfiguration
             tags: DatabaseTags);
 #endif
 
-        services.AddHealthChecks().AddElasticsearch(configuration["ElasticConfiguration:Uri"],
-            tags: ElasticSearchTags);
     }
 
     public static void ConfigureHealthCheck(this IApplicationBuilder app) 

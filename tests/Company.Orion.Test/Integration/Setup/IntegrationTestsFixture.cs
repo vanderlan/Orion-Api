@@ -66,7 +66,9 @@ namespace Company.Orion.Test.Integration.Setup
 
             _databaseName = $"OrionTests{DateTime.UtcNow.Ticks}";
 
-            var sqlServerConnection = new SqlConnection(config[connectionPath]);
+            var baseConnectionString = TestDatabaseContainer.ConnectionString;
+
+            var sqlServerConnection = new SqlConnection(baseConnectionString);
 
             lock (sqlServerConnection)
             {
@@ -81,7 +83,7 @@ namespace Company.Orion.Test.Integration.Setup
                 }
             }
 
-            _connectionString = config[connectionPath].Replace("OrionTests", _databaseName);
+            _connectionString = new SqlConnectionStringBuilder(baseConnectionString) { InitialCatalog = _databaseName }.ConnectionString;
             config[connectionPath] = _connectionString;
         }
 #else
@@ -91,7 +93,9 @@ namespace Company.Orion.Test.Integration.Setup
 
             _databaseName = $"OrionTests{DateTime.UtcNow.Ticks}";
 
-            var postgreSqlConnection = new NpgsqlConnection(config[connectionPath]);
+            var baseConnectionString = TestDatabaseContainer.ConnectionString;
+
+            var postgreSqlConnection = new NpgsqlConnection(baseConnectionString);
 
             lock (postgreSqlConnection)
             {
@@ -106,7 +110,7 @@ namespace Company.Orion.Test.Integration.Setup
                 }
             }
 
-            _connectionString = config[connectionPath].Replace("OrionTests", _databaseName);
+            _connectionString = new NpgsqlConnectionStringBuilder(baseConnectionString) { Database = _databaseName }.ConnectionString;
             config[connectionPath] = _connectionString;
         }
 #endif

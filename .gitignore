@@ -264,3 +264,41 @@ __pycache__/
 /.editorconfig
 /.sonarqube
 /tests/Orion.Test/coverage
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+secrets.json
+appsettings.local.json
+appsettings.*.local.json
+*.pem
+*.key
+*.p12
+*.crt
+*.cer
+
+# Local databases
+*.db
+*.sqlite
+*.sqlite3
+*.mdf
+*.ldf
+
+# Test, coverage and mutation-testing output
+TestResults/
+StrykerOutput/
+coverage.json
+coverage.opencover.xml
+opencover.xml
+.sonarqube/
+
+# AI assistant / agent instruction files (not part of the application)
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.claude/
+.cursor/
+.cursorrules
+.github/copilot-instructions.md
+.vs/CopilotSnapshots/

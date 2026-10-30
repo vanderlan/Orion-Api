@@ -1,1 +1,1 @@
-/opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P SqlServer2019! -d master -i /tmp/initial-script.sql
+/opt/mssql-tools/bin/sqlcmd -S sqlserver -U sa -P 'CHANGE_ME_Passw0rd!' -d master -i /tmp/initial-script.sql

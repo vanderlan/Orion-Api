@@ -3,7 +3,6 @@ using Company.Orion.Api.Configuration;
 using Company.Orion.Api.Filters;
 using Company.Orion.Api.Middleware;
 using FluentValidation;
-using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,13 +16,10 @@ builder.Services.AddControllers(options =>
 
 builder.Configuration.ConfigureLogging();
 
-builder.Host.UseSerilog();
-
 builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
-app.UseSerilogRequestLogging();
 
 app.UseMiddleware<ExceptionMiddleware>();
 

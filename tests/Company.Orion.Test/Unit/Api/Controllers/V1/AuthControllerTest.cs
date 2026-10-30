@@ -108,7 +108,7 @@ public class AuthControllerTest
            });
 
         var inMemorySettings = new Dictionary<string, string> {
-           {"JwtOptions:SymmetricSecurityKey", "5cCI6IkpXVCJ9.eyJlbWFpbCI6InZhbmRlcmxhbi5nc0BnbWFpbC5jb20iLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1p"},
+           {"JwtOptions:SymmetricSecurityKey", "REPLACE-WITH-A-RANDOM-SECRET-OF-AT-LEAST-64-CHARACTERS-REQUIRED-FOR-HS512"},
            {"JwtOptions:Issuer", "http://www.myapplication.com"},
            {"JwtOptions:Audience", "http://www.myapplication.com"},
            {"JwtOptions:TokenExpirationMinutes", "15"}
