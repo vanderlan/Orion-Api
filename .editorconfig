@@ -1,0 +1,9 @@
+root = true
+
+[*.cs]
+# Logging arguments are intentionally evaluated eagerly
+dotnet_diagnostic.CA1873.severity = none
+
+# API versioning: unversioned requests intentionally fall back to the default version (1.0)
+dotnet_diagnostic.AV0016.severity = none
+dotnet_diagnostic.AV0011.severity = none

@@ -60,6 +60,6 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
         context.Response.StatusCode = (int)statusCode;
         context.Response.ContentType = "application/json";
 
-        await context.Response.WriteAsync(errrorReturn);
+        await context.Response.WriteAsync(errrorReturn, context.RequestAborted);
     }
 }

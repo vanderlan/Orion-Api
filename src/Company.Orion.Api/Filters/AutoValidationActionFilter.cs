@@ -16,9 +16,8 @@ public sealed class AutoValidationActionFilter(IServiceProvider services) : IAsy
     {
         var errors = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var kv in context.ActionArguments)
+        foreach (var arg in context.ActionArguments.Values)
         {
-            var arg = kv.Value;
             if (arg is null) 
                 continue;
 

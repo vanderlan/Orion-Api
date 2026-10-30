@@ -12,7 +12,7 @@ namespace Company.Orion.Application.Core.UseCases.Users.Notifications.UserCreate
     {
         public async Task Handle(UserCreatedNotification notification, CancellationToken cancellationToken)
         {
-            logger.LogInformation("A notification {notificationType} has been received. Notification details: {notification}. Action performed by: {currentUserName}",
+            logger.LogInformation("A notification {NotificationType} has been received. Notification details: {Notification}. Action performed by: {CurrentUserName}",
                 nameof(UserCreatedNotification),
                 JsonConvert.SerializeObject(notification, Formatting.Indented),
                 currentUser.ToString());

@@ -11,7 +11,7 @@ using Company.Orion.Infra.Data.Repository.Implementations;
 
 namespace Company.Orion.Infra.Data.UnitOfWork;
 
-public sealed class UnitOfWork(IConfiguration configuration, ILogger<UserRepository> logger) : IUnitOfWork
+public sealed class UnitOfWork(IConfiguration configuration, ILogger<UnitOfWork> logger) : IUnitOfWork
 {
     private DataContext DbContext { get; } = new(configuration);
 
@@ -33,7 +33,7 @@ public sealed class UnitOfWork(IConfiguration configuration, ILogger<UserReposit
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error when trying commit changes. Error message: {errorMessage}", e.Message);
+            logger.LogError(e, "Error when trying commit changes. Error message: {ErrorMessage}", e.Message);
             DiscardChanges();
             logger.LogWarning("The changes were successfully rolled back");
             throw;
