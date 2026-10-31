@@ -9,8 +9,10 @@ services:
     depends_on:
 #if (systemDatabase == SqlServer)
       - sqlserver
-#else
+#elseif (systemDatabase == PostgreSql)
       - postgresql
+#else
+      - mongodb
 #endif
     networks:
       - backend-network
@@ -38,7 +40,7 @@ services:
     command: /bin/bash ./tmp/init-sqlserver.sh
     networks:
       - backend-network  
-#else
+#elseif (systemDatabase == PostgreSql)
   postgresql:
     container_name: postgresql
     image: postgres:16.3
@@ -50,6 +52,20 @@ services:
       POSTGRES_PASSWORD: "CHANGE_ME_Passw0rd!"
     ports:
       - "5432:5432"
+    networks:
+        - backend-network
+#else
+  mongodb:
+    container_name: mongodb
+    image: mongo:7.0
+    restart: unless-stopped
+    hostname: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: "CHANGE_ME_Passw0rd!"
+      MONGO_INITDB_DATABASE: OrionDev
+    ports:
+      - "27017:27017"
     networks:
         - backend-network
 #endif

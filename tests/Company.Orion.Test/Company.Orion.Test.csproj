@@ -16,9 +16,11 @@
     <PackageReference Include="Moq" />
     <!--#if (systemDatabase == SqlServer) -->
     <PackageReference Include="Testcontainers.MsSql" />
-    <!-- #else -->
+    <!--#elseif (systemDatabase == PostgreSql) -->
     <PackageReference Include="Testcontainers.PostgreSql" />
-    <!-- #endif -->
+    <!--#else -->
+    <PackageReference Include="Testcontainers.MongoDb" />
+    <!--#endif -->
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>

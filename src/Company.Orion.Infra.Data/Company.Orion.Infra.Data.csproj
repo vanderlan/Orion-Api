@@ -13,15 +13,21 @@
   <ItemGroup>
 <!--#if (systemDatabase == SqlServer) -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
-<!-- #else -->
+<!--#elseif (systemDatabase == PostgreSql) -->
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
-<!-- #endif -->
+<!--#else -->
+    <PackageReference Include="MongoDB.Driver" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+<!--#endif -->
+<!--#if (systemDatabase != MongoDb) -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
+<!--#endif -->
   </ItemGroup>
 
   <ItemGroup>
@@ -29,11 +35,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Company.Orion.Test" />
+  </ItemGroup>
+
+<!--#if (systemDatabase != MongoDb) -->
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <Folder Include="Migrations\" />
   </ItemGroup>
+<!--#endif -->
 
 </Project>

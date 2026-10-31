@@ -11,4 +11,11 @@
     <ProjectReference Include="..\Company.Orion.Domain.Core\Company.Orion.Domain.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+<!--#if (systemDatabase == MongoDb) -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+<!--#endif -->
+  </ItemGroup>
+
 </Project>

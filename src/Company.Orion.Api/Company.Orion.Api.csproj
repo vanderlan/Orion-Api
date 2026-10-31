@@ -11,19 +11,23 @@
   <ItemGroup>
     <!--#if (systemDatabase == SqlServer) -->
     <PackageReference Include="AspNetCore.HealthChecks.SqlServer" />
-    <!-- #else -->
+    <!--#elseif (systemDatabase == PostgreSql) -->
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
-    <!-- #endif -->
+    <!--#else -->
+    <PackageReference Include="AspNetCore.HealthChecks.MongoDb" />
+    <!--#endif -->
     <PackageReference Include="Asp.Versioning.Mvc" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
     <PackageReference Include="FluentValidation" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <!--#if (systemDatabase != MongoDb) -->
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
+    <!--#endif -->
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Enrichers.CorrelationId" />
     <PackageReference Include="Serilog.Enrichers.Environment" />
