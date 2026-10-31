@@ -9,7 +9,7 @@ using System.Net.Http;
 using Company.Orion.Test.Shared.Faker;
 #if (systemDatabase == SqlServer)
 using Microsoft.Data.SqlClient;
-#else
+#elif (systemDatabase == PostgreSql)
 using Npgsql;
 #endif
 
@@ -37,8 +37,10 @@ namespace Company.Orion.Test.Integration.Setup
 
                                 #if (systemDatabase == SqlServer)
                                     SetupSqlServerDatabase(config);
-                                #else
+                                #elif (systemDatabase == PostgreSql)
                                     SetupPostgreSqlDatabase(config);
+                                #else
+                                    SetupMongoDbDatabase(config);
                                 #endif
 
                                     builder.UseConfiguration(config);
@@ -86,7 +88,7 @@ namespace Company.Orion.Test.Integration.Setup
             _connectionString = new SqlConnectionStringBuilder(baseConnectionString) { InitialCatalog = _databaseName }.ConnectionString;
             config[connectionPath] = _connectionString;
         }
-#else
+#elif (systemDatabase == PostgreSql)
         private void SetupPostgreSqlDatabase(IConfiguration config)
         {
             const string connectionPath = "ConnectionStrings:PostgreSql";
@@ -112,6 +114,20 @@ namespace Company.Orion.Test.Integration.Setup
 
             _connectionString = new NpgsqlConnectionStringBuilder(baseConnectionString) { Database = _databaseName }.ConnectionString;
             config[connectionPath] = _connectionString;
+        }
+#else
+        private void SetupMongoDbDatabase(IConfiguration config)
+        {
+            const string connectionPath = "ConnectionStrings:MongoDb";
+            const string databaseNamePath = "MongoDb:DatabaseName";
+
+            //Each fixture runs on its own database of the shared MongoDb container.
+            _databaseName = $"OrionTests{DateTime.UtcNow.Ticks}";
+
+            _connectionString = TestDatabaseContainer.ConnectionString;
+
+            config[connectionPath] = _connectionString;
+            config[databaseNamePath] = _databaseName;
         }
 #endif
 

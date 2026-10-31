@@ -16,9 +16,12 @@ public static class HealthCheckConfiguration
 #if (systemDatabase == SqlServer)
         services.AddHealthChecks().AddSqlServer(configuration["ConnectionStrings:SqlServer"],
             tags: DatabaseTags);
-#else
+#elif (systemDatabase == PostgreSql)
         services.AddHealthChecks().AddNpgSql(configuration["ConnectionStrings:PostgreSql"], 
             tags: DatabaseTags);
+#else
+        //The MongoDb health check uses the IMongoClient registered by AddDatabaseContext.
+        services.AddHealthChecks().AddMongoDb(tags: DatabaseTags);
 #endif
 
     }

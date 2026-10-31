@@ -16,6 +16,24 @@
       "modifiers": [
         {
           "exclude": [ ".vs/**", ".git/**" ]
+        },
+        {
+          "condition": "(systemDatabase == MongoDb)",
+          "exclude": [
+            "src/Company.Orion.Infra.Data/Context/**",
+            "src/Company.Orion.Infra.Data/Mapping/**",
+            "src/Company.Orion.Infra.Data/Migrations/**",
+            "src/Company.Orion.Infra.Data/Repository/**",
+            "src/Company.Orion.Infra.Data/UnitOfWork/**",
+            "scripts/**"
+          ]
+        },
+        {
+          "condition": "(systemDatabase != MongoDb)",
+          "exclude": [
+            "src/Company.Orion.Infra.Data/Mongo/**",
+            "tests/Company.Orion.Test/Unit/Infra/**"
+          ]
         }
       ]
     }
@@ -51,6 +69,10 @@
         {
           "choice": "PostgreSql",
           "description": "PostgreSql database"
+        },
+        {
+          "choice": "MongoDb",
+          "description": "MongoDb database"
         }
       ],
       "defaultValue": "SqlServer"

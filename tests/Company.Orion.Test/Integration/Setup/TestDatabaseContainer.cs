@@ -2,8 +2,10 @@ using System;
 using System.Threading;
 #if (systemDatabase == SqlServer)
 using Testcontainers.MsSql;
-#else
+#elif (systemDatabase == PostgreSql)
 using Testcontainers.PostgreSql;
+#else
+using Testcontainers.MongoDb;
 #endif
 
 namespace Company.Orion.Test.Integration.Setup;
@@ -28,10 +30,19 @@ public static class TestDatabaseContainer
 
         return container.GetConnectionString();
     }
-#else
+#elif (systemDatabase == PostgreSql)
     private static string StartContainer()
     {
         var container = new PostgreSqlBuilder("postgres:16.3").Build();
+
+        container.StartAsync().GetAwaiter().GetResult();
+
+        return container.GetConnectionString();
+    }
+#else
+    private static string StartContainer()
+    {
+        var container = new MongoDbBuilder("mongo:7.0").Build();
 
         container.StartAsync().GetAwaiter().GetResult();
 
