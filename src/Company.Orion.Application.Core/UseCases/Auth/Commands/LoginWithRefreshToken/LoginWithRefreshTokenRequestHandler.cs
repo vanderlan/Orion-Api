@@ -17,38 +17,65 @@ public class LoginWithRefreshTokenRequestHandler(IUnitOfWork unitOfWork, IString
     {
         if (string.IsNullOrEmpty(request.RefreshToken))
         {
-            throw new UnauthorizedUserException(
-                resourceMessages[UserMessages.InvalidRefreshToken],
-                resourceMessages[ExceptionsTitles.AuthenticationError]
-            );
+            throw CreateInvalidRefreshTokenException();
         }
 
         var email = GetClaimFromJwtToken(request.Token, ClaimTypes.Email);
 
-        var userRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(request.RefreshToken) && x.Email == email)).FirstOrDefault();
+        var currentRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(request.RefreshToken) && x.Email == email)).FirstOrDefault()
+            ?? throw CreateInvalidRefreshTokenException();
 
-        if (userRefreshToken is not null)
+        var user = (await unitOfWork.UserRepository.SearchByAsync(x => x.Email == currentRefreshToken.Email)).FirstOrDefault()
+            ?? throw CreateInvalidRefreshTokenException();
+
+        var newRefreshToken = await RotateRefreshTokenAsync(currentRefreshToken);
+
+        return new LoginWithRefreshTokenResponse
         {
-            var user = (await unitOfWork.UserRepository.SearchByAsync(x => x.Email == userRefreshToken.Email)).FirstOrDefault();
+            Email = user.Email,
+            Name = user.Name,
+            PublicId = user.PublicId,
+            Profile = user.Profile,
+            RefreshToken = newRefreshToken.Refreshtoken
+        };
+    }
 
-            if (user is not null)
+    /// <summary>
+    /// Rotates the refresh token atomically: the current token is revoked and a brand new one
+    /// is issued inside a single transaction, so the old token can never be served again after
+    /// the rotation and the new one only becomes valid when the old one is effectively revoked.
+    /// When the rotation cannot be persisted, everything is rolled back and the current token
+    /// remains valid, allowing the user to retry.
+    /// </summary>
+    private async Task<RefreshToken> RotateRefreshTokenAsync(RefreshToken currentRefreshToken)
+    {
+        var newRefreshToken = new RefreshToken
+        {
+            Email = currentRefreshToken.Email,
+            Refreshtoken = Guid.NewGuid().ToString().ToSha512()
+        };
+
+        try
+        {
+            await unitOfWork.ExecuteInTransactionAsync(async () =>
             {
-                await unitOfWork.RefreshTokenRepository.DeleteAsync(userRefreshToken.PublicId);
-                var newRefreshToken = await AddRefreshTokenAsync(user.Email);
+                await unitOfWork.RefreshTokenRepository.DeleteAsync(currentRefreshToken.PublicId);
 
-                return new LoginWithRefreshTokenResponse
-                {
-                    Email = user.Email,
-                    Name = user.Name,
-                    PublicId = user.PublicId,
-                    Profile = user.Profile,
-                    RefreshToken = newRefreshToken.Refreshtoken
-                };
-            }
+                newRefreshToken = await unitOfWork.RefreshTokenRepository.AddAsync(newRefreshToken);
 
+                await unitOfWork.CommitAsync();
+            });
+        }
+        catch (Exception exception)
+        {
+            throw new RefreshTokenRotationException(
+                resourceMessages[UserMessages.RefreshTokenRotationFailed],
+                resourceMessages[ExceptionsTitles.AuthenticationError],
+                exception
+            );
         }
 
-        throw new UnauthorizedUserException(resourceMessages[UserMessages.InvalidRefreshToken], resourceMessages[ExceptionsTitles.AuthenticationError]);
+        return newRefreshToken;
     }
 
     private string GetClaimFromJwtToken(string jtwToken, string claimName)
@@ -63,26 +90,12 @@ public class LoginWithRefreshTokenRequestHandler(IUnitOfWork unitOfWork, IString
         }
         catch (Exception)
         {
-            throw new UnauthorizedUserException(resourceMessages[UserMessages.InvalidRefreshToken], resourceMessages[ExceptionsTitles.AuthenticationError]);
+            throw CreateInvalidRefreshTokenException();
         }
     }
 
-    private async Task<RefreshToken> AddRefreshTokenAsync(string userEmail)
+    private UnauthorizedUserException CreateInvalidRefreshTokenException()
     {
-        var existentRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == userEmail)).FirstOrDefault();
-
-        if (existentRefreshToken is not null)
-            return existentRefreshToken;
-
-        var refreshToken = new RefreshToken
-        {
-            Email = userEmail,
-            Refreshtoken = Guid.NewGuid().ToString().ToSha512()
-        };
-
-        var addedRefreshToken = await unitOfWork.RefreshTokenRepository.AddAsync(refreshToken);
-        await unitOfWork.CommitAsync();
-
-        return addedRefreshToken;
+        return new UnauthorizedUserException(resourceMessages[UserMessages.InvalidRefreshToken], resourceMessages[ExceptionsTitles.AuthenticationError]);
     }
 }

@@ -135,6 +135,9 @@
   <data name="User.InvalidRefreshToken" xml:space="preserve">
     <value>Token de atualização inválido</value>
   </data>
+  <data name="User.RefreshTokenRotationFailed" xml:space="preserve">
+    <value>Não foi possível renovar o Token de atualização, tente novamente</value>
+  </data>
   <data name="User.NullEntity" xml:space="preserve">
     <value>O usuário não pode ser encontrado</value>
   </data>

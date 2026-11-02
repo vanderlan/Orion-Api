@@ -253,6 +253,46 @@ public class MongoDataContextTests
     }
 
     [Fact]
+    public void UseSession_SetsAndClearsTheCurrentSession()
+    {
+        //arrange
+        var session = new Mock<IClientSessionHandle>();
+        var dataContext = _mongo.CreateDataContext();
+
+        //act & assert
+        Assert.Null(dataContext.CurrentSession);
+
+        dataContext.UseSession(session.Object);
+        Assert.Same(session.Object, dataContext.CurrentSession);
+
+        dataContext.UseSession(null);
+        Assert.Null(dataContext.CurrentSession);
+    }
+
+    [Fact]
+    public async Task SaveChangesAsync_WithSession_ExecutesThePendingWritesThroughTheSession()
+    {
+        //arrange
+        var session = new Mock<IClientSessionHandle>();
+        var user = UserFaker.Get();
+
+        _mongo.Users.Setup(collection => collection.InsertOneAsync(session.Object, user, It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var dataContext = _mongo.CreateDataContext();
+        dataContext.UseSession(session.Object);
+        dataContext.Insert(user);
+
+        //act
+        var affected = await dataContext.SaveChangesAsync();
+
+        //assert
+        Assert.Equal(1, affected);
+        _mongo.Users.Verify(collection => collection.InsertOneAsync(session.Object, user, It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mongo.Users.Verify(collection => collection.InsertOneAsync(It.IsAny<User>(), It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
     public async Task SaveChangesAsync_WhenTheWriteFails_KeepsThePendingWritesAndRethrows()
     {
         //arrange

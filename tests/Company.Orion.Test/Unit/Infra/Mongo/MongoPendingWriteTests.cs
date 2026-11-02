@@ -93,6 +93,78 @@ public class MongoPendingWriteTests
     }
 
     [Fact]
+    public async Task ExecuteAsync_WithInsertAndSession_InsertsThroughTheSession()
+    {
+        //arrange
+        var session = new Mock<IClientSessionHandle>();
+        var user = UserFaker.Get();
+
+        _mongo.Users.Setup(collection => collection.InsertOneAsync(session.Object, user, It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
+
+        var dataContext = _mongo.CreateDataContext();
+        dataContext.UseSession(session.Object);
+
+        var pendingWrite = new MongoPendingWrite<User>(user, MongoWriteOperation.Insert);
+
+        //act
+        var affected = await pendingWrite.ExecuteAsync(dataContext, CancellationToken.None);
+
+        //assert
+        Assert.Equal(1, affected);
+        _mongo.Users.Verify(collection => collection.InsertOneAsync(session.Object, user, It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mongo.Users.Verify(collection => collection.InsertOneAsync(It.IsAny<User>(), It.IsAny<InsertOneOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WithReplaceAndSession_ReplacesThroughTheSession()
+    {
+        //arrange
+        var session = new Mock<IClientSessionHandle>();
+        var user = UserFaker.Get();
+
+        _mongo.Users.Setup(collection => collection.ReplaceOneAsync(session.Object, It.IsAny<FilterDefinition<User>>(), user, It.IsAny<ReplaceOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ReplaceOneResult.Acknowledged(1, 1, null));
+
+        var dataContext = _mongo.CreateDataContext();
+        dataContext.UseSession(session.Object);
+
+        var pendingWrite = new MongoPendingWrite<User>(user, MongoWriteOperation.Replace);
+
+        //act
+        var affected = await pendingWrite.ExecuteAsync(dataContext, CancellationToken.None);
+
+        //assert
+        Assert.Equal(1, affected);
+        _mongo.Users.Verify(collection => collection.ReplaceOneAsync(session.Object, It.IsAny<FilterDefinition<User>>(), user, It.IsAny<ReplaceOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mongo.Users.Verify(collection => collection.ReplaceOneAsync(It.IsAny<FilterDefinition<User>>(), It.IsAny<User>(), It.IsAny<ReplaceOptions>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
+    public async Task ExecuteAsync_WithDeleteAndSession_DeletesThroughTheSession()
+    {
+        //arrange
+        var session = new Mock<IClientSessionHandle>();
+        var refreshToken = RefreshTokenFaker.Get();
+
+        _mongo.RefreshTokens.Setup(collection => collection.DeleteOneAsync(session.Object, It.IsAny<FilterDefinition<RefreshToken>>(), It.IsAny<DeleteOptions>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new DeleteResult.Acknowledged(1));
+
+        var dataContext = _mongo.CreateDataContext();
+        dataContext.UseSession(session.Object);
+
+        var pendingWrite = new MongoPendingWrite<RefreshToken>(refreshToken, MongoWriteOperation.Delete);
+
+        //act
+        var affected = await pendingWrite.ExecuteAsync(dataContext, CancellationToken.None);
+
+        //assert
+        Assert.Equal(1, affected);
+        _mongo.RefreshTokens.Verify(collection => collection.DeleteOneAsync(session.Object, It.IsAny<FilterDefinition<RefreshToken>>(), It.IsAny<DeleteOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+        _mongo.RefreshTokens.Verify(collection => collection.DeleteOneAsync(It.IsAny<FilterDefinition<RefreshToken>>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Fact]
     public async Task ExecuteAsync_WithUnknownOperation_ThrowsNotSupportedException()
     {
         //arrange

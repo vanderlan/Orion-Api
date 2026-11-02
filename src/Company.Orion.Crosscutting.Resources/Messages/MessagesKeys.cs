@@ -16,6 +16,7 @@ public static class MessagesKeys
         //Auth
         public const string InvalidCredentials = "User.InvalidCredentials";
         public const string InvalidRefreshToken = "User.InvalidRefreshToken";
+        public const string RefreshTokenRotationFailed = "User.RefreshTokenRotationFailed";
 
         //User
         public const string NullEntity = "User.NullEntity";

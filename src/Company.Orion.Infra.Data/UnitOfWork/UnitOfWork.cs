@@ -40,6 +40,38 @@ public sealed class UnitOfWork(IConfiguration configuration, ILogger<UnitOfWork>
         }
     }
     
+    public async Task ExecuteInTransactionAsync(Func<Task> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        //Joins the ambient transaction when one was already opened by an outer operation.
+        if (DbContext.Database.CurrentTransaction is not null)
+        {
+            await operation();
+            return;
+        }
+
+        await using var transaction = await DbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            logger.LogInformation("Trying to execute the operation in a transaction");
+
+            await operation();
+            await transaction.CommitAsync();
+
+            logger.LogInformation("The transaction was successfully committed");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error when trying to execute the transactional operation. Error message: {ErrorMessage}", e.Message);
+            await transaction.RollbackAsync();
+            DiscardChanges();
+            logger.LogWarning("The transaction was successfully rolled back");
+            throw;
+        }
+    }
+
     public void DiscardChanges()
     {
         foreach (var entry in DbContext.ChangeTracker.Entries().Where(e => e.State != EntityState.Unchanged))

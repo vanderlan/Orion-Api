@@ -44,6 +44,59 @@ public sealed class MongoUnitOfWork(IMongoClient mongoClient, MongoDbOptions opt
         }
     }
 
+    public async Task ExecuteInTransactionAsync(Func<Task> operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        using var session = await mongoClient.StartSessionAsync();
+
+        if (!TryStartTransaction(session))
+        {
+            //Transactions are not supported by the deployment (e.g. standalone servers).
+            //The operation is still executed so all its writes are persisted by a single commit.
+            await operation();
+            return;
+        }
+
+        DbContext.UseSession(session);
+
+        try
+        {
+            logger.LogInformation("Trying to execute the operation in a MongoDb transaction");
+
+            await operation();
+            await session.CommitTransactionAsync();
+
+            logger.LogInformation("The MongoDb transaction was successfully committed");
+        }
+        catch (Exception e)
+        {
+            logger.LogError(e, "Error when trying to execute the transactional operation. Error message: {ErrorMessage}", e.Message);
+            await session.AbortTransactionAsync();
+            DiscardChanges();
+            logger.LogWarning("The MongoDb transaction was successfully aborted");
+            throw;
+        }
+        finally
+        {
+            DbContext.UseSession(null);
+        }
+    }
+
+    private bool TryStartTransaction(IClientSessionHandle session)
+    {
+        try
+        {
+            session.StartTransaction();
+            return true;
+        }
+        catch (NotSupportedException e)
+        {
+            logger.LogWarning(e, "The MongoDb deployment does not support transactions, the operation will be executed without one");
+            return false;
+        }
+    }
+
     public void DiscardChanges()
     {
         DbContext.DiscardChanges();

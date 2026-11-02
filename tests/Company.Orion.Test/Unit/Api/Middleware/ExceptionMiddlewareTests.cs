@@ -5,6 +5,8 @@ using Moq;
 using Xunit;
 using Company.Orion.Api.Middleware;
 using Company.Orion.Domain.Core.Exceptions;
+using Newtonsoft.Json.Linq;
+using System.IO;
 using System.Threading.Tasks;
 using System;
 
@@ -54,6 +56,7 @@ public class ExceptionMiddlewareTests
     [InlineData(typeof(NotFoundException), HttpStatusCode.NotFound)]
     [InlineData(typeof(ConflictException), HttpStatusCode.Conflict)]
     [InlineData(typeof(UnauthorizedUserException), HttpStatusCode.Unauthorized)]
+    [InlineData(typeof(RefreshTokenRotationException), HttpStatusCode.InternalServerError)]
     [InlineData(typeof(BusinessException), HttpStatusCode.BadRequest)]
     [InlineData(typeof(Exception), HttpStatusCode.InternalServerError)]
     public async Task HandleExceptionAsync_SetCorrectStatusCode(Type exceptionType, HttpStatusCode expectedStatusCode)
@@ -83,6 +86,52 @@ public class ExceptionMiddlewareTests
 
         // Assert
         Assert.Equal((int)expectedStatusCode, context.Response.StatusCode);
+    }
+
+    [Fact]
+    public async Task HandleExceptionAsync_WithRefreshTokenRotationException_KeepsTheExceptionTitle()
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        context.Response.Body = new MemoryStream();
+
+        var exception = new RefreshTokenRotationException("The rotation has failed", "Authentication Error", new TimeoutException());
+
+        // Act
+        await InvokeHandleExceptionAsync(context, exception);
+
+        // Assert
+        var response = await ReadResponseBodyAsync(context);
+
+        Assert.Equal((int)HttpStatusCode.InternalServerError, context.Response.StatusCode);
+        Assert.Equal("Authentication Error", response["Title"].ToString());
+        Assert.Equal("The rotation has failed", response["Errors"][0].ToString());
+    }
+
+    [Fact]
+    public async Task HandleExceptionAsync_WithUnexpectedException_SetsTheDefaultTitle()
+    {
+        // Arrange
+        var context = new DefaultHttpContext();
+        context.Response.Body = new MemoryStream();
+
+        // Act
+        await InvokeHandleExceptionAsync(context, new Exception("Test Exception"));
+
+        // Assert
+        var response = await ReadResponseBodyAsync(context);
+
+        Assert.Equal((int)HttpStatusCode.InternalServerError, context.Response.StatusCode);
+        Assert.Equal("Unexpected error", response["Title"].ToString());
+    }
+
+    private static async Task<JObject> ReadResponseBodyAsync(HttpContext context)
+    {
+        context.Response.Body.Seek(0, SeekOrigin.Begin);
+
+        using var reader = new StreamReader(context.Response.Body);
+
+        return JObject.Parse(await reader.ReadToEndAsync());
     }
 
     private async Task InvokeHandleExceptionAsync(HttpContext context, Exception exception)

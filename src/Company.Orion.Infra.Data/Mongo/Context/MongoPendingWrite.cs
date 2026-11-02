@@ -28,20 +28,28 @@ internal sealed class MongoPendingWrite<T>(T entity, MongoWriteOperation operati
     public async Task<int> ExecuteAsync(MongoDataContext context, CancellationToken cancellationToken)
     {
         var collection = context.GetCollection<T>();
+        var session = context.CurrentSession;
         var filter = Builders<T>.Filter.Eq(current => current.PublicId, entity.PublicId);
 
         switch (Operation)
         {
             case MongoWriteOperation.Insert:
-                await collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
+                if (session is null)
+                    await collection.InsertOneAsync(entity, cancellationToken: cancellationToken);
+                else
+                    await collection.InsertOneAsync(session, entity, cancellationToken: cancellationToken);
                 return 1;
 
             case MongoWriteOperation.Replace:
-                var replaceResult = await collection.ReplaceOneAsync(filter, entity, new ReplaceOptions(), cancellationToken);
+                var replaceResult = session is null
+                    ? await collection.ReplaceOneAsync(filter, entity, new ReplaceOptions(), cancellationToken)
+                    : await collection.ReplaceOneAsync(session, filter, entity, new ReplaceOptions(), cancellationToken);
                 return replaceResult.IsAcknowledged ? (int)replaceResult.ModifiedCount : 0;
 
             case MongoWriteOperation.Delete:
-                var deleteResult = await collection.DeleteOneAsync(filter, cancellationToken);
+                var deleteResult = session is null
+                    ? await collection.DeleteOneAsync(filter, cancellationToken)
+                    : await collection.DeleteOneAsync(session, filter, cancellationToken: cancellationToken);
                 return deleteResult.IsAcknowledged ? (int)deleteResult.DeletedCount : 0;
 
             default:

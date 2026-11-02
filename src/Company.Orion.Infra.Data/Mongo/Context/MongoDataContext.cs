@@ -41,6 +41,12 @@ public class MongoDataContext
 
     public bool HasPendingWrites => _pendingWrites.Count > 0;
 
+    /// <summary>
+    /// The session the pending writes are bound to. When set, every write executed by
+    /// <see cref="SaveChangesAsync"/> takes part of the transaction of the session.
+    /// </summary>
+    public IClientSessionHandle CurrentSession { get; private set; }
+
     public IMongoCollection<T> GetCollection<T>() where T : BaseEntity
     {
         return Database.GetCollection<T>(MongoMappingConfiguration.GetCollectionName<T>());
@@ -83,6 +89,15 @@ public class MongoDataContext
     public void DiscardChanges()
     {
         _pendingWrites.Clear();
+    }
+
+    /// <summary>
+    /// Binds the pending writes to the given session so they take part of its transaction.
+    /// Pass <c>null</c> to detach the context from the session.
+    /// </summary>
+    public void UseSession(IClientSessionHandle session)
+    {
+        CurrentSession = session;
     }
 
     private void AddPendingWrite<T>(T entity, MongoWriteOperation operation) where T : BaseEntity

@@ -42,6 +42,7 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
             NotFoundException => HttpStatusCode.NotFound,
             ConflictException => HttpStatusCode.Conflict,
             UnauthorizedUserException => HttpStatusCode.Unauthorized,
+            RefreshTokenRotationException => HttpStatusCode.InternalServerError,
             BusinessException => HttpStatusCode.BadRequest,
             _ => HttpStatusCode.InternalServerError
         };
@@ -51,7 +52,7 @@ public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddlewa
     {
         if (statusCode == HttpStatusCode.InternalServerError)
         {
-            errorResponse.Title = "Unexpected error";
+            errorResponse.Title ??= "Unexpected error";
             foreach (var error in errorResponse.Errors)
                 logger.LogError(exception, "Internal Server Error: {Message}", error);
         }

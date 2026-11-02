@@ -138,6 +138,9 @@
   <data name="User.InvalidRefreshToken" xml:space="preserve">
     <value>Invalid Refresh Token</value>
   </data>
+  <data name="User.RefreshTokenRotationFailed" xml:space="preserve">
+    <value>It was not possible to renew the Refresh Token, please try again</value>
+  </data>
   <data name="User.EmptyName" xml:space="preserve">
     <value>Is necessary to inform the Name</value>
   </data>
