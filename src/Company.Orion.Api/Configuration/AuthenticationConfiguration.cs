@@ -1,74 +1,40 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Company.Orion.Domain.Core.Extensions;
-using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
+using Company.Orion.Api.Security;
+using Company.Orion.Domain.Core.Authentication;
+using Company.Orion.Domain.Core.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 
 namespace Company.Orion.Api.Configuration;
 
 public static class AuthenticationConfiguration
 {
-    public static void ConfigureAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static void ConfigureAuthentication(this IServiceCollection services)
     {
-        var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
+        //Strongly-typed, validated at startup: a missing/weak secret stops the application from starting.
+        services.AddOptions<JwtOptions>()
+            .BindConfiguration(JwtOptions.SectionName)
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
 
-        services.AddAuthentication(option =>
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddSingleton<ITokenService, JwtTokenService>();
+        services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
+
+        services.AddAuthentication(options =>
         {
-            option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            option.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(options =>
-        {
-            options.SaveToken = true;
-            options.RequireHttpsMetadata = true;
-            options.TokenValidationParameters = new TokenValidationParameters
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer();
+
+        //The bearer options are built from the validated JwtOptions instead of re-reading IConfiguration.
+        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<IOptions<JwtOptions>>((options, jwtOptions) =>
             {
-                ValidateAudience = true,
-                ValidAudience = jwtOptions.Audience,
-                ValidateIssuer = true,
-                ValidIssuer = jwtOptions.Issuer,
-                ValidAlgorithms = [SecurityAlgorithms.HmacSha512],
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey)),
-                ClockSkew = TimeSpan.Zero
-            };
-        });
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = true;
+                options.TokenValidationParameters = JwtTokenService.CreateValidationParameters(jwtOptions.Value);
+            });
     }
-
-    public static (string Token, DateTime ValidTo)CreateToken(LoginWithCredentialsResponse loginWithCredentialsResponse, IConfiguration configuration)
-    {
-        var jwtOptions = configuration.GetSection("JwtOptions").Get<JwtOptions>();
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.Email, loginWithCredentialsResponse.Email),
-            new Claim(ClaimTypes.GivenName, loginWithCredentialsResponse.Name),
-            new Claim(ClaimTypes.Sid, loginWithCredentialsResponse.PublicId),
-            new Claim(ClaimTypes.Role, loginWithCredentialsResponse.Profile.Description()),
-        };
-
-        var signinKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SymmetricSecurityKey));
-
-        var token = new JwtSecurityToken(
-          issuer: jwtOptions.Issuer,
-          audience: jwtOptions.Audience,
-          expires: DateTime.UtcNow.AddMinutes(jwtOptions.TokenExpirationMinutes),
-          signingCredentials: new SigningCredentials(signinKey, SecurityAlgorithms.HmacSha512),
-          claims: claims
-        );
-
-        return (new JwtSecurityTokenHandler().WriteToken(token), token.ValidTo);
-    }
-}
-
-/// <summary>
-/// Section of appsettings that contains the JWT app configuration
-/// </summary>
-public class JwtOptions
-{
-    public string SymmetricSecurityKey { get; set; }
-    public string Issuer { get; set; }
-    public string Audience { get; set; }
-    public int TokenExpirationMinutes { get; set; }
 }

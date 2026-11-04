@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace Company.Orion.Domain.Core.ValueObjects.Pagination;
 
 public class PagedList<T>(IList<T> items, int count = 0)

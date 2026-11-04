@@ -2,7 +2,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Company.Orion.Domain.Core.Entities;
-using Company.Orion.Domain.Core.Extensions;
 using Company.Orion.Domain.Core.Filters;
 using Company.Orion.Infra.Data.Mongo.Repository.Implementations;
 using Company.Orion.Test.Shared.Faker;
@@ -17,37 +16,6 @@ namespace Company.Orion.Test.Unit.Infra.Mongo;
 public class MongoUserRepositoryTests
 {
     private readonly MongoMockContext _mongo = new();
-
-    [Fact]
-    public async Task LoginAsync_FiltersByEmailAndPassword()
-    {
-        //arrange
-        var user = UserFaker.GetDefaultSystemUser();
-        var capture = MongoMockContext.SetupFind(_mongo.Users, user);
-        var repository = new MongoUserRepository(_mongo.CreateDataContext());
-
-        //act
-        var found = await repository.LoginAsync(user.Email, "123".ToSha512());
-
-        //assert
-        Assert.Same(user, found);
-        Assert.Equal(user.Email, capture.RenderedFilter[nameof(User.Email)].AsString);
-        Assert.Equal("123".ToSha512(), capture.RenderedFilter[nameof(User.Password)].AsString);
-    }
-
-    [Fact]
-    public async Task LoginAsync_WithInvalidCredentials_ReturnsNull()
-    {
-        //arrange
-        MongoMockContext.SetupFind(_mongo.Users);
-        var repository = new MongoUserRepository(_mongo.CreateDataContext());
-
-        //act
-        var found = await repository.LoginAsync("invalid@orion.com", "invalid".ToSha512());
-
-        //assert
-        Assert.Null(found);
-    }
 
     [Fact]
     public async Task FindByEmailAsync_FiltersByEmailOnly()

@@ -1,33 +1,29 @@
-﻿using Microsoft.AspNetCore.Http;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Http;
 
 namespace Company.Orion.Domain.Core.Authentication;
 
-public class CurrentUser : ICurrentUser
+public class CurrentUser(IHttpContextAccessor accessor) : ICurrentUser
 {
-    private readonly IHttpContextAccessor _accessor;
-    private readonly List<Claim> _claims;
+    private ClaimsPrincipal? Principal => accessor.HttpContext?.User;
 
-    public CurrentUser(IHttpContextAccessor accessor)
-    {
-        _accessor = accessor;
-        _claims = _accessor?.HttpContext?.User.Claims.ToList();
-    }
-
-    public string Name => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.GivenName).Value : string.Empty;
-    public string Id => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Sid).Value: string.Empty;
-    public string Email => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Email).Value: string.Empty;
-    public string Profile => IsAuthenticated() ? _claims.Find(x => x.Type == ClaimTypes.Role).Value : string.Empty;
+    public string Name => GetClaim(ClaimTypes.GivenName);
+    public string Id => GetClaim(ClaimTypes.Sid);
+    public string Email => GetClaim(ClaimTypes.Email);
+    public string Profile => GetClaim(ClaimTypes.Role);
 
     public bool IsAuthenticated()
     {
-        return _accessor?.HttpContext?.User.Identity?.IsAuthenticated is true;
+        return Principal?.Identity?.IsAuthenticated is true;
     }
 
     public override string ToString()
     {
         return IsAuthenticated() ? $"Name: {Name} - Id: {Id} - Email: {Email} - Profile: {Profile}" : "Anonymous User";
+    }
+
+    private string GetClaim(string claimType)
+    {
+        return IsAuthenticated() ? Principal?.FindFirst(claimType)?.Value ?? string.Empty : string.Empty;
     }
 }

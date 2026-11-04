@@ -1,7 +1,7 @@
-﻿using Company.Orion.Domain.Core.Authentication;
+using Company.Orion.Domain.Core.Authentication;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Company.Orion.Application.Core.UseCases.Users.Notifications.UserPasswordChanged
 {
@@ -10,11 +10,13 @@ namespace Company.Orion.Application.Core.UseCases.Users.Notifications.UserPasswo
         ICurrentUser currentUser)
         : INotificationHandler<UserPasswordChangedNotification>
     {
+        private static readonly JsonSerializerOptions NotificationSerializerOptions = new() { WriteIndented = true };
+
         public async Task Handle(UserPasswordChangedNotification notification, CancellationToken cancellationToken)
         {
             logger.LogInformation("A notification {NotificationType} has been received. Notification details: {Notification}. Action performed by: {CurrentUserName}",
                 nameof(UserPasswordChangedNotification),
-                JsonConvert.SerializeObject(notification, Formatting.Indented),
+                JsonSerializer.Serialize(notification, NotificationSerializerOptions),
                 currentUser.ToString());
 
             await Task.CompletedTask;

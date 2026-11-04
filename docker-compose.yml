@@ -4,9 +4,15 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5010:80"
+      - "5010:8080"
     container_name: orion-api
+    environment:
+      # Traces, metrics and logs are sent to the Aspire dashboard (http://localhost:18888).
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://aspire-dashboard:18889"
+      OTEL_EXPORTER_OTLP_PROTOCOL: "grpc"
+      OTEL_SERVICE_NAME: "orion-api"
     depends_on:
+      - aspire-dashboard
 #if (systemDatabase == SqlServer)
       - sqlserver
 #elseif (systemDatabase == PostgreSql)
@@ -69,6 +75,19 @@ services:
     networks:
         - backend-network
 #endif
+
+  # Standalone .NET Aspire dashboard: OpenTelemetry UI for local development (no Aspire SDK required).
+  aspire-dashboard:
+    container_name: aspire-dashboard
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
+    restart: unless-stopped
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: "true"
+    ports:
+      - "18888:18888"   # UI
+      - "18889:18889"   # OTLP/gRPC ingestion
+    networks:
+      - backend-network
 
 networks:
     backend-network:

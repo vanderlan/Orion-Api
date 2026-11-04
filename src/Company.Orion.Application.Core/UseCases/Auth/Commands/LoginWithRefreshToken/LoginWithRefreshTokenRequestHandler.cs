@@ -1,34 +1,49 @@
-﻿using MediatR;
-using Company.Orion.Domain.Core.Repositories.UnitOfWork;
-using Company.Orion.Crosscutting.Resources;
-using Microsoft.Extensions.Localization;
-using Company.Orion.Domain.Core.Exceptions;
 using System.Security.Claims;
-using System.IdentityModel.Tokens.Jwt;
+using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithCredentials;
+using Company.Orion.Crosscutting.Resources;
+using Company.Orion.Domain.Core.Authentication;
 using Company.Orion.Domain.Core.Entities;
-using Company.Orion.Domain.Core.Extensions;
+using Company.Orion.Domain.Core.Exceptions;
+using Company.Orion.Domain.Core.Repositories.UnitOfWork;
+using MediatR;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using static Company.Orion.Crosscutting.Resources.Messages.MessagesKeys;
 
 namespace Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithRefreshToken;
 
-public class LoginWithRefreshTokenRequestHandler(IUnitOfWork unitOfWork, IStringLocalizer<OrionResources> resourceMessages) : IRequestHandler<LoginWithRefreshTokenRequest, LoginWithRefreshTokenResponse>
+public class LoginWithRefreshTokenRequestHandler(
+    IUnitOfWork unitOfWork,
+    ITokenService tokenService,
+    IOptions<JwtOptions> jwtOptions,
+    TimeProvider timeProvider,
+    IStringLocalizer<OrionResources> resourceMessages) : IRequestHandler<LoginWithRefreshTokenRequest, LoginWithRefreshTokenResponse>
 {
     public async Task<LoginWithRefreshTokenResponse> Handle(LoginWithRefreshTokenRequest request, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(request.RefreshToken))
-        {
             throw CreateInvalidRefreshTokenException();
-        }
 
-        var email = GetClaimFromJwtToken(request.Token, ClaimTypes.Email);
-
-        var currentRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(request.RefreshToken) && x.Email == email)).FirstOrDefault()
+        //The expired access token must still be one issued by this API (signature, issuer and audience are
+        //validated); otherwise anyone could pair a forged e-mail with a stolen refresh token.
+        var principal = await tokenService.ValidateExpiredAccessTokenAsync(request.Token)
             ?? throw CreateInvalidRefreshTokenException();
 
-        var user = (await unitOfWork.UserRepository.SearchByAsync(x => x.Email == currentRefreshToken.Email)).FirstOrDefault()
+        var email = principal.FindFirst(ClaimTypes.Email)?.Value
             ?? throw CreateInvalidRefreshTokenException();
 
-        var newRefreshToken = await RotateRefreshTokenAsync(currentRefreshToken);
+        var currentRefreshToken = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Refreshtoken.Equals(request.RefreshToken) && x.Email == email, cancellationToken)).FirstOrDefault()
+            ?? throw CreateInvalidRefreshTokenException();
+
+        if (currentRefreshToken.IsExpired(timeProvider.GetUtcNow().UtcDateTime, jwtOptions.Value.RefreshTokenLifetime))
+            throw CreateInvalidRefreshTokenException();
+
+        var user = (await unitOfWork.UserRepository.SearchByAsync(x => x.Email == currentRefreshToken.Email, cancellationToken)).FirstOrDefault()
+            ?? throw CreateInvalidRefreshTokenException();
+
+        var newRefreshToken = await RotateRefreshTokenAsync(currentRefreshToken, cancellationToken);
+
+        var accessToken = tokenService.CreateAccessToken(user);
 
         return new LoginWithRefreshTokenResponse
         {
@@ -36,6 +51,8 @@ public class LoginWithRefreshTokenRequestHandler(IUnitOfWork unitOfWork, IString
             Name = user.Name,
             PublicId = user.PublicId,
             Profile = user.Profile,
+            Token = accessToken.Token,
+            Expiration = accessToken.ExpiresAt,
             RefreshToken = newRefreshToken.Refreshtoken
         };
     }
@@ -47,24 +64,24 @@ public class LoginWithRefreshTokenRequestHandler(IUnitOfWork unitOfWork, IString
     /// When the rotation cannot be persisted, everything is rolled back and the current token
     /// remains valid, allowing the user to retry.
     /// </summary>
-    private async Task<RefreshToken> RotateRefreshTokenAsync(RefreshToken currentRefreshToken)
+    private async Task<RefreshToken> RotateRefreshTokenAsync(RefreshToken currentRefreshToken, CancellationToken cancellationToken)
     {
         var newRefreshToken = new RefreshToken
         {
             Email = currentRefreshToken.Email,
-            Refreshtoken = Guid.NewGuid().ToString().ToSha512()
+            Refreshtoken = LoginWithCredentialsRequestHandler.GenerateRefreshToken()
         };
 
         try
         {
             await unitOfWork.ExecuteInTransactionAsync(async () =>
             {
-                await unitOfWork.RefreshTokenRepository.DeleteAsync(currentRefreshToken.PublicId);
+                await unitOfWork.RefreshTokenRepository.DeleteAsync(currentRefreshToken.PublicId, cancellationToken);
 
-                newRefreshToken = await unitOfWork.RefreshTokenRepository.AddAsync(newRefreshToken);
+                newRefreshToken = await unitOfWork.RefreshTokenRepository.AddAsync(newRefreshToken, cancellationToken);
 
-                await unitOfWork.CommitAsync();
-            });
+                await unitOfWork.CommitAsync(cancellationToken);
+            }, cancellationToken);
         }
         catch (Exception exception)
         {
@@ -76,22 +93,6 @@ public class LoginWithRefreshTokenRequestHandler(IUnitOfWork unitOfWork, IString
         }
 
         return newRefreshToken;
-    }
-
-    private string GetClaimFromJwtToken(string jtwToken, string claimName)
-    {
-        try
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtSecurityToken = handler.ReadJwtToken(jtwToken);
-            var claimValue = jwtSecurityToken.Claims.First(claim => claim.Type == claimName).Value;
-
-            return claimValue;
-        }
-        catch (Exception)
-        {
-            throw CreateInvalidRefreshTokenException();
-        }
     }
 
     private UnauthorizedUserException CreateInvalidRefreshTokenException()

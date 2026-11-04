@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Company.Orion.Api.Models;
@@ -240,7 +240,8 @@ namespace Company.Orion.Test.Api.V1
             //assert: the old token must have been revoked and only the new one must remain valid
             Assert.Equal(HttpStatusCode.OK, httpResponseRefreshToken.StatusCode);
 
-            using var unitOfWork = ServiceProvider.GetRequiredService<IUnitOfWork>();
+            using var scope = IntegrationTestsFixture.CreateScope();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
 
             var persistedRefreshTokens = (await unitOfWork.RefreshTokenRepository.SearchByAsync(x => x.Email == userCreated.Email)).ToList();
 

@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Filters;
@@ -13,19 +14,12 @@ namespace Company.Orion.Infra.Data.Mongo.Repository.Implementations;
 
 public sealed class MongoUserRepository(MongoDataContext context) : MongoBaseEntityRepository<User>(context), IUserRepository
 {
-    public async Task<User> LoginAsync(string email, string password)
+    public async Task<User> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await Collection
-            .Find(user => user.Email == email && user.Password == password)
-            .FirstOrDefaultAsync();
+        return await Collection.Find(user => user.Email == email).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<User> FindByEmailAsync(string email)
-    {
-        return await Collection.Find(user => user.Email == email).FirstOrDefaultAsync();
-    }
-
-    public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
+    public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter, CancellationToken cancellationToken = default)
     {
         var filterDefinition = ApplyFilters(filter);
 
@@ -35,9 +29,9 @@ public sealed class MongoUserRepository(MongoDataContext context) : MongoBaseEnt
             .SortBy(user => user.CreatedAt)
             .Skip(pagination)
             .Limit(filter.Quantity)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        var count = await Collection.CountDocumentsAsync(filterDefinition);
+        var count = await Collection.CountDocumentsAsync(filterDefinition, cancellationToken: cancellationToken);
 
         return new PagedList<User>(entityList, (int)count);
     }

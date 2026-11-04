@@ -1,27 +1,20 @@
 using Company.Orion.Api;
 using Company.Orion.Api.Configuration;
-using Company.Orion.Api.Filters;
-using Company.Orion.Api.Middleware;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-
-builder.Services.AddScoped<AutoValidationActionFilter>();
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<AutoValidationActionFilter>();
-});
-
-builder.Configuration.ConfigureLogging();
+builder.ConfigureLogging();
 
 builder.Services.ConfigureServices(builder.Configuration);
 
 var app = builder.Build();
 
+//Must be the first middlewares: every unhandled exception and every empty error status code
+//(401/403/404 produced by the framework) is answered as RFC 9457 Problem Details.
+app.UseExceptionHandler();
+app.UseStatusCodePages();
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseRequestLogging();
 
 app.ConfigureApp();
 

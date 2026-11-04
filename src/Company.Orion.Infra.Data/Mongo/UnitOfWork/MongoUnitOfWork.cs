@@ -1,8 +1,8 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Company.Orion.Domain.Core.Repositories;
 using Company.Orion.Domain.Core.Repositories.UnitOfWork;
-using Company.Orion.Infra.Data.Mongo.Configuration;
 using Company.Orion.Infra.Data.Mongo.Context;
 using Company.Orion.Infra.Data.Mongo.Repository.Implementations;
 using Microsoft.Extensions.Logging;
@@ -11,13 +11,13 @@ using MongoDB.Driver;
 namespace Company.Orion.Infra.Data.Mongo.UnitOfWork;
 
 /// <summary>
-/// MongoDb unit of work. Every instance owns its own <see cref="MongoDataContext"/> (the
-/// pending writes buffer), while the <see cref="IMongoClient"/> is shared as a singleton
-/// to take advantage of the driver connection pool.
+/// Scoped MongoDb unit of work over the <see cref="MongoDataContext"/> (the pending writes buffer)
+/// owned by the DI scope, while the <see cref="IMongoClient"/> is shared as a singleton to take
+/// advantage of the driver connection pool.
 /// </summary>
-public sealed class MongoUnitOfWork(IMongoClient mongoClient, MongoDbOptions options, ILogger<MongoUnitOfWork> logger) : IUnitOfWork
+public sealed class MongoUnitOfWork(MongoDataContext dataContext, ILogger<MongoUnitOfWork> logger) : IUnitOfWork
 {
-    private MongoDataContext DbContext { get; } = new(mongoClient, options);
+    private MongoDataContext DbContext { get; } = dataContext;
 
     private IUserRepository _userRepository;
     public IUserRepository UserRepository => _userRepository ??= new MongoUserRepository(DbContext);
@@ -25,13 +25,13 @@ public sealed class MongoUnitOfWork(IMongoClient mongoClient, MongoDbOptions opt
     private IRefreshTokenRepository _refreshTokenRepository;
     public IRefreshTokenRepository RefreshTokenRepository => _refreshTokenRepository ??= new MongoRefreshTokenRepository(DbContext);
 
-    public async Task CommitAsync()
+    public async Task CommitAsync(CancellationToken cancellationToken = default)
     {
         try
         {
             logger.LogInformation("Trying to commit changes");
 
-            await DbContext.SaveChangesAsync();
+            await DbContext.SaveChangesAsync(cancellationToken);
 
             logger.LogInformation("The changes were successfully committed");
         }
@@ -44,11 +44,11 @@ public sealed class MongoUnitOfWork(IMongoClient mongoClient, MongoDbOptions opt
         }
     }
 
-    public async Task ExecuteInTransactionAsync(Func<Task> operation)
+    public async Task ExecuteInTransactionAsync(Func<Task> operation, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(operation);
 
-        using var session = await mongoClient.StartSessionAsync();
+        using var session = await DbContext.Client.StartSessionAsync(cancellationToken: cancellationToken);
 
         if (!TryStartTransaction(session))
         {
@@ -65,14 +65,14 @@ public sealed class MongoUnitOfWork(IMongoClient mongoClient, MongoDbOptions opt
             logger.LogInformation("Trying to execute the operation in a MongoDb transaction");
 
             await operation();
-            await session.CommitTransactionAsync();
+            await session.CommitTransactionAsync(cancellationToken);
 
             logger.LogInformation("The MongoDb transaction was successfully committed");
         }
         catch (Exception e)
         {
             logger.LogError(e, "Error when trying to execute the transactional operation. Error message: {ErrorMessage}", e.Message);
-            await session.AbortTransactionAsync();
+            await session.AbortTransactionAsync(CancellationToken.None);
             DiscardChanges();
             logger.LogWarning("The MongoDb transaction was successfully aborted");
             throw;

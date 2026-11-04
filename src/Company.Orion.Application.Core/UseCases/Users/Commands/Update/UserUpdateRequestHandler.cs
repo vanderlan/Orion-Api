@@ -1,4 +1,4 @@
-﻿using Company.Orion.Crosscutting.Resources;
+using Company.Orion.Crosscutting.Resources;
 using Company.Orion.Domain.Core.Exceptions;
 using Company.Orion.Domain.Core.Repositories.UnitOfWork;
 using MediatR;
@@ -12,8 +12,8 @@ public class UserUpdateRequestHandler(IUnitOfWork unitOfWork, IStringLocalizer<O
 {
     public async Task Handle(UserUpdateRequest request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.PublicId);
-        await ValidateUser(request);
+        var user = await unitOfWork.UserRepository.GetByIdAsync(request.PublicId, cancellationToken) ?? throw new NotFoundException(request.PublicId);
+        await ValidateUser(request, cancellationToken);
 
         user.Email = request.Email;
         user.Name = request.Name;
@@ -21,12 +21,12 @@ public class UserUpdateRequestHandler(IUnitOfWork unitOfWork, IStringLocalizer<O
 
         unitOfWork.UserRepository.Update(user);
 
-        await unitOfWork.CommitAsync();
+        await unitOfWork.CommitAsync(cancellationToken);
     }
 
-    private async Task ValidateUser(UserUpdateRequest request)
+    private async Task ValidateUser(UserUpdateRequest request, CancellationToken cancellationToken)
     {
-        var userFound = await unitOfWork.UserRepository.FindByEmailAsync(request.Email);
+        var userFound = await unitOfWork.UserRepository.FindByEmailAsync(request.Email, cancellationToken);
 
         if (userFound != null && userFound.PublicId != request.PublicId)
             throw new ConflictException(resourceMessages[UserMessages.EmailExists], resourceMessages[ExceptionsTitles.ValidationError]);
