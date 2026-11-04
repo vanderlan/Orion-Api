@@ -18,7 +18,6 @@
 [Add a feature](#-adding-a-new-feature-in-5-steps) •
 [Testing](#-testing) •
 [Contributing](#-contributing) •
-[Roadmap](#-roadmap)
 
 </div>
 
@@ -276,7 +275,7 @@ Coverage is collected with Coverlet and published to SonarCloud on every push/PR
 
 ## 🤝 Contributing
 
-Contributions are very welcome — bug reports, new database flavours, docs, or items from the [roadmap](#-roadmap).
+Contributions are very welcome — bug reports, new database flavours or docs
 
 1. Fork and create a branch: `git checkout -b feature/my-improvement`
 2. Read [`AGENTS.md`](AGENTS.md): it is the contract for the project structure and it applies to humans too.
@@ -285,10 +284,6 @@ Contributions are very welcome — bug reports, new database flavours, docs, or 
 5. Open a pull request describing *why* — the CI (build, tests, SonarCloud quality gate) runs automatically.
 
 Found a bug or have an idea? [Open an issue](https://github.com/vanderlan/Orion-Api/issues).
-
-## 🗺 Roadmap
-
-The prioritized architecture improvements to keep the template aligned with .NET 10 and Microsoft's API guidance are tracked in [`docs/ROADMAP.md`](docs/ROADMAP.md). Pick one and send a PR!
 
 ## 📄 License
 
