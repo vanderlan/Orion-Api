@@ -20,7 +20,7 @@ public class MongoUnitOfWorkTests
 
     private MongoUnitOfWork CreateUnitOfWork()
     {
-        return new MongoUnitOfWork(_mongo.Client.Object, _mongo.Options, _loggerMock.Object);
+        return new MongoUnitOfWork(_mongo.CreateDataContext(), _loggerMock.Object);
     }
 
     [Fact]

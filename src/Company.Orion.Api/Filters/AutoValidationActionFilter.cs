@@ -1,53 +1,55 @@
-﻿using FluentValidation;
+using Company.Orion.Crosscutting.Resources;
+using Company.Orion.Crosscutting.Resources.Messages;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Localization;
 
 namespace Company.Orion.Api.Filters;
 
 /// <summary>
-/// Validates action arguments using FluentValidation automatically,
-/// returning 400 with ValidationProblemDetails when invalid.
+/// Validates the action arguments with FluentValidation automatically and, when invalid, answers
+/// 400 with a <see cref="ValidationProblemDetails"/> built by the framework's
+/// <see cref="ProblemDetailsFactory"/> (same shape used for model binding errors).
 /// </summary>
-public sealed class AutoValidationActionFilter(IServiceProvider services) : IAsyncActionFilter
+public sealed class AutoValidationActionFilter(
+    IServiceProvider services,
+    ProblemDetailsFactory problemDetailsFactory,
+    IStringLocalizer<OrionResources> localizer) : IAsyncActionFilter
 {
-    private readonly IServiceProvider _services = services;
-
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
-        var errors = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+        var modelState = new ModelStateDictionary();
 
-        foreach (var arg in context.ActionArguments.Values)
+        foreach (var argument in context.ActionArguments.Values)
         {
-            if (arg is null) 
+            if (argument is null)
                 continue;
 
-            var argType = arg.GetType();
-            var validatorType = typeof(IValidator<>).MakeGenericType(argType);
+            var validatorType = typeof(IValidator<>).MakeGenericType(argument.GetType());
 
-            if (_services.GetService(validatorType) is IValidator validator)
+            if (services.GetService(validatorType) is not IValidator validator)
+                continue;
+
+            var result = await validator.ValidateAsync(new ValidationContext<object>(argument), context.HttpContext.RequestAborted);
+
+            foreach (var error in result.Errors)
             {
-                var validationContext = new ValidationContext<object>(arg);
-                var result = await validator.ValidateAsync(validationContext);
-
-                if (!result.IsValid)
-                {
-                    foreach (var grp in result.Errors.GroupBy(e => e.PropertyName))
-                    {
-                        errors[grp.Key] = [.. grp.Select(e => e.ErrorMessage)];
-                    }
-                }
+                modelState.AddModelError(error.PropertyName, error.ErrorMessage);
             }
         }
 
-        if (errors.Count > 0)
+        if (modelState.ErrorCount > 0)
         {
-            var problem = new ValidationProblemDetails(errors)
-            {
-                Status = StatusCodes.Status400BadRequest,
-                Title = "One or more validation errors occurred."
-            };
+            var problemDetails = problemDetailsFactory.CreateValidationProblemDetails(
+                context.HttpContext,
+                modelState,
+                statusCode: StatusCodes.Status400BadRequest,
+                title: localizer[MessagesKeys.ExceptionsTitles.ValidationError]);
 
-            context.Result = new BadRequestObjectResult(problem);
+            context.Result = new BadRequestObjectResult(problemDetails);
             return;
         }
 

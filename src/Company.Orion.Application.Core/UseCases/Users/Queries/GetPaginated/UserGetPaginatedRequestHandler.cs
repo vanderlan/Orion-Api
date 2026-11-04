@@ -1,4 +1,4 @@
-﻿using Company.Orion.Domain.Core.Repositories.UnitOfWork;
+using Company.Orion.Domain.Core.Repositories.UnitOfWork;
 using Company.Orion.Domain.Core.ValueObjects.Pagination;
 using MediatR;
 
@@ -9,7 +9,7 @@ public class UserGetPaginatedRequestHandler(IUnitOfWork unitOfWork)
 {
     public async Task<PagedList<UserGetPaginatedResponse>> Handle(UserGetPaginatedRequest request, CancellationToken cancellationToken)
     {
-        var users = await unitOfWork.UserRepository.ListPaginateAsync(request);
+        var users = await unitOfWork.UserRepository.ListPaginateAsync(request, cancellationToken);
 
         var usersPaginated = users.Items.Select(user => (UserGetPaginatedResponse)user).ToList();
 

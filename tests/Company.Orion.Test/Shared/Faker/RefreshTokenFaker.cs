@@ -12,6 +12,7 @@ public static class RefreshTokenFaker
            .RuleFor(o => o.Email, f => forUserEmail ?? f.Internet.Email())
            .RuleFor(o => o.Refreshtoken, f => Guid.NewGuid().ToString())
            .RuleFor(o => o.PublicId, f => Guid.NewGuid().ToString())
+           .RuleFor(o => o.CreatedAt, f => DateTime.UtcNow)
            .Generate();
     }
 }

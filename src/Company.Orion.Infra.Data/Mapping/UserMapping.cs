@@ -19,7 +19,10 @@ public class UserMapping : IEntityTypeConfiguration<User>
         builder.HasIndex(x => x.PublicId).IsUnique();
         builder.Property(x => x.Password).HasMaxLength(300).IsRequired();
 
-        //Default System User
+        //Default System User.
+        //The password is seeded with the legacy (unsalted SHA-512) format because HasData must be
+        //deterministic (a PBKDF2 hash has a random salt). IPasswordHasher accepts it and upgrades it
+        //to PBKDF2 on the first successful login.
         builder.HasData(
             new User
             {

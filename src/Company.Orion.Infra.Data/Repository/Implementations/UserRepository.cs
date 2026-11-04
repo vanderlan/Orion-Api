@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Repositories;
-using System.Linq;
-using System.Threading.Tasks;
 using Company.Orion.Domain.Core.Filters;
 using Company.Orion.Domain.Core.ValueObjects.Pagination;
 using Company.Orion.Infra.Data.Context;
@@ -12,15 +10,6 @@ namespace Company.Orion.Infra.Data.Repository.Implementations;
 
 public sealed class UserRepository(DataContext context) : BaseEntityRepository<User>(context), IUserRepository
 {
-    public async Task<User> LoginAsync(string email, string password)
-    {
-        var user = await DataContext.Users.AsNoTracking()
-            .Where(x => x.Email.Equals(email) && x.Password.Equals(password))
-            .FirstOrDefaultAsync();
-
-        return user;
-    }
-
     private static IQueryable<User> ApplyFilters(UserFilter filter, IQueryable<User> query)
     {
         if (!string.IsNullOrWhiteSpace(filter.Query))
@@ -29,12 +18,12 @@ public sealed class UserRepository(DataContext context) : BaseEntityRepository<U
         return query;
     }
 
-    public async Task<User> FindByEmailAsync(string email)
+    public async Task<User> FindByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
-        return await DataContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email.Equals(email));
+        return await DataContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email.Equals(email), cancellationToken);
     }
-    
-    public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter)
+
+    public async Task<PagedList<User>> ListPaginateAsync(UserFilter filter, CancellationToken cancellationToken = default)
     {
         IQueryable<User> query = DataContext.Set<User>();
 
@@ -46,8 +35,8 @@ public sealed class UserRepository(DataContext context) : BaseEntityRepository<U
             .AsNoTracking()
             .Skip(pagination)
             .Take(filter.Quantity)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
-        return new PagedList<User>(entityList, await query.CountAsync());
+        return new PagedList<User>(entityList, await query.CountAsync(cancellationToken));
     }
 }

@@ -18,8 +18,9 @@ namespace Company.Orion.Infra.Data.Mongo.Context;
 public class MongoDataContext
 {
     private readonly List<IMongoPendingWrite> _pendingWrites = [];
+    private readonly TimeProvider _timeProvider;
 
-    public MongoDataContext(IMongoClient mongoClient, MongoDbOptions options)
+    public MongoDataContext(IMongoClient mongoClient, MongoDbOptions options, TimeProvider timeProvider = null)
     {
         ArgumentNullException.ThrowIfNull(mongoClient);
         ArgumentNullException.ThrowIfNull(options);
@@ -28,6 +29,7 @@ public class MongoDataContext
 
         Client = mongoClient;
         Database = mongoClient.GetDatabase(options.DatabaseName);
+        _timeProvider = timeProvider ?? TimeProvider.System;
     }
 
     public IMongoClient Client { get; }
@@ -109,6 +111,8 @@ public class MongoDataContext
 
     private void AddTimestamps()
     {
+        var utcNow = UtcNow();
+
         foreach (var pendingWrite in _pendingWrites)
         {
             if (pendingWrite.Operation == MongoWriteOperation.Delete)
@@ -116,11 +120,11 @@ public class MongoDataContext
 
             if (pendingWrite.Operation == MongoWriteOperation.Insert)
             {
-                pendingWrite.Entity.CreatedAt = UtcNow();
+                pendingWrite.Entity.CreatedAt = utcNow;
                 pendingWrite.Entity.PublicId = Guid.NewGuid().ToString();
             }
 
-            pendingWrite.Entity.LastUpdated = UtcNow();
+            pendingWrite.Entity.LastUpdated = utcNow;
         }
     }
 
@@ -128,9 +132,9 @@ public class MongoDataContext
     /// BSON dates have millisecond precision, so the timestamps are truncated to keep the
     /// in memory entity exactly equal to the persisted document.
     /// </summary>
-    private static DateTime UtcNow()
+    private DateTime UtcNow()
     {
-        var utcNow = DateTime.UtcNow;
+        var utcNow = _timeProvider.GetUtcNow().UtcDateTime;
 
         return new DateTime(utcNow.Ticks - (utcNow.Ticks % TimeSpan.TicksPerMillisecond), DateTimeKind.Utc);
     }

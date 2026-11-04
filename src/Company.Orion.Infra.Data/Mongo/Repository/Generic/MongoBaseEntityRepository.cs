@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Repositories.Base;
@@ -16,16 +17,16 @@ public abstract class MongoBaseEntityRepository<T>(MongoDataContext dataContext)
 
     protected IMongoCollection<T> Collection => DataContext.GetCollection<T>();
 
-    public virtual Task<T> AddAsync(T entity)
+    public virtual Task<T> AddAsync(T entity, CancellationToken cancellationToken = default)
     {
         DataContext.Insert(entity);
 
         return Task.FromResult(entity);
     }
 
-    public virtual async Task DeleteAsync(string publicId)
+    public virtual async Task DeleteAsync(string publicId, CancellationToken cancellationToken = default)
     {
-        var existing = await GetByIdAsync(publicId);
+        var existing = await GetByIdAsync(publicId, cancellationToken);
 
         if (existing != null)
         {
@@ -33,14 +34,14 @@ public abstract class MongoBaseEntityRepository<T>(MongoDataContext dataContext)
         }
     }
 
-    public virtual async Task<T> GetByIdAsync(string publicId)
+    public virtual async Task<T> GetByIdAsync(string publicId, CancellationToken cancellationToken = default)
     {
-        return await Collection.Find(entity => entity.PublicId == publicId).FirstOrDefaultAsync();
+        return await Collection.Find(entity => entity.PublicId == publicId).FirstOrDefaultAsync(cancellationToken);
     }
 
-    public virtual async Task<IEnumerable<T>> SearchByAsync(Expression<Func<T, bool>> predicate)
+    public virtual async Task<IEnumerable<T>> SearchByAsync(Expression<Func<T, bool>> predicate, CancellationToken cancellationToken = default)
     {
-        return await Collection.Find(predicate).ToListAsync();
+        return await Collection.Find(predicate).ToListAsync(cancellationToken);
     }
 
     public virtual void Update(T entity)

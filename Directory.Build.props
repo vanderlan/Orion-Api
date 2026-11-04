@@ -1,0 +1,20 @@
+<Project>
+  <!--
+    Settings shared by every project of the solution. Keep the .csproj files for what is specific
+    to each project (package/project references, SDK, content).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!--
+      Nullable reference types are being enabled project by project (Domain.Core and Crosscutting.Ioc
+      are done). Projects that are not annotated yet opt out with <Nullable>disable</Nullable> in their
+      .csproj; remove the override (and fix the warnings) when migrating the next project.
+    -->
+    <Nullable>enable</Nullable>
+    <!-- Deterministic, reproducible builds (CI, Docker layer caching). -->
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+</Project>

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +21,6 @@ namespace Company.Orion.Test.Integration.Setup
         public readonly HttpClient AuthenticatedHttpClient;
         public readonly User DefaultSystemUser;
         public readonly IServiceProvider ServiceProvider;
-        private readonly IUnitOfWork _unitOfWork;
         private readonly WebApplicationFactory<Program> _appFactory;
         private string _databaseName;
         private string _connectionString;
@@ -48,8 +47,6 @@ namespace Company.Orion.Test.Integration.Setup
 
             ServiceProvider = appFactory.Services;
 
-            _unitOfWork = appFactory.Services.GetRequiredService<IUnitOfWork>();
-
             HttpClient = appFactory.CreateClient();
             AuthenticatedHttpClient = appFactory.CreateClient();
 
@@ -57,8 +54,18 @@ namespace Company.Orion.Test.Integration.Setup
 
             _appFactory = appFactory;
 
-            _unitOfWork.UserRepository.AddAsync(DefaultSystemUser).GetAwaiter().GetResult();
-            _unitOfWork.CommitAsync().GetAwaiter().GetResult();
+            //The unit of work is scoped (one per request): outside a request it must be resolved from a scope.
+            using var scope = CreateScope();
+            var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+
+            unitOfWork.UserRepository.AddAsync(DefaultSystemUser).GetAwaiter().GetResult();
+            unitOfWork.CommitAsync().GetAwaiter().GetResult();
+        }
+
+        /// <summary>Creates a DI scope to resolve scoped services (e.g. <see cref="IUnitOfWork"/>) from a test.</summary>
+        public IServiceScope CreateScope()
+        {
+            return _appFactory.Services.CreateScope();
         }
 
 #if (systemDatabase == SqlServer)

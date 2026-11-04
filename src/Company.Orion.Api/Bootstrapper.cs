@@ -1,30 +1,21 @@
-using Company.Orion.Api.Attributes;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Razor;
+using System.Text.Json.Serialization;
 using Company.Orion.Api.Configuration;
+using Company.Orion.Api.Filters;
 using Company.Orion.Application.Core;
 using Company.Orion.Application.Core.UseCases.Users.Commands.Create;
 using Company.Orion.Crosscutting.Ioc.Dependencies;
 using Company.Orion.Domain.Core.Authentication;
+using FluentValidation;
 
 namespace Company.Orion.Api;
 
 public static class Bootstrapper
 {
-    public static void ConfigureApp(this IApplicationBuilder app)
+    public static void ConfigureApp(this WebApplication app)
     {
-        app.UseSwagger();
-        
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint("v1/swagger.json", "Orion API");
-        });
+        app.UseOpenApiDocumentation();
 
-        app.UseCors(options => options.WithOrigins("*")
-            .AllowAnyMethod()
-            .AllowAnyOrigin()
-            .AllowAnyHeader());
+        app.UseCors();
 
         app.ConfigureGlobalization();
 
@@ -32,45 +23,46 @@ public static class Bootstrapper
 
         app.UseRouting();
 
+        app.UseRateLimiter();
+
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapDefaultControllerRoute();
-        });
+        app.MapControllers();
     }
 
     public static void ConfigureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddCors();
+        services.ConfigureCors(configuration);
 
-        services.ConfigureAuthentication(configuration);
+        services.ConfigureAuthentication();
 
-        services.AddControllers();
+        services.ConfigureRateLimiting();
+
+        services.ConfigureProblemDetails();
+
+        services.AddScoped<AutoValidationActionFilter>();
+        services.AddControllers(options =>
+            {
+                options.Filters.Add<AutoValidationActionFilter>();
+            })
+            .AddJsonOptions(options =>
+            {
+                //Enums travel as their names ("Admin") instead of numbers; numbers are still accepted.
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
 
         services.AddValidatorsFromAssemblyContaining<UserCreateRequestValidator>();
 
         services.ConfigureApiVersioning();
 
-        services.AddMvc(options =>
-                        {
-                            options.Filters.Add<CustomValidationAttribute>();
-                        })
-            .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-            .AddDataAnnotationsLocalization();
-
-        services.Configure<ApiBehaviorOptions>(options =>
-        {
-            options.SuppressModelStateInvalidFilter = true;
-        });
-
         services.AddLocalization(options => options.ResourcesPath = @"Resources");
         services.AddApplicationHealthChecks(configuration);
+        services.ConfigureOpenTelemetry(configuration);
 
-        services.ConfigureSwagger();
+        services.ConfigureOpenApi();
 
-        services.AddDatabaseContext();
+        services.AddDatabaseContext(configuration);
         services.AddUnitOfWork();
 
         services.AddHttpContextAccessor();

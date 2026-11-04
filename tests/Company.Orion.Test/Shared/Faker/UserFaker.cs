@@ -4,18 +4,22 @@ using Company.Orion.Application.Core.UseCases.Users.Commands.Create;
 using Company.Orion.Application.Core.UseCases.Users.Commands.Update;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Entities.Enuns;
-using Company.Orion.Domain.Core.Extensions;
+using Company.Orion.Domain.Core.Security;
 
 namespace Company.Orion.Test.Shared.Faker;
 
 public static class UserFaker
 {
+    public const string DefaultSystemUserPassword = "123";
+
+    private static readonly IPasswordHasher PasswordHasher = new Pbkdf2PasswordHasher();
+
     public static User GetDefaultSystemUser()
     {
         return new Faker<User>()
              .RuleFor(o => o.Name, f => f.Name.FullName())
              .RuleFor(o => o.Email, f => f.Internet.Email())
-             .RuleFor(o => o.Password, f => "123".ToSha512())
+             .RuleFor(o => o.Password, f => PasswordHasher.Hash(DefaultSystemUserPassword))
              .RuleFor(o => o.Profile, f => UserProfile.Admin)
              .RuleFor(o => o.PublicId, f => Guid.NewGuid().ToString())
              .Generate();

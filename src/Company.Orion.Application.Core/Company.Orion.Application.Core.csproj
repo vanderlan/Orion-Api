@@ -1,12 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>disable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\Company.Orion.Domain.Core\Company.Orion.Domain.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="Company.Orion.Test" />
     </ItemGroup>
 
 </Project>

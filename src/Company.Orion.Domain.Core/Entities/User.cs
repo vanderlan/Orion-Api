@@ -8,5 +8,7 @@ public class User : BaseEntity
     public required string Name { get; set; }
     public required string Email { get; set; }
     public required UserProfile Profile { get; set; }
-    public string Password { get; set; }
+
+    /// <summary>Password hash produced by <c>IPasswordHasher</c>, never the plain text password.</summary>
+    public string Password { get; set; } = string.Empty;
 }

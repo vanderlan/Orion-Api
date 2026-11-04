@@ -2,7 +2,7 @@
   "profiles": {
     "Dev": {
       "commandName": "Project",
-      "launchUrl": "swagger",
+      "launchUrl": "scalar/v1",
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
@@ -11,7 +11,7 @@
     },
     "Test": {
       "commandName": "Project",
-      "launchUrl": "swagger",
+      "launchUrl": "scalar/v1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Test"
       },
@@ -20,7 +20,7 @@
     "Production": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchUrl": "scalar/v1",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Production"
       },

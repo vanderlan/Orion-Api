@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Company.Orion.Api.Controllers.Base;
 
 [ApiController]
+[Produces("application/json")]
 public abstract class ApiController(IMediator mediator) : ControllerBase
 {
     protected readonly IMediator Mediator = mediator;

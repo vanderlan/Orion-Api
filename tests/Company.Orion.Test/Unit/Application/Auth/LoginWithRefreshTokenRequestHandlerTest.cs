@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Company.Orion.Application.Core.UseCases.Auth.Commands.LoginWithRefreshToken;
 using Company.Orion.Crosscutting.Resources;
+using Company.Orion.Domain.Core.Authentication;
 using Company.Orion.Domain.Core.Entities;
 using Company.Orion.Domain.Core.Exceptions;
 using Company.Orion.Domain.Core.Repositories;
 using Company.Orion.Domain.Core.Repositories.UnitOfWork;
 using Company.Orion.Test.Shared.Faker;
 using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Options;
 using Moq;
 using Xunit;
 using static Company.Orion.Crosscutting.Resources.Messages.MessagesKeys;
@@ -21,13 +22,19 @@ namespace Company.Orion.Test.Unit.Application.Auth;
 
 public class LoginWithRefreshTokenRequestHandlerTest
 {
+    private const string ValidExpiredToken = "valid-expired-jwt";
+    private const string TokenWithoutEmail = "jwt-without-email";
+
     private readonly Mock<IUnitOfWork> _unitOfWorkMock = new();
     private readonly Mock<IRefreshTokenRepository> _refreshTokenRepositoryMock = new();
     private readonly Mock<IUserRepository> _userRepositoryMock = new();
+    private readonly Mock<ITokenService> _tokenServiceMock = new();
+    private readonly JwtOptions _jwtOptions = new() { RefreshTokenExpirationDays = 7 };
     private readonly LoginWithRefreshTokenRequestHandler _handler;
 
     private readonly User _user = UserFaker.Get();
     private readonly RefreshToken _currentRefreshToken;
+    private readonly AccessToken _accessToken = new("new-jwt-token", DateTime.UtcNow.AddMinutes(15));
 
     public LoginWithRefreshTokenRequestHandlerTest()
     {
@@ -38,16 +45,30 @@ public class LoginWithRefreshTokenRequestHandlerTest
 
         //By default the transaction just executes the operation, the transactional behavior
         //itself is covered by the unit of work and integration tests.
-        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>()))
-            .Returns((Func<Task> operation) => operation());
+        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()))
+            .Returns((Func<Task> operation, CancellationToken _) => operation());
 
-        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.CommitAsync()).Returns(Task.CompletedTask);
+        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+
+        //Only tokens issued by the API are trusted; the lifetime is ignored by the token service.
+        _tokenServiceMock.Setup(tokenService => tokenService.ValidateExpiredAccessTokenAsync(It.IsAny<string>()))
+            .ReturnsAsync((ClaimsPrincipal)null);
+        _tokenServiceMock.Setup(tokenService => tokenService.ValidateExpiredAccessTokenAsync(ValidExpiredToken))
+            .ReturnsAsync(CreatePrincipal(new Claim(ClaimTypes.Email, _user.Email)));
+        _tokenServiceMock.Setup(tokenService => tokenService.ValidateExpiredAccessTokenAsync(TokenWithoutEmail))
+            .ReturnsAsync(CreatePrincipal(new Claim(ClaimTypes.GivenName, _user.Name)));
+        _tokenServiceMock.Setup(tokenService => tokenService.CreateAccessToken(_user)).Returns(_accessToken);
 
         var localizerMock = new Mock<IStringLocalizer<OrionResources>>();
         localizerMock.Setup(localizer => localizer[It.IsAny<string>()])
             .Returns((string key) => new LocalizedString(key, key));
 
-        _handler = new LoginWithRefreshTokenRequestHandler(_unitOfWorkMock.Object, localizerMock.Object);
+        _handler = new LoginWithRefreshTokenRequestHandler(
+            _unitOfWorkMock.Object,
+            _tokenServiceMock.Object,
+            Options.Create(_jwtOptions),
+            TimeProvider.System,
+            localizerMock.Object);
     }
 
     [Fact]
@@ -59,9 +80,9 @@ public class LoginWithRefreshTokenRequestHandlerTest
 
         RefreshToken addedRefreshToken = null;
 
-        _refreshTokenRepositoryMock.Setup(repository => repository.AddAsync(It.IsAny<RefreshToken>()))
-            .Callback((RefreshToken refreshToken) => addedRefreshToken = refreshToken)
-            .Returns((RefreshToken refreshToken) => Task.FromResult(refreshToken));
+        _refreshTokenRepositoryMock.Setup(repository => repository.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .Callback((RefreshToken refreshToken, CancellationToken _) => addedRefreshToken = refreshToken)
+            .Returns((RefreshToken refreshToken, CancellationToken _) => Task.FromResult(refreshToken));
 
         //act
         var response = await _handler.Handle(CreateValidRequest(), CancellationToken.None);
@@ -71,6 +92,8 @@ public class LoginWithRefreshTokenRequestHandlerTest
         Assert.Equal(_user.Name, response.Name);
         Assert.Equal(_user.PublicId, response.PublicId);
         Assert.Equal(_user.Profile, response.Profile);
+        Assert.Equal(_accessToken.Token, response.Token);
+        Assert.Equal(_accessToken.ExpiresAt, response.Expiration);
 
         //the old token must be revoked and a brand new one must be returned
         Assert.NotNull(response.RefreshToken);
@@ -79,10 +102,10 @@ public class LoginWithRefreshTokenRequestHandlerTest
         Assert.Equal(addedRefreshToken.Refreshtoken, response.RefreshToken);
         Assert.Equal(_user.Email, addedRefreshToken.Email);
 
-        _refreshTokenRepositoryMock.Verify(repository => repository.DeleteAsync(_currentRefreshToken.PublicId), Times.Once);
-        _refreshTokenRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<RefreshToken>()), Times.Once);
-        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>()), Times.Once);
-        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(), Times.Once);
+        _refreshTokenRepositoryMock.Verify(repository => repository.DeleteAsync(_currentRefreshToken.PublicId, It.IsAny<CancellationToken>()), Times.Once);
+        _refreshTokenRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]
@@ -92,7 +115,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
         //simulates the original consistency problem: the old token is always returned by the
         //lookups because the deletion was not persisted yet. The rotation must not rely on a
         //new lookup and must always return the newly created token.
-        _refreshTokenRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>()))
+        _refreshTokenRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([_currentRefreshToken]);
 
         SetupUserFound();
@@ -115,23 +138,23 @@ public class LoginWithRefreshTokenRequestHandlerTest
         var executionOrder = new List<string>();
         var insideTransaction = false;
 
-        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>()))
-            .Returns(async (Func<Task> operation) =>
+        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()))
+            .Returns(async (Func<Task> operation, CancellationToken _) =>
             {
                 insideTransaction = true;
                 await operation();
                 insideTransaction = false;
             });
 
-        _refreshTokenRepositoryMock.Setup(repository => repository.DeleteAsync(It.IsAny<string>()))
+        _refreshTokenRepositoryMock.Setup(repository => repository.DeleteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()))
             .Callback(() => executionOrder.Add(insideTransaction ? "delete" : "delete-outside-transaction"))
             .Returns(Task.CompletedTask);
 
-        _refreshTokenRepositoryMock.Setup(repository => repository.AddAsync(It.IsAny<RefreshToken>()))
+        _refreshTokenRepositoryMock.Setup(repository => repository.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
             .Callback(() => executionOrder.Add(insideTransaction ? "add" : "add-outside-transaction"))
-            .Returns((RefreshToken refreshToken) => Task.FromResult(refreshToken));
+            .Returns((RefreshToken refreshToken, CancellationToken _) => Task.FromResult(refreshToken));
 
-        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.CommitAsync())
+        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>()))
             .Callback(() => executionOrder.Add(insideTransaction ? "commit" : "commit-outside-transaction"))
             .Returns(Task.CompletedTask);
 
@@ -148,8 +171,8 @@ public class LoginWithRefreshTokenRequestHandlerTest
         //arrange
         Expression<Func<RefreshToken, bool>> capturedPredicate = null;
 
-        _refreshTokenRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>()))
-            .Callback((Expression<Func<RefreshToken, bool>> predicate) => capturedPredicate = predicate)
+        _refreshTokenRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>(), It.IsAny<CancellationToken>()))
+            .Callback((Expression<Func<RefreshToken, bool>> predicate, CancellationToken _) => capturedPredicate = predicate)
             .ReturnsAsync([_currentRefreshToken]);
 
         SetupUserFound();
@@ -186,7 +209,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
         //arrange
         var request = new LoginWithRefreshTokenRequest
         {
-            Token = CreateJwtToken(_user.Email),
+            Token = ValidExpiredToken,
             RefreshToken = refreshToken
         };
 
@@ -195,7 +218,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
 
         //assert
         Assert.Equal(UserMessages.InvalidRefreshToken, exception.Message);
-        _refreshTokenRepositoryMock.Verify(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>()), Times.Never);
+        _refreshTokenRepositoryMock.Verify(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>(), It.IsAny<CancellationToken>()), Times.Never);
         VerifyRotationNeverHappened();
     }
 
@@ -203,7 +226,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
     [InlineData(null)]
     [InlineData("")]
     [InlineData("invalid-jwt-token")]
-    public async Task Handle_WithInvalidJwtToken_ThrowsUnauthorizedUserException(string token)
+    public async Task Handle_WithUntrustedJwtToken_ThrowsUnauthorizedUserException(string token)
     {
         //arrange
         var request = new LoginWithRefreshTokenRequest
@@ -217,6 +240,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
 
         //assert
         Assert.Equal(UserMessages.InvalidRefreshToken, exception.Message);
+        _refreshTokenRepositoryMock.Verify(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>(), It.IsAny<CancellationToken>()), Times.Never);
         VerifyRotationNeverHappened();
     }
 
@@ -224,14 +248,9 @@ public class LoginWithRefreshTokenRequestHandlerTest
     public async Task Handle_WithJwtTokenWithoutEmailClaim_ThrowsUnauthorizedUserException()
     {
         //arrange
-        var tokenWithoutEmail = new JwtSecurityTokenHandler().WriteToken(new JwtSecurityToken(claims:
-        [
-            new Claim(ClaimTypes.GivenName, _user.Name)
-        ]));
-
         var request = new LoginWithRefreshTokenRequest
         {
-            Token = tokenWithoutEmail,
+            Token = TokenWithoutEmail,
             RefreshToken = _currentRefreshToken.Refreshtoken
         };
 
@@ -244,7 +263,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
     public async Task Handle_WithRefreshTokenNotFound_ThrowsUnauthorizedUserException()
     {
         //arrange
-        _refreshTokenRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>()))
+        _refreshTokenRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         //act
@@ -256,12 +275,30 @@ public class LoginWithRefreshTokenRequestHandlerTest
     }
 
     [Fact]
+    public async Task Handle_WithExpiredRefreshToken_ThrowsUnauthorizedUserException()
+    {
+        //arrange
+        _currentRefreshToken.CreatedAt = DateTime.UtcNow.AddDays(-_jwtOptions.RefreshTokenExpirationDays).AddMinutes(-1);
+
+        SetupRefreshTokenFound();
+        SetupUserFound();
+
+        //act
+        var exception = await Assert.ThrowsAsync<UnauthorizedUserException>(() => _handler.Handle(CreateValidRequest(), CancellationToken.None));
+
+        //assert
+        Assert.Equal(UserMessages.InvalidRefreshToken, exception.Message);
+        _tokenServiceMock.Verify(tokenService => tokenService.CreateAccessToken(It.IsAny<User>()), Times.Never);
+        VerifyRotationNeverHappened();
+    }
+
+    [Fact]
     public async Task Handle_WithUserNotFound_ThrowsUnauthorizedUserException()
     {
         //arrange
         SetupRefreshTokenFound();
 
-        _userRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<User, bool>>>()))
+        _userRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         //act
@@ -282,7 +319,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
 
         var persistenceException = new TimeoutException("The database is unavailable");
 
-        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.CommitAsync()).ThrowsAsync(persistenceException);
+        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>())).ThrowsAsync(persistenceException);
 
         //act
         var exception = await Assert.ThrowsAsync<RefreshTokenRotationException>(() => _handler.Handle(CreateValidRequest(), CancellationToken.None));
@@ -302,7 +339,7 @@ public class LoginWithRefreshTokenRequestHandlerTest
 
         var transactionException = new InvalidOperationException("The transaction was aborted");
 
-        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>()))
+        _unitOfWorkMock.Setup(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(transactionException);
 
         //act
@@ -318,45 +355,40 @@ public class LoginWithRefreshTokenRequestHandlerTest
     {
         return new LoginWithRefreshTokenRequest
         {
-            Token = CreateJwtToken(_user.Email),
+            Token = ValidExpiredToken,
             RefreshToken = _currentRefreshToken.Refreshtoken
         };
     }
 
-    private static string CreateJwtToken(string email)
+    private static ClaimsPrincipal CreatePrincipal(params Claim[] claims)
     {
-        var token = new JwtSecurityToken(claims:
-        [
-            new Claim(ClaimTypes.Email, email)
-        ]);
-
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        return new ClaimsPrincipal(new ClaimsIdentity(claims, "Test"));
     }
 
     private void SetupRefreshTokenFound()
     {
-        _refreshTokenRepositoryMock.SetupSequence(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>()))
+        _refreshTokenRepositoryMock.SetupSequence(repository => repository.SearchByAsync(It.IsAny<Expression<Func<RefreshToken, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([_currentRefreshToken])
             .ReturnsAsync([]);
     }
 
     private void SetupUserFound()
     {
-        _userRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<User, bool>>>()))
+        _userRepositoryMock.Setup(repository => repository.SearchByAsync(It.IsAny<Expression<Func<User, bool>>>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([_user]);
     }
 
     private void SetupAddReturningTheGivenToken()
     {
-        _refreshTokenRepositoryMock.Setup(repository => repository.AddAsync(It.IsAny<RefreshToken>()))
-            .Returns((RefreshToken refreshToken) => Task.FromResult(refreshToken));
+        _refreshTokenRepositoryMock.Setup(repository => repository.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()))
+            .Returns((RefreshToken refreshToken, CancellationToken _) => Task.FromResult(refreshToken));
     }
 
     private void VerifyRotationNeverHappened()
     {
-        _refreshTokenRepositoryMock.Verify(repository => repository.DeleteAsync(It.IsAny<string>()), Times.Never);
-        _refreshTokenRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<RefreshToken>()), Times.Never);
-        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>()), Times.Never);
-        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(), Times.Never);
+        _refreshTokenRepositoryMock.Verify(repository => repository.DeleteAsync(It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _refreshTokenRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<RefreshToken>(), It.IsAny<CancellationToken>()), Times.Never);
+        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.ExecuteInTransactionAsync(It.IsAny<Func<Task>>(), It.IsAny<CancellationToken>()), Times.Never);
+        _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(It.IsAny<CancellationToken>()), Times.Never);
     }
 }

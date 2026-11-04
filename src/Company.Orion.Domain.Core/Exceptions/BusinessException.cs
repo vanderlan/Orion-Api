@@ -1,13 +1,11 @@
-using System;
-
 namespace Company.Orion.Domain.Core.Exceptions;
 
-[Serializable]
 public class BusinessException : Exception
 {
-    public string Title { get; set; }
+    /// <summary>Optional title shown to the client (ProblemDetails.Title). Defaults to the HTTP status title when null.</summary>
+    public string? Title { get; set; }
 
-    public BusinessException(string message, string title) : base(message)
+    public BusinessException(string message, string? title) : base(message)
     {
         Title = title;
     }

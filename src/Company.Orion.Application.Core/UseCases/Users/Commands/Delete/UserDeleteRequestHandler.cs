@@ -1,4 +1,4 @@
-﻿using Company.Orion.Domain.Core.Exceptions;
+using Company.Orion.Domain.Core.Exceptions;
 using Company.Orion.Domain.Core.Repositories.UnitOfWork;
 using MediatR;
 
@@ -8,12 +8,12 @@ public class UserDeleteRequestHandler(IUnitOfWork unitOfWork) : IRequestHandler<
 {
     public async Task Handle(UserDeleteRequest request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.PublicId);
+        var user = await unitOfWork.UserRepository.GetByIdAsync(request.PublicId, cancellationToken);
 
         if (user == null)
             throw new NotFoundException(request.PublicId);
 
-        await unitOfWork.UserRepository.DeleteAsync(request.PublicId);
-        await unitOfWork.CommitAsync();
+        await unitOfWork.UserRepository.DeleteAsync(request.PublicId, cancellationToken);
+        await unitOfWork.CommitAsync(cancellationToken);
     }
 }

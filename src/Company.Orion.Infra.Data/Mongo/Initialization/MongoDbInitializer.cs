@@ -71,6 +71,8 @@ public sealed class MongoDbInitializer(MongoDataContext dataContext, ILogger<Mon
             Email = "adm@orion.com",
             Name = "Orion Admin User",
             Profile = UserProfile.Admin,
+            //Legacy (unsalted SHA-512) format, kept equal to the relational seed. IPasswordHasher
+            //accepts it and upgrades it to PBKDF2 on the first successful login.
             Password = "123".ToSha512()
         };
 

@@ -1,4 +1,4 @@
-﻿using Company.Orion.Domain.Core.Exceptions;
+using Company.Orion.Domain.Core.Exceptions;
 using Company.Orion.Domain.Core.Repositories.UnitOfWork;
 using MediatR;
 
@@ -8,7 +8,7 @@ public class UserGetByIdHandler(IUnitOfWork unitOfWork) : IRequestHandler<UserGe
 {
     public async Task<UserGetByIdResponse> Handle(UserGetByIdRequest request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.PublicId);
+        var user = await unitOfWork.UserRepository.GetByIdAsync(request.PublicId, cancellationToken);
 
         if (user == null)
             throw new NotFoundException(request.PublicId);
